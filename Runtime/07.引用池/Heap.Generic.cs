@@ -36,27 +36,34 @@ namespace JFramework
 
             public T Dequeue()
             {
-                dequeueCount++;
                 T assetData;
-                if (unused.Count > 0)
+                lock (unused)
                 {
-                    assetData = unused.Dequeue();
-                }
-                else
-                {
-                    assetData = (T)Activator.CreateInstance(assetType);
+                    dequeueCount++;
+                    if (unused.Count > 0)
+                    {
+                        assetData = unused.Dequeue();
+                    }
+                    else
+                    {
+                        assetData = (T)Activator.CreateInstance(assetType);
+                    }
+
+                    cached.Add(assetData);
                 }
 
-                cached.Add(assetData);
                 return assetData;
             }
 
             public void Enqueue(T assetData)
             {
-                if (cached.Remove(assetData))
+                lock (unused)
                 {
-                    enqueueCount++;
-                    unused.Enqueue(assetData);
+                    if (cached.Remove(assetData))
+                    {
+                        enqueueCount++;
+                        unused.Enqueue(assetData);
+                    }
                 }
             }
 

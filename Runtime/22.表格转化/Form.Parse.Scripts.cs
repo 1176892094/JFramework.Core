@@ -92,7 +92,8 @@ namespace JFramework
                             if (IsStruct(type))
                             {
                                 fields.Add(name, type.EndsWith("[]") ? name + "[]" : name);
-                                dataTable[WriteStructPath(name)] = WriteStruct(name, type);
+                                var pair = WriteStruct(name, type);
+                                dataTable[pair.Key] = pair.Value;
                             }
                             else if (IsBasic(type))
                             {
@@ -110,21 +111,23 @@ namespace JFramework
                                     }
                                 }
 
-                                dataTable[WriteEnumPath(name)] = WriteEnum(name, members);
+                                var pair = WriteEnum(name, members);
+                                dataTable[pair.Key] = pair.Value;
                             }
                         }
                     }
 
                     if (fields.Count > 0)
                     {
-                        dataTable[WriteTablePath(sheetName)] = WriteTable(sheetName, fields);
+                        var pair = WriteTable(sheetName, fields);
+                        dataTable[pair.Key] = pair.Value;
                     }
                 }
 
                 return dataTable;
             }
 
-            private static string WriteTable(string className, Dictionary<string, string> fields)
+            private static KeyValuePair<string, string> WriteTable(string className, Dictionary<string, string> fields)
             {
                 var builder = Heap.Dequeue<StringBuilder>();
                 var scriptText = pathHelper.Path("Table", FileAccess.Read).Replace("Template", className);
@@ -163,10 +166,10 @@ namespace JFramework
                 scriptText = scriptText.Replace("//TODO:2", builder.ToString());
                 builder.Length = 0;
                 Heap.Enqueue(builder);
-                return scriptText;
+                return new KeyValuePair<string, string>(Text.Format(pathHelper.Path("Table", FileAccess.Write), className), scriptText);
             }
 
-            private static string WriteStruct(string className, string classType)
+            private static KeyValuePair<string, string> WriteStruct(string className, string classType)
             {
                 var builder = Heap.Dequeue<StringBuilder>();
                 var scriptText = pathHelper.Path("Struct", FileAccess.Read).Replace("Template", className);
@@ -186,10 +189,10 @@ namespace JFramework
                 scriptText = scriptText.Replace("//TODO:1", builder.ToString());
                 builder.Length = 0;
                 Heap.Enqueue(builder);
-                return scriptText;
+                return new KeyValuePair<string, string>(Text.Format(pathHelper.Path("Struct", FileAccess.Write), className), scriptText);
             }
 
-            private static string WriteEnum(string className, IEnumerable<string> members)
+            private static KeyValuePair<string, string> WriteEnum(string className, IEnumerable<string> members)
             {
                 var builder = Heap.Dequeue<StringBuilder>();
                 var scriptText = pathHelper.Path("Enum", FileAccess.Read).Replace("Template", className);
@@ -212,7 +215,7 @@ namespace JFramework
                 scriptText = scriptText.Replace("//TODO:1", builder.ToString());
                 builder.Length = 0;
                 Heap.Enqueue(builder);
-                return scriptText;
+                return new KeyValuePair<string, string>(Text.Format(pathHelper.Path("Enum", FileAccess.Write), className), scriptText);
             }
 
             private static void WriteScript(string filePath, string fileText)

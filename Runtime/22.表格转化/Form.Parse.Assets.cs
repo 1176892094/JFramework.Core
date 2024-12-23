@@ -52,7 +52,7 @@ namespace JFramework
 
                     foreach (var data in dataTables)
                     {
-                        CreateAssets(data.Key, data.Value);
+                        await poolHelper.Instantiate(data.Key, data.Value);
                     }
                 }
                 catch (Exception e)
@@ -122,19 +122,6 @@ namespace JFramework
                 }
 
                 return dataTable;
-            }
-
-            private static void CreateAssets(string sheetName, List<string[]> scriptTexts)
-            {
-                if (!File.Exists(pathHelper.Path("Table", FileAccess.Write)))
-                {
-                    return;
-                }
-
-                if (!Directory.Exists(pathHelper.assetDataPath))
-                {
-                    Directory.CreateDirectory(pathHelper.assetDataPath);
-                }
             }
         }
     }

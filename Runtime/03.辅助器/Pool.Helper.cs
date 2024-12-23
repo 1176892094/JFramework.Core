@@ -10,6 +10,7 @@
 // *********************************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace JFramework
@@ -20,6 +21,7 @@ namespace JFramework
         bool IsActive(IEntity entity);
         Task<object> Instantiate(string assetPath);
         Task<object> Instantiate(string assetPath, Type assetType);
+        Task Instantiate(string assetPath, List<string[]> assetData);
         void OnDequeue(IEntity assetData);
         string OnEnqueue(IEntity assetData);
     }
