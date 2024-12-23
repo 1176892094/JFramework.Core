@@ -74,5 +74,5 @@ crashlytics-build.properties
 
 .idea*
 global.json
-JFramework/obj*
-JFramework/bin*
+Runtime/obj*
+Runtime/bin*
