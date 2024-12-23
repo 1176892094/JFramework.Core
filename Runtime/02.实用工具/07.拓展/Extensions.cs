@@ -76,12 +76,12 @@ namespace JFramework
 
         public static Watch Watch(this IEntity current, float duration)
         {
-            return Service.Timer.Create<Watch>(current, duration);
+            return Service.Timer.Load<Watch>(current, duration);
         }
 
         public static Tween Tween(this IEntity current, float duration)
         {
-            return Service.Timer.Create<Tween>(current, duration);
+            return Service.Timer.Load<Tween>(current, duration);
         }
 
         public static IAgent Agent(this IEntity current, Type agentType)
