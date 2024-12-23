@@ -23,7 +23,7 @@ namespace JFramework
                 }
             }
 
-            public static T Create<T>(IEntity entity, float duration) where T : class, ITimer
+            public static T Load<T>(IEntity entity, float duration) where T : class, ITimer
             {
                 if (helper == null) return default;
                 var timerData = Heap.Dequeue<T>();
