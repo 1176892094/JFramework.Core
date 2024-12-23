@@ -65,6 +65,14 @@ namespace JFramework
                     src += 4;
                     size -= 4;
                 }
+                
+                while (size >= 2)
+                {
+                    *(short*)dest = *(short*)src;
+                    dest += 2;
+                    src += 2;
+                    size -= 2;
+                }
 
                 while (size > 0)
                 {
