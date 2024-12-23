@@ -22,12 +22,8 @@ namespace JFramework
             {
                 fixed (byte* destination = &buffer[position])
                 {
-#if UNITY_ANDROID
                     var source = stackalloc T[1] { value };
                     MemCpy(destination, source, sizeof(T));
-#else
-                    *(T*)destination = value;
-#endif
                 }
 
                 position += sizeof(T);
@@ -39,13 +35,9 @@ namespace JFramework
                 T value;
                 fixed (byte* source = &buffer[offset + position])
                 {
-#if UNITY_ANDROID
                     var destination = stackalloc T[1];
                     MemCpy(destination, source, sizeof(T));
                     value = destination[0];
-#else
-                    value = *(T*)source;
-#endif
                 }
 
                 position += sizeof(T);

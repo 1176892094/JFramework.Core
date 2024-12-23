@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace JFramework
 {
-    public interface IPanelHelper
+    public interface IPanelHelper : IBaseHelper
     {
         Task<object> Instantiate(string assetPath, Type assetType);
 
