@@ -1,0 +1,87 @@
+// *********************************************************************************
+// # Project: JFramework
+// # Unity: 6000.3.5f1
+// # Author: 云谷千羽
+// # Version: 1.0.0
+// # History: 2024-12-21 03:12:35
+// # Recently: 2024-12-22 20:12:19
+// # Copyright: 2024, 云谷千羽
+// # Description: This is an automatically generated comment.
+// *********************************************************************************
+
+using System.Runtime.CompilerServices;
+
+namespace JFramework
+{
+    public static partial class Service
+    {
+        public static class Memory
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static unsafe void Write<T>(byte[] buffer, T value, ref int position) where T : unmanaged
+            {
+                fixed (byte* destination = &buffer[position])
+                {
+#if UNITY_ANDROID
+                    var source = stackalloc T[1] { value };
+                    MemCpy(destination, source, sizeof(T));
+#else
+                    *(T*)destination = value;
+#endif
+                }
+
+                position += sizeof(T);
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static unsafe T Read<T>(byte[] buffer, int offset, ref int position) where T : unmanaged
+            {
+                T value;
+                fixed (byte* source = &buffer[offset + position])
+                {
+#if UNITY_ANDROID
+                    var destination = stackalloc T[1];
+                    MemCpy(destination, source, sizeof(T));
+                    value = destination[0];
+#else
+                    value = *(T*)source;
+#endif
+                }
+
+                position += sizeof(T);
+                return value;
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static unsafe void MemCpy(void* destination, void* source, int size)
+            {
+                var dest = (byte*)destination;
+                var src = (byte*)source;
+
+                while (size >= 8)
+                {
+                    *(long*)dest = *(long*)src;
+                    dest += 8;
+                    src += 8;
+                    size -= 8;
+                }
+
+                while (size >= 4)
+                {
+                    *(int*)dest = *(int*)src;
+                    dest += 4;
+                    src += 4;
+                    size -= 4;
+                }
+
+                while (size > 0)
+                {
+                    *dest = *src;
+                    dest++;
+                    src++;
+                    size--;
+                }
+            }
+        }
+    }
+}
