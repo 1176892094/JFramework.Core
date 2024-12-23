@@ -10,7 +10,7 @@
 // *********************************************************************************
 
 using System;
-using System.Linq;
+using System.Collections.Generic;
 
 namespace JFramework
 {
@@ -70,7 +70,15 @@ namespace JFramework
         public static T ToRandom<T>(this T current) where T : struct, Enum
         {
             var enumArray = (T[])Enum.GetValues(typeof(T));
-            var enumFlags = enumArray.Where(item => current.HasFlag(item)).ToList();
+            var enumFlags = new List<T>();
+            foreach (var item in enumArray)
+            {
+                if (current.HasFlag(item))
+                {
+                    enumFlags.Add(item);
+                }
+            }
+
             return enumFlags[Service.Random.Next(enumFlags.Count)];
         }
 

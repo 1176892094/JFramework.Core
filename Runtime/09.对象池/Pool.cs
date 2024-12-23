@@ -10,7 +10,7 @@
 // *********************************************************************************
 
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace JFramework
@@ -87,7 +87,7 @@ namespace JFramework
 
             internal static void Dispose()
             {
-                var poolCaches = poolData.Keys.ToList();
+                var poolCaches = new List<string>(poolData.Keys);
                 foreach (var cache in poolCaches)
                 {
                     if (Service.poolData.TryGetValue(cache, out var poolData))

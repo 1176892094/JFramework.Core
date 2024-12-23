@@ -11,7 +11,6 @@
 
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace JFramework
@@ -44,7 +43,13 @@ namespace JFramework
                         serverPacks.Add(assetPack.name, assetPack);
                     }
 
-                    Event.Invoke(new PackAwakeEvent(assetPacks.Select(pack => pack.size).ToArray()));
+                    var sizes = new int[assetPacks.Count];
+                    for (int i = 0; i < sizes.Length; i++)
+                    {
+                        sizes[i] = assetPacks[i].size;
+                    }
+
+                    Event.Invoke(new PackAwakeEvent(sizes));
                 }
 
                 if (string.IsNullOrEmpty(serverRequest))
@@ -83,9 +88,13 @@ namespace JFramework
                     }
                 }
 
-                foreach (var filePath in clientPacks.Keys.Select(GetPacketPath).Where(File.Exists))
+                foreach (var clientPack in clientPacks.Keys)
                 {
-                    File.Delete(filePath);
+                    var filePath = GetPacketPath(clientPack);
+                    if (File.Exists(filePath))
+                    {
+                        File.Delete(filePath);
+                    }
                 }
 
                 var status = await LoadPacketRequest(fileNames);
@@ -100,7 +109,7 @@ namespace JFramework
 
             private static async Task<bool> LoadPacketRequest(HashSet<string> fileNames)
             {
-                var packNames = fileNames.ToHashSet();
+                var packNames = new HashSet<string>(fileNames);
                 for (var i = 0; i < 5; i++)
                 {
                     foreach (var packName in packNames)

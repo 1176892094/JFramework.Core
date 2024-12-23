@@ -12,7 +12,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,7 +25,16 @@ namespace JFramework
             {
                 try
                 {
-                    var excelPaths = Directory.GetFiles(filePaths).Where(IsSupport);
+                    var excelPaths = new List<string>();
+                    var excelFiles = Directory.GetFiles(filePaths);
+                    foreach (var excelFile in excelFiles)
+                    {
+                        if (IsSupport(excelFile))
+                        {
+                            excelPaths.Add(excelFile);
+                        }
+                    }
+
                     var dataTables = new Dictionary<string, string>();
                     foreach (var excelPath in excelPaths)
                     {
@@ -104,7 +112,7 @@ namespace JFramework
                         }
                     }
 
-                    if (fields.Any())
+                    if (fields.Count > 0)
                     {
                         dataTable[WriteTablePath(sheetName)] = WriteTable(sheetName, fields);
                     }

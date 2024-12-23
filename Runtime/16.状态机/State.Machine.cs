@@ -11,7 +11,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace JFramework
 {
@@ -23,7 +22,7 @@ namespace JFramework
         protected override void Dispose()
         {
             state = null;
-            var copies = states.Values.ToList();
+            var copies = new List<IState>(states.Values);
             foreach (var stateData in copies)
             {
                 stateData.Dispose();

@@ -11,7 +11,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace JFramework
 {
@@ -75,7 +74,7 @@ namespace JFramework
 
             internal static void Dispose()
             {
-                var agentCaches = agentData.Keys.ToList();
+                var agentCaches = new List<IEntity>(agentData.Keys);
                 foreach (var cache in agentCaches)
                 {
                     Destroy(cache);

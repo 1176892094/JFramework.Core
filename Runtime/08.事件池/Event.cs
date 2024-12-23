@@ -9,7 +9,8 @@
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
 
-using System.Linq;
+using System;
+using System.Collections.Generic;
 
 namespace JFramework
 {
@@ -63,7 +64,7 @@ namespace JFramework
 
             internal static void Dispose()
             {
-                var eventCaches = eventData.Keys.ToList();
+                var eventCaches = new List<Type>(eventData.Keys);
                 foreach (var cache in eventCaches)
                 {
                     if (Service.eventData.TryGetValue(cache, out var eventData))

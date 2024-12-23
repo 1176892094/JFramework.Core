@@ -10,7 +10,6 @@
 // *********************************************************************************
 
 using System.IO;
-using System.Linq;
 
 namespace JFramework
 {
@@ -22,16 +21,12 @@ namespace JFramework
             private const int TYPE_LINE = 2;
             private const int DATA_LINE = 3;
 
-            private static readonly string[] Basic =
+            private static readonly string[] Array =
             {
                 "int", "long", "bool", "float", "double", "string",
-            };
-
-            private static readonly string[] Extra =
-            {
                 "Vector2", "Vector3", "Vector4", "Vector2Int", "Vector3Int"
             };
-            
+
             private static bool IsBasic(string assetType)
             {
                 if (string.IsNullOrEmpty(assetType))
@@ -45,14 +40,12 @@ namespace JFramework
                     return true;
                 }
 
-                if (Basic.Any(assetType.Equals))
+                foreach (var basic in Array)
                 {
-                    return true;
-                }
-
-                if (Extra.Any(assetType.Equals))
-                {
-                    return true;
+                    if (assetType.Equals(basic))
+                    {
+                        return true;
+                    }
                 }
 
                 if (!assetType.EndsWith("[]"))
@@ -61,14 +54,12 @@ namespace JFramework
                 }
 
                 assetType = assetType.Substring(0, assetType.IndexOf('['));
-                if (Basic.Any(s => assetType.Equals(s)))
+                foreach (var basic in Array)
                 {
-                    return true;
-                }
-
-                if (Extra.Any(s => assetType.Equals(s)))
-                {
-                    return true;
+                    if (assetType.Equals(basic))
+                    {
+                        return true;
+                    }
                 }
 
                 return false;

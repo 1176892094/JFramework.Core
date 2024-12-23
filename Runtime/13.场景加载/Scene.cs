@@ -10,7 +10,6 @@
 // *********************************************************************************
 
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace JFramework
@@ -46,7 +45,13 @@ namespace JFramework
                     var assetPair = await LoadAssetPair(assetPath);
                     var assetPack = await LoadAssetPack(assetPair.Key);
                     var assetData = assetHelper.GetAllScenePaths(assetPack);
-                    return assetData.FirstOrDefault(data => data == assetPair.Value);
+                    foreach (var data in assetData)
+                    {
+                        if (data == assetPair.Value)
+                        {
+                            return data;
+                        }
+                    }
                 }
 
                 return assetPath.Substring(assetPath.LastIndexOf('/') + 1);

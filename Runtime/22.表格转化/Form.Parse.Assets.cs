@@ -12,7 +12,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace JFramework
 {
@@ -20,11 +19,20 @@ namespace JFramework
     {
         public static partial class Form
         {
-            public static void Update(string filePaths)
+            public static void UpdateAssets(string filePaths)
             {
                 try
                 {
-                    var excelPaths = Directory.GetFiles(filePaths).Where(IsSupport).ToArray();
+                    var excelPaths = new List<string>();
+                    var excelFiles = Directory.GetFiles(filePaths);
+                    foreach (var excelFile in excelFiles)
+                    {
+                        if (IsSupport(excelFile))
+                        {
+                            excelPaths.Add(excelFile);
+                        }
+                    }
+
                     var dataTables = new Dictionary<string, List<string[]>>();
                     foreach (var excelPath in excelPaths)
                     {
@@ -103,7 +111,7 @@ namespace JFramework
                         copies.Add(rows);
                     }
 
-                    if (copies.Any())
+                    if (copies.Count > 0)
                     {
                         dataTable.Add(sheetName, copies);
                     }

@@ -10,7 +10,7 @@
 // *********************************************************************************
 
 using System;
-using System.Linq;
+using System.Collections.Generic;
 
 namespace JFramework
 {
@@ -66,7 +66,7 @@ namespace JFramework
 
             internal static void Dispose()
             {
-                var heapCaches = heapData.Keys.ToList();
+                var heapCaches = new List<Type>(heapData.Keys);
                 foreach (var cache in heapCaches)
                 {
                     if (Service.heapData.TryGetValue(cache, out var heapData))

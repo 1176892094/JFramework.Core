@@ -10,7 +10,6 @@
 // *********************************************************************************
 
 using System.Collections.Generic;
-using System.Linq;
 
 namespace JFramework
 {
@@ -115,7 +114,7 @@ namespace JFramework
 
             internal static void Dispose()
             {
-                var groupPanel = Service.groupPanel.Keys.ToList();
+                var groupPanel = new List<IPanel>(Service.groupPanel.Keys);
                 foreach (var panel in groupPanel)
                 {
                     if (Service.groupPanel.TryGetValue(panel, out var group))
@@ -126,7 +125,7 @@ namespace JFramework
 
                 Service.groupPanel.Clear();
 
-                var panelGroup = Service.panelGroup.Keys.ToList();
+                var panelGroup = new List<string>(Service.panelGroup.Keys);
                 foreach (var group in panelGroup)
                 {
                     if (Service.panelGroup.TryGetValue(group, out var panel))

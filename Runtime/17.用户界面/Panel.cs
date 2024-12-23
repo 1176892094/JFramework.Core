@@ -10,7 +10,8 @@
 // *********************************************************************************
 
 using System;
-using System.Linq;
+using System.Collections.Generic;
+
 
 namespace JFramework
 {
@@ -124,7 +125,7 @@ namespace JFramework
 
             public static void Clear()
             {
-                var panelData = Service.panelData.Keys.ToList();
+                var panelData = new List<Type>(Service.panelData.Keys);
                 foreach (var assetType in panelData)
                 {
                     if (Service.panelData.TryGetValue(assetType, out var panel))

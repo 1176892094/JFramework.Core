@@ -3,8 +3,8 @@
 // # Unity: 6000.3.5f1
 // # Author: 云谷千羽
 // # Version: 1.0.0
-// # History: 2024-12-19 02:12:49
-// # Recently: 2024-12-22 20:12:17
+// # History: 2024-12-23 18:12:21
+// # Recently: 2024-12-24 00:12:01
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
@@ -12,7 +12,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 
 namespace JFramework
@@ -27,9 +26,27 @@ namespace JFramework
                 var filePath = pathHelper.Path("Assembly", FileAccess.Write);
                 var assembly = Depend.GetAssembly(Path.GetFileNameWithoutExtension(filePath));
                 if (assembly == null) return;
-                var assetTypes = assembly.GetTypes().Where(type => typeof(IDataTable).IsAssignableFrom(type)).ToArray();
-                if (assetTypes.Length == 0) return;
-                Event.Invoke(new DataAwakeEvent(assetTypes.Select(type => type.Name).ToArray()));
+                var assetTypes = new List<Type>();
+                foreach (var assetType in assembly.GetTypes())
+                {
+                    if (typeof(IDataTable).IsAssignableFrom(assetType))
+                    {
+                        assetTypes.Add(assetType);
+                    }
+                }
+
+                if (assetTypes.Count == 0)
+                {
+                    return;
+                }
+
+                var names = new string[assetTypes.Count];
+                for (var i = 0; i < names.Length; i++)
+                {
+                    names[i] = assetTypes[i].Name;
+                }
+
+                Event.Invoke(new DataAwakeEvent(names));
                 foreach (var assetType in assetTypes)
                 {
                     try
@@ -139,22 +156,40 @@ namespace JFramework
                 return (T)data;
             }
 
-            public static T[] GetTable<T>() where T : IData
+            public static List<T> GetTable<T>() where T : IData
             {
                 if (helper == null) return default;
                 if (Service.itemTable.TryGetValue(typeof(T), out var itemTable))
                 {
-                    return itemTable?.Values.Cast<T>().ToArray();
+                    var caches = new List<T>();
+                    foreach (T data in itemTable.Values)
+                    {
+                        caches.Add(data);
+                    }
+
+                    return caches;
                 }
 
                 if (Service.nameTable.TryGetValue(typeof(T), out var nameTable))
                 {
-                    return nameTable?.Values.Cast<T>().ToArray();
+                    var caches = new List<T>();
+                    foreach (T data in nameTable.Values)
+                    {
+                        caches.Add(data);
+                    }
+
+                    return caches;
                 }
 
                 if (Service.enumTable.TryGetValue(typeof(T), out var enumTable))
                 {
-                    return enumTable?.Values.Cast<T>().ToArray();
+                    var caches = new List<T>();
+                    foreach (T data in enumTable.Values)
+                    {
+                        caches.Add(data);
+                    }
+
+                    return caches;
                 }
 
                 Error(Text.Format("获取 {0} 失败!", typeof(T).Name));
@@ -163,7 +198,7 @@ namespace JFramework
 
             internal static void Dispose()
             {
-                var itemTable = Service.itemTable.Keys.ToList();
+                var itemTable = new List<Type>(Service.itemTable.Keys);
                 foreach (var data in itemTable)
                 {
                     if (Service.itemTable.TryGetValue(data, out var pool))
@@ -175,7 +210,7 @@ namespace JFramework
 
                 Service.itemTable.Clear();
 
-                var enumTable = Service.enumTable.Keys.ToList();
+                var enumTable = new List<Type>(Service.enumTable.Keys);
                 foreach (var data in enumTable)
                 {
                     if (Service.enumTable.TryGetValue(data, out var pool))
@@ -187,7 +222,7 @@ namespace JFramework
 
                 Service.enumTable.Clear();
 
-                var nameTable = Service.nameTable.Keys.ToList();
+                var nameTable = new List<Type>(Service.nameTable.Keys);
                 foreach (var data in nameTable)
                 {
                     if (Service.nameTable.TryGetValue(data, out var pool))
