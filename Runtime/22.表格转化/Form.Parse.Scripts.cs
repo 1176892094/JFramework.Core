@@ -21,7 +21,7 @@ namespace JFramework
     {
         public static partial class Form
         {
-            public static async void UpdateScripts(string filePaths)
+            public static async void WriteScripts(string filePaths)
             {
                 try
                 {
