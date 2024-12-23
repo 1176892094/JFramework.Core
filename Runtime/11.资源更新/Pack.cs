@@ -3,8 +3,8 @@
 // # Unity: 6000.3.5f1
 // # Author: 云谷千羽
 // # Version: 1.0.0
-// # History: 2024-12-19 03:12:36
-// # Recently: 2024-12-22 20:12:29
+// # History: 2024-12-23 18:12:21
+// # Recently: 2024-12-24 01:12:37
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
@@ -44,7 +44,7 @@ namespace JFramework
                     }
 
                     var sizes = new int[assetPacks.Count];
-                    for (int i = 0; i < sizes.Length; i++)
+                    for (var i = 0; i < sizes.Length; i++)
                     {
                         sizes[i] = assetPacks[i].size;
                     }

@@ -4,7 +4,7 @@
 // # Author: 云谷千羽
 // # Version: 1.0.0
 // # History: 2024-12-23 20:12:06
-// # Recently: 2024-12-23 20:12:06
+// # Recently: 2024-12-24 01:12:31
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
@@ -19,109 +19,6 @@ namespace JFramework
 {
     public static partial class Service
     {
-        public static partial class Form
-        {
-            public static async void UpdateScripts(string filePaths)
-            {
-                try
-                {
-                    var excelPaths = new List<string>();
-                    var excelFiles = Directory.GetFiles(filePaths);
-                    foreach (var excelFile in excelFiles)
-                    {
-                        if (IsSupport(excelFile))
-                        {
-                            excelPaths.Add(excelFile);
-                        }
-                    }
-
-                    var dataTables = new Dictionary<string, string>();
-                    foreach (var excelPath in excelPaths)
-                    {
-                        var scripts = LoadScripts(excelPath);
-                        foreach (var script in scripts)
-                        {
-                            if (!dataTables.ContainsKey(script.Key))
-                            {
-                                dataTables.Add(script.Key, script.Value);
-                            }
-                        }
-                    }
-
-                    var filePath = pathHelper.Path("Assembly", FileAccess.Write);
-                    var fileText = pathHelper.Path("Assembly", FileAccess.Read);
-                    dataTables.Add(filePath, fileText);
-                    foreach (var data in dataTables)
-                    {
-                        await Task.Run(() => WriteScript(data.Key, data.Value));
-                        Log(Text.Format("生成 CSharp 脚本:{0}", data.Key.Color("00FF00")));
-                    }
-                }
-                catch (Exception e)
-                {
-                    Error(e.ToString());
-                }
-            }
-
-            private static Dictionary<string, string> LoadScripts(string excelPath)
-            {
-                var excelFile = GetDataTable(excelPath);
-                if (excelFile == null)
-                {
-                    return new Dictionary<string, string>();
-                }
-
-                var dataTable = new Dictionary<string, string>();
-                foreach (var excelData in excelFile)
-                {
-                    var sheetName = excelData.Key;
-                    var sheetData = excelData.Value;
-                    var row = sheetData.GetLength(1);
-                    var column = sheetData.GetLength(0);
-                    var fields = new Dictionary<string, string>();
-                    for (var x = 0; x < column; x++)
-                    {
-                        var name = sheetData[x, NAME_LINE];
-                        var type = sheetData[x, TYPE_LINE];
-                        if (!string.IsNullOrEmpty(name))
-                        {
-                            name = char.ToUpper(name[0]) + name.Substring(1);
-                            if (IsStruct(type))
-                            {
-                                fields.Add(name, type.EndsWith("[]") ? name + "[]" : name);
-                                dataTable[WriteStructPath(name)] = WriteStruct(name, type);
-                            }
-                            else if (IsBasic(type))
-                            {
-                                fields.Add(name, type);
-                            }
-                            else if (type == "enum")
-                            {
-                                var members = new List<string>();
-                                for (var y = DATA_LINE; y < row; y++)
-                                {
-                                    var data = sheetData[x, y];
-                                    if (!string.IsNullOrEmpty(data))
-                                    {
-                                        members.Add(data);
-                                    }
-                                }
-
-                                dataTable[WriteEnumPath(name)] = WriteEnum(name, members);
-                            }
-                        }
-                    }
-
-                    if (fields.Count > 0)
-                    {
-                        dataTable[WriteTablePath(sheetName)] = WriteTable(sheetName, fields);
-                    }
-                }
-
-                return dataTable;
-            }
-        }
-
         private static string WriteTable(string className, Dictionary<string, string> fields)
         {
             var builder = Heap.Dequeue<StringBuilder>();
@@ -237,6 +134,109 @@ namespace JFramework
             }
 
             File.WriteAllText(filePath, fileText);
+        }
+
+        public static partial class Form
+        {
+            public static async void UpdateScripts(string filePaths)
+            {
+                try
+                {
+                    var excelPaths = new List<string>();
+                    var excelFiles = Directory.GetFiles(filePaths);
+                    foreach (var excelFile in excelFiles)
+                    {
+                        if (IsSupport(excelFile))
+                        {
+                            excelPaths.Add(excelFile);
+                        }
+                    }
+
+                    var dataTables = new Dictionary<string, string>();
+                    foreach (var excelPath in excelPaths)
+                    {
+                        var scripts = LoadScripts(excelPath);
+                        foreach (var script in scripts)
+                        {
+                            if (!dataTables.ContainsKey(script.Key))
+                            {
+                                dataTables.Add(script.Key, script.Value);
+                            }
+                        }
+                    }
+
+                    var filePath = pathHelper.Path("Assembly", FileAccess.Write);
+                    var fileText = pathHelper.Path("Assembly", FileAccess.Read);
+                    dataTables.Add(filePath, fileText);
+                    foreach (var data in dataTables)
+                    {
+                        await Task.Run(() => WriteScript(data.Key, data.Value));
+                        Log(Text.Format("生成 CSharp 脚本:{0}", data.Key.Color("00FF00")));
+                    }
+                }
+                catch (Exception e)
+                {
+                    Error(e.ToString());
+                }
+            }
+
+            private static Dictionary<string, string> LoadScripts(string excelPath)
+            {
+                var excelFile = GetDataTable(excelPath);
+                if (excelFile == null)
+                {
+                    return new Dictionary<string, string>();
+                }
+
+                var dataTable = new Dictionary<string, string>();
+                foreach (var excelData in excelFile)
+                {
+                    var sheetName = excelData.Key;
+                    var sheetData = excelData.Value;
+                    var row = sheetData.GetLength(1);
+                    var column = sheetData.GetLength(0);
+                    var fields = new Dictionary<string, string>();
+                    for (var x = 0; x < column; x++)
+                    {
+                        var name = sheetData[x, NAME_LINE];
+                        var type = sheetData[x, TYPE_LINE];
+                        if (!string.IsNullOrEmpty(name))
+                        {
+                            name = char.ToUpper(name[0]) + name.Substring(1);
+                            if (IsStruct(type))
+                            {
+                                fields.Add(name, type.EndsWith("[]") ? name + "[]" : name);
+                                dataTable[WriteStructPath(name)] = WriteStruct(name, type);
+                            }
+                            else if (IsBasic(type))
+                            {
+                                fields.Add(name, type);
+                            }
+                            else if (type == "enum")
+                            {
+                                var members = new List<string>();
+                                for (var y = DATA_LINE; y < row; y++)
+                                {
+                                    var data = sheetData[x, y];
+                                    if (!string.IsNullOrEmpty(data))
+                                    {
+                                        members.Add(data);
+                                    }
+                                }
+
+                                dataTable[WriteEnumPath(name)] = WriteEnum(name, members);
+                            }
+                        }
+                    }
+
+                    if (fields.Count > 0)
+                    {
+                        dataTable[WriteTablePath(sheetName)] = WriteTable(sheetName, fields);
+                    }
+                }
+
+                return dataTable;
+            }
         }
     }
 }
