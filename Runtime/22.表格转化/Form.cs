@@ -4,15 +4,15 @@
 // # Author: 云谷千羽
 // # Version: 1.0.0
 // # History: 2024-12-23 20:12:35
-// # Recently: 2024-12-24 01:12:35
+// # Recently: 2024-12-24 02:12:47
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Text;
 using System.Xml;
 
 namespace JFramework
@@ -21,7 +21,7 @@ namespace JFramework
     {
         public static partial class Form
         {
-            private static List<KeyValuePair<string, string[,]>> GetDataTable(string filePath)
+            private static List<KeyValuePair<string, string[,]>> LoadDataTable(string filePath)
             {
                 var fileType = Path.GetExtension(filePath);
                 var fileName = Path.GetFileNameWithoutExtension(filePath);
@@ -33,12 +33,13 @@ namespace JFramework
                 {
                     using var stream = File.OpenRead(fileData);
                     using var archive = new ZipArchive(stream, ZipArchiveMode.Read);
-                    var sheetName = LoadSheetName(archive);
-                    var sharedString = LoadSharedString(archive);
+                    var sheetName = LoadSheetName(LoadDocument(archive, "xl/workbook.xml"));
+                    var sharedString = LoadSharedString(LoadDocument(archive, "xl/sharedStrings.xml"));
                     var dataTable = new List<KeyValuePair<string, string[,]>>();
                     for (var i = 0; i < sheetName.Count; i++)
                     {
-                        var worksheet = GetWorksheet(archive, sharedString, i);
+                        var sheet = Text.Format("xl/worksheets/sheet{0}.xml", i + 1);
+                        var worksheet = GetWorksheet(LoadDocument(archive, sheet), sharedString);
                         dataTable.Add(new KeyValuePair<string, string[,]>(sheetName[i], worksheet));
                     }
 
@@ -50,7 +51,7 @@ namespace JFramework
                 }
             }
 
-            private static XmlDocument GetDocument(ZipArchive archive, string name)
+            private static XmlDocument LoadDocument(ZipArchive archive, string name)
             {
                 var zipEntry = archive.GetEntry(name);
                 var document = new XmlDocument();
@@ -63,9 +64,8 @@ namespace JFramework
                 return document;
             }
 
-            private static List<string> LoadSheetName(ZipArchive archive)
+            private static List<string> LoadSheetName(XmlDocument document)
             {
-                var document = GetDocument(archive, "xl/workbook.xml");
                 var manager = new XmlNamespaceManager(document.NameTable);
                 manager.AddNamespace("x", "http://schemas.openxmlformats.org/spreadsheetml/2006/main");
                 var childNodes = document.SelectNodes("//x:sheet", manager);
@@ -84,17 +84,25 @@ namespace JFramework
                 return sheetName;
             }
 
-            private static List<string> LoadSharedString(ZipArchive archive)
+            private static List<string> LoadSharedString(XmlDocument document)
             {
-                var document = GetDocument(archive, "xl/sharedStrings.xml");
                 var sharedString = new List<string>();
                 if (document.DocumentElement != null)
                 {
                     foreach (XmlNode childNode in document.DocumentElement.ChildNodes)
                     {
-                        if (childNode["t"] != null)
+                        var shared = string.Empty;
+                        foreach (XmlNode node in childNode.ChildNodes)
                         {
-                            sharedString.Add(childNode["t"].InnerText);
+                            if (node.Name == "t")
+                            {
+                                shared += node.InnerText;
+                            }
+                        }
+
+                        if (!string.IsNullOrEmpty(shared))
+                        {
+                            sharedString.Add(shared);
                         }
                     }
                 }
@@ -102,36 +110,59 @@ namespace JFramework
                 return sharedString;
             }
 
-            private static string[,] GetWorksheet(ZipArchive archive, List<string> sharedStrings, int i)
+            private static string[,] GetWorksheet(XmlDocument document, List<string> sharedStrings)
             {
-                var document = GetDocument(archive, Text.Format("xl/worksheets/sheet{0}.xml", i + 1));
-                var childNodes = document.GetElementsByTagName("sheetData")[0].ChildNodes;
-                if (childNodes.Count == 0)
+                var rowNodes = document.GetElementsByTagName("sheetData")[0].ChildNodes;
+                if (rowNodes.Count == 0)
                 {
                     return null;
                 }
 
-                var column = GetDimensions(childNodes[0]);
-                if (column == 0)
+                var columnCount = GetMaxColumn(rowNodes);
+                if (columnCount == 0)
                 {
                     return null;
                 }
 
-                var dataTable = new string[column, childNodes.Count];
-                SetWorksheet(dataTable, childNodes, sharedStrings);
+                var dataTable = new string[columnCount, rowNodes.Count];
+                SetWorksheet(dataTable, rowNodes, sharedStrings);
                 return dataTable;
             }
 
-            private static int GetDimensions(XmlNode node)
+            private static int GetMaxColumn(XmlNodeList rowNodes)
             {
-                var column = 0;
-                var childNode = node.Attributes?["spans"].Value.Split(':')[1];
-                if (childNode != null)
+                var maxColumn = 0;
+                foreach (XmlNode rowNode in rowNodes)
                 {
-                    column = int.Parse(childNode);
+                    foreach (XmlNode cellNode in rowNode.ChildNodes)
+                    {
+                        if (cellNode.Attributes != null)
+                        {
+                            var cellReference = cellNode.Attributes["r"]?.Value;
+                            if (!string.IsNullOrEmpty(cellReference))
+                            {
+                                var column = GetDimensions(cellReference);
+                                maxColumn = Math.Max(maxColumn, column);
+                            }
+                        }
+                    }
                 }
 
-                return column;
+                return maxColumn;
+            }
+
+            private static int GetDimensions(string node)
+            {
+                var column = 0;
+                foreach (var c in node)
+                {
+                    if (char.IsLetter(c))
+                    {
+                        column = column * 26 + (c - 'A') + 1;
+                    }
+                }
+
+                return column - 1;
             }
 
             private static void SetWorksheet(string[,] dataTable, XmlNodeList childNodes, IReadOnlyList<string> sharedStrings)
@@ -140,51 +171,34 @@ namespace JFramework
                 var columnCount = dataTable.GetLength(0);
                 foreach (XmlNode rowNode in childNodes)
                 {
-                    var value = rowNode.Attributes?["r"].Value;
-                    if (value == null) continue;
-                    var row = int.Parse(value) - 1;
-
-                    foreach (XmlNode columnNode in rowNode.ChildNodes)
+                    var rowAttribute = rowNode.Attributes?["r"].Value;
+                    if (string.IsNullOrEmpty(rowAttribute))
                     {
-                        var message = columnNode["v"]?.InnerText;
-                        if (columnNode.Attributes?["t"]?.Value == "s")
+                        continue;
+                    }
+
+                    var rowIndex = int.Parse(rowAttribute) - 1;
+                    foreach (XmlNode cellNode in rowNode.ChildNodes)
+                    {
+                        var cellReference = cellNode.Attributes?["r"]?.Value;
+                        var cellValue = cellNode["v"]?.InnerText;
+
+                        if (cellReference != null && cellValue != null)
                         {
-                            if (int.TryParse(message, out var index))
+                            var column = GetDimensions(cellReference);
+
+                            if (column >= 0 && column < columnCount && rowIndex >= 0 && rowIndex < rowCount)
                             {
-                                message = sharedStrings[index];
+                                if (cellNode.Attributes?["t"]?.Value == "s" && int.TryParse(cellValue, out var index))
+                                {
+                                    cellValue = sharedStrings[index];
+                                }
+
+                                dataTable[column, rowIndex] = cellValue;
                             }
                         }
-
-                        var column = GetDimensions(columnNode.Attributes?["r"]?.Value);
-                        if (column >= 0 && column < columnCount && row >= 0 && row < rowCount)
-                        {
-                            dataTable[column, row] = message;
-                        }
                     }
                 }
-            }
-
-            private static int GetDimensions(string node)
-            {
-                var builder = new StringBuilder(1024);
-                foreach (var value in node)
-                {
-                    if (char.IsLetter(value))
-                    {
-                        builder.Append(value);
-                    }
-                }
-
-                var result = 0;
-                var reason = builder.ToString();
-                foreach (var c in reason)
-                {
-                    result = result * 26 + (c - 'A') + 1;
-                }
-
-                var column = result - 1;
-                builder.Clear();
-                return column;
             }
         }
     }

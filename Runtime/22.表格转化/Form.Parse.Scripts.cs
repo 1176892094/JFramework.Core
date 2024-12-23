@@ -68,7 +68,7 @@ namespace JFramework
 
             private static Dictionary<string, string> LoadScripts(string excelPath)
             {
-                var excelFile = GetDataTable(excelPath);
+                var excelFile = LoadDataTable(excelPath);
                 if (excelFile == null)
                 {
                     return new Dictionary<string, string>();

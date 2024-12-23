@@ -63,7 +63,7 @@ namespace JFramework
 
             private static Dictionary<string, List<string[]>> LoadAssets(string excelPath)
             {
-                var excelFile = GetDataTable(excelPath);
+                var excelFile = LoadDataTable(excelPath);
                 if (excelFile == null)
                 {
                     return new Dictionary<string, List<string[]>>();
@@ -94,7 +94,11 @@ namespace JFramework
                         }
                     }
 
-                    if (columns.Count == 0) continue;
+                    if (columns.Count == 0)
+                    {
+                        continue;
+                    }
+
                     var copies = new List<string[]>();
                     for (var y = DATA_LINE; y < row; ++y)
                     {
