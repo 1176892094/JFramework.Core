@@ -24,7 +24,8 @@ namespace JFramework
             public static async void LoadDataTable()
             {
                 if (helper == null) return;
-                var assembly = Depend.GetAssembly(Path.GetFileNameWithoutExtension(pathHelper.writeAssembly));
+                var filePath = pathHelper.Path("Assembly", FileAccess.Write);
+                var assembly = Depend.GetAssembly(Path.GetFileNameWithoutExtension(filePath));
                 if (assembly == null) return;
                 var assetTypes = assembly.GetTypes().Where(type => typeof(IDataTable).IsAssignableFrom(type)).ToArray();
                 if (assetTypes.Length == 0) return;

@@ -39,7 +39,9 @@ namespace JFramework
                         }
                     }
 
-                    dataTables.Add(pathHelper.writeAssembly, pathHelper.readAssembly);
+                    var filePath = pathHelper.Path("Assembly", FileAccess.Write);
+                    var fileText = pathHelper.Path("Assembly", FileAccess.Read);
+                    dataTables.Add(filePath, fileText);
                     foreach (var data in dataTables)
                     {
                         WriteScript(data.Key, data.Value);
@@ -115,7 +117,7 @@ namespace JFramework
         private static string WriteTable(string className, Dictionary<string, string> fields)
         {
             var builder = Heap.Dequeue<StringBuilder>();
-            var scriptText = pathHelper.readTableText.Replace("Template", className);
+            var scriptText = pathHelper.Path("Table", FileAccess.Read).Replace("Template", className);
 
             foreach (var field in fields)
             {
@@ -157,7 +159,7 @@ namespace JFramework
         private static string WriteStruct(string className, string classType)
         {
             var builder = Heap.Dequeue<StringBuilder>();
-            var scriptText = pathHelper.readStructText.Replace("Template", className);
+            var scriptText = pathHelper.Path("Struct", FileAccess.Read).Replace("Template", className);
 
             var members = classType.Substring(1, classType.IndexOf('}') - 1).Split(',');
             foreach (var member in members)
@@ -180,7 +182,7 @@ namespace JFramework
         private static string WriteEnum(string className, IEnumerable<string> members)
         {
             var builder = Heap.Dequeue<StringBuilder>();
-            var scriptText = pathHelper.readEnumText.Replace("Template", className);
+            var scriptText = pathHelper.Path("Enum", FileAccess.Read).Replace("Template", className);
 
             foreach (var member in members)
             {

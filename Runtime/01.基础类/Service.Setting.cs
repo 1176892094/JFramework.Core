@@ -37,11 +37,11 @@ namespace JFramework
 
         private static string GetPlatform(string fileName) => Path.Combine(pathHelper.assetPlatform, fileName);
 
-        private static string WriteTablePath(string assetName) => Text.Format(pathHelper.writeTablePath, assetName);
+        private static string WriteTablePath(string assetName) => Text.Format(pathHelper.Path("Table", FileAccess.Write), assetName);
 
-        private static string WriteStructPath(string assetName) => Text.Format(pathHelper.writeStructPath, assetName);
+        private static string WriteStructPath(string assetName) => Text.Format(pathHelper.Path("Struct", FileAccess.Write), assetName);
 
-        private static string WriteEnumPath(string assetName) => Text.Format(pathHelper.writeEnumPath, assetName);
+        private static string WriteEnumPath(string assetName) => Text.Format(pathHelper.Path("Enum", FileAccess.Write), assetName);
 
         private static string GetJsonPath(string fileName)
         {
