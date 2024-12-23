@@ -12,6 +12,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace JFramework
 {
@@ -19,7 +20,7 @@ namespace JFramework
     {
         public static partial class Form
         {
-            public static void UpdateAssets(string filePaths)
+            public static async void WriteAssets(string filePaths)
             {
                 try
                 {
@@ -36,19 +37,22 @@ namespace JFramework
                     var dataTables = new Dictionary<string, List<string[]>>();
                     foreach (var excelPath in excelPaths)
                     {
-                        var assets = LoadAssets(excelPath);
-                        foreach (var asset in assets)
+                        await Task.Run(() =>
                         {
-                            if (!dataTables.ContainsKey(asset.Key))
+                            var assets = LoadAssets(excelPath);
+                            foreach (var asset in assets)
                             {
-                                dataTables.Add(asset.Key, asset.Value);
+                                if (!dataTables.ContainsKey(asset.Key))
+                                {
+                                    dataTables.Add(asset.Key, asset.Value);
+                                }
                             }
-                        }
+                        });
                     }
 
                     foreach (var data in dataTables)
                     {
-                        WriteAssetTask(data.Key, data.Value);
+                        CreateAssets(data.Key, data.Value);
                     }
                 }
                 catch (Exception e)
@@ -120,7 +124,7 @@ namespace JFramework
                 return dataTable;
             }
 
-            private static void WriteAssetTask(string sheetName, List<string[]> scriptTexts)
+            private static void CreateAssets(string sheetName, List<string[]> scriptTexts)
             {
                 if (!File.Exists(pathHelper.Path("Table", FileAccess.Write)))
                 {
