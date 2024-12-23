@@ -19,7 +19,7 @@ namespace JFramework
 {
     public static partial class Service
     {
-        internal static partial class Table
+        public static partial class Table
         {
             public static void Update(string filePaths)
             {
@@ -39,6 +39,7 @@ namespace JFramework
                         }
                     }
 
+                    dataTables.Add(pathHelper.writeAssembly, pathHelper.readAssembly);
                     foreach (var data in dataTables)
                     {
                         WriteScript(data.Key, data.Value);

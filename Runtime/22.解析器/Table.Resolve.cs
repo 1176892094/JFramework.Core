@@ -11,13 +11,12 @@
 
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace JFramework
 {
     public static partial class Service
     {
-        internal static partial class Table
+        public static partial class Table
         {
             private const int NAME_LINE = 1;
             private const int TYPE_LINE = 2;
@@ -33,7 +32,7 @@ namespace JFramework
                 "Vector2", "Vector3", "Vector4", "Vector2Int", "Vector3Int"
             };
             
-            public static bool IsBasic(string assetType)
+            private static bool IsBasic(string assetType)
             {
                 if (string.IsNullOrEmpty(assetType))
                 {
@@ -75,7 +74,7 @@ namespace JFramework
                 return false;
             }
 
-            public static bool IsStruct(string assetType)
+            private static bool IsStruct(string assetType)
             {
                 if (string.IsNullOrEmpty(assetType))
                 {
@@ -96,7 +95,7 @@ namespace JFramework
                 return false;
             }
 
-            public static bool IsSupport(string assetPath)
+            private static bool IsSupport(string assetPath)
             {
                 if (string.IsNullOrEmpty(assetPath))
                 {

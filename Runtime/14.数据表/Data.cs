@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -23,7 +24,7 @@ namespace JFramework
             public static async void LoadDataTable()
             {
                 if (helper == null) return;
-                var assembly = Depend.GetAssembly(pathHelper.assetAssembly);
+                var assembly = Depend.GetAssembly(Path.GetFileNameWithoutExtension(pathHelper.writeAssembly));
                 if (assembly == null) return;
                 var assetTypes = assembly.GetTypes().Where(type => typeof(IDataTable).IsAssignableFrom(type)).ToArray();
                 if (assetTypes.Length == 0) return;

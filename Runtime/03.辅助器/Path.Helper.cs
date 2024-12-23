@@ -15,13 +15,14 @@ namespace JFramework
     {
         bool assetPackMode { get; }
         string assetPlatform { get; }
-        string assetAssembly { get; }
         string assetPackPath { get; }
         string assetPackName { get; }
         string assetRemotePath { get; }
+        string writeAssembly { get; }
         string writeTablePath { get; }
         string writeStructPath { get; }
         string writeEnumPath { get; }
+        string readAssembly { get; }
         string readTableText { get; }
         string readStructText { get; }
         string readEnumText { get; }

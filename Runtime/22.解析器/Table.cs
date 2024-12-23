@@ -19,9 +19,9 @@ namespace JFramework
 {
     public static partial class Service
     {
-        internal static partial class Table
+        public static partial class Table
         {
-            public static List<KeyValuePair<string, string[,]>> GetDataTable(string filePath)
+            private static List<KeyValuePair<string, string[,]>> GetDataTable(string filePath)
             {
                 var fileType = Path.GetExtension(filePath);
                 var fileName = Path.GetFileNameWithoutExtension(filePath);
@@ -31,7 +31,8 @@ namespace JFramework
                 File.Copy(filePath, fileData, true);
                 try
                 {
-                    using var archive = ZipFile.OpenRead(fileData);
+                    using var stream = File.OpenRead(fileData);
+                    using var archive = new ZipArchive(stream, ZipArchiveMode.Read);
                     var sheetName = LoadSheetName(archive);
                     var sharedString = LoadSharedString(archive);
                     var dataTable = new List<KeyValuePair<string, string[,]>>();
@@ -103,7 +104,7 @@ namespace JFramework
 
             private static string[,] GetWorksheet(ZipArchive archive, List<string> sharedStrings, int i)
             {
-                var document = GetDocument(archive, Service.Text.Format("xl/worksheets/sheet{0}.xml", i + 1));
+                var document = GetDocument(archive, Text.Format("xl/worksheets/sheet{0}.xml", i + 1));
                 var childNodes = document.GetElementsByTagName("sheetData")[0].ChildNodes;
                 if (childNodes.Count == 0)
                 {
