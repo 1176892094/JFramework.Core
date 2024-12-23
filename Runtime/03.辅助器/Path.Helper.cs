@@ -22,6 +22,5 @@ namespace JFramework
         string assetRemotePath { get; }
         string streamingAssetsPath { get; }
         string persistentDataPath { get; }
-        string Path(string objectText, FileAccess fileAccess);
     }
 }

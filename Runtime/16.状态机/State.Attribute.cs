@@ -85,13 +85,16 @@ namespace JFramework
 
         public override string ToString()
         {
-            var builder = new StringBuilder();
+            var builder = Service.Heap.Dequeue<StringBuilder>();
             foreach (var attribute in attributes)
             {
                 builder.AppendFormat("{0} : {1}", attribute.Key, attribute.Value);
             }
 
-            return builder.ToString();
+            var message = builder.ToString();
+            builder.Length = 0;
+            Service.Heap.Enqueue(builder);
+            return message;
         }
     }
 }

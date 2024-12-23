@@ -13,5 +13,6 @@ namespace JFramework
 {
     public interface IData
     {
+        void Create(string[] sheet, int column);
     }
 }

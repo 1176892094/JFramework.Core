@@ -21,7 +21,7 @@ namespace JFramework
     {
         public static partial class Form
         {
-            public static async void WriteScripts(string filePaths)
+            public static async Task WriteScripts(string filePaths)
             {
                 try
                 {
@@ -51,13 +51,24 @@ namespace JFramework
                         });
                     }
 
-                    var filePath = pathHelper.Path("Assembly", FileAccess.Write);
-                    var fileText = pathHelper.Path("Assembly", FileAccess.Read);
+                    var writeAssets = false;
+                    var filePath = formHelper.Path("Assembly", FileAccess.Write);
+                    var fileText = formHelper.Path("Assembly", FileAccess.Read);
                     dataTables.Add(filePath, fileText);
                     foreach (var data in dataTables)
                     {
-                        await Task.Run(() => WriteScript(data.Key, data.Value));
+                        var result = await Task.Run(() => WriteScript(data.Key, data.Value));
+                        if (result)
+                        {
+                            writeAssets = true;
+                        }
+
                         Log(Text.Format("生成 CSharp 脚本:{0}", data.Key.Color("00FF00")));
+                    }
+
+                    if (writeAssets)
+                    {
+                        await WriteAssets(filePaths);
                     }
                 }
                 catch (Exception e)
@@ -130,7 +141,7 @@ namespace JFramework
             private static KeyValuePair<string, string> WriteTable(string className, Dictionary<string, string> fields)
             {
                 var builder = Heap.Dequeue<StringBuilder>();
-                var scriptText = pathHelper.Path("Table", FileAccess.Read).Replace("Template", className);
+                var scriptText = formHelper.Path("Table", FileAccess.Read).Replace("Template", className);
 
                 foreach (var field in fields)
                 {
@@ -166,13 +177,13 @@ namespace JFramework
                 scriptText = scriptText.Replace("//TODO:2", builder.ToString());
                 builder.Length = 0;
                 Heap.Enqueue(builder);
-                return new KeyValuePair<string, string>(Text.Format(pathHelper.Path("Table", FileAccess.Write), className), scriptText);
+                return new KeyValuePair<string, string>(Text.Format(formHelper.Path("Table", FileAccess.Write), className), scriptText);
             }
 
             private static KeyValuePair<string, string> WriteStruct(string className, string classType)
             {
                 var builder = Heap.Dequeue<StringBuilder>();
-                var scriptText = pathHelper.Path("Struct", FileAccess.Read).Replace("Template", className);
+                var scriptText = formHelper.Path("Struct", FileAccess.Read).Replace("Template", className);
 
                 var members = classType.Substring(1, classType.IndexOf('}') - 1).Split(',');
                 foreach (var member in members)
@@ -189,13 +200,13 @@ namespace JFramework
                 scriptText = scriptText.Replace("//TODO:1", builder.ToString());
                 builder.Length = 0;
                 Heap.Enqueue(builder);
-                return new KeyValuePair<string, string>(Text.Format(pathHelper.Path("Struct", FileAccess.Write), className), scriptText);
+                return new KeyValuePair<string, string>(Text.Format(formHelper.Path("Struct", FileAccess.Write), className), scriptText);
             }
 
             private static KeyValuePair<string, string> WriteEnum(string className, IEnumerable<string> members)
             {
                 var builder = Heap.Dequeue<StringBuilder>();
-                var scriptText = pathHelper.Path("Enum", FileAccess.Read).Replace("Template", className);
+                var scriptText = formHelper.Path("Enum", FileAccess.Read).Replace("Template", className);
 
                 foreach (var member in members)
                 {
@@ -215,15 +226,15 @@ namespace JFramework
                 scriptText = scriptText.Replace("//TODO:1", builder.ToString());
                 builder.Length = 0;
                 Heap.Enqueue(builder);
-                return new KeyValuePair<string, string>(Text.Format(pathHelper.Path("Enum", FileAccess.Write), className), scriptText);
+                return new KeyValuePair<string, string>(Text.Format(formHelper.Path("Enum", FileAccess.Write), className), scriptText);
             }
 
-            private static void WriteScript(string filePath, string fileText)
+            private static bool WriteScript(string filePath, string fileText)
             {
                 var directory = Path.GetDirectoryName(filePath);
                 if (string.IsNullOrEmpty(directory))
                 {
-                    return;
+                    return false;
                 }
 
                 if (!Directory.Exists(directory))
@@ -238,10 +249,11 @@ namespace JFramework
 
                 if (File.ReadAllText(filePath) == fileText)
                 {
-                    return;
+                    return false;
                 }
 
                 File.WriteAllText(filePath, fileText);
+                return true;
             }
         }
     }

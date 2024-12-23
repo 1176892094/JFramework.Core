@@ -23,7 +23,7 @@ namespace JFramework
             public static async void LoadDataTable()
             {
                 if (helper == null) return;
-                var filePath = pathHelper.Path("Assembly", FileAccess.Write);
+                var filePath = formHelper.Path("Assembly", FileAccess.Write);
                 var assembly = Depend.GetAssembly(Path.GetFileNameWithoutExtension(filePath));
                 if (assembly == null) return;
                 var assetTypes = new List<Type>();
@@ -52,7 +52,7 @@ namespace JFramework
                     try
                     {
                         if (string.IsNullOrEmpty(assetType.FullName)) continue;
-                        var dataTable = (IDataTable)await poolHelper.Instantiate(GetTablePath(assetType.Name));
+                        var dataTable = await formHelper.Instantiate(GetTablePath(assetType.Name));
                         var children = assembly.GetType(assetType.FullName.Substring(0, assetType.FullName.Length - 5));
                         var properties = children.GetProperties(Depend.Instance);
                         foreach (var property in properties)

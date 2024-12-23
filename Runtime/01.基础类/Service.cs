@@ -64,6 +64,7 @@ namespace JFramework
         private static readonly Dictionary<Type, IPanel> panelData = new Dictionary<Type, IPanel>();
 
         private static IPathHelper pathHelper => (IPathHelper)helper;
+        private static IFormHelper formHelper => (IFormHelper)helper;
         private static IJsonHelper jsonHelper => (IJsonHelper)helper;
         private static IPackHelper packHelper => (IPackHelper)helper;
         private static IPoolHelper poolHelper => (IPoolHelper)helper;

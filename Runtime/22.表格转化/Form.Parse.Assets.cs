@@ -20,7 +20,7 @@ namespace JFramework
     {
         public static partial class Form
         {
-            public static async void WriteAssets(string filePaths)
+            public static async Task WriteAssets(string filePaths)
             {
                 try
                 {
@@ -52,7 +52,7 @@ namespace JFramework
 
                     foreach (var data in dataTables)
                     {
-                        await poolHelper.Instantiate(data.Key, data.Value);
+                        await WriteAssetTask(data.Key, data.Value);
                     }
                 }
                 catch (Exception e)
@@ -126,6 +126,49 @@ namespace JFramework
                 }
 
                 return dataTable;
+            }
+
+            private static async Task WriteAssetTask(string sheetName, List<string[]> scriptTexts)
+            {
+                if (!File.Exists(Text.Format(formHelper.Path("Table", FileAccess.Write), sheetName)))
+                {
+                    return;
+                }
+
+                if (!Directory.Exists(formHelper.assetDataPath))
+                {
+                    Directory.CreateDirectory(formHelper.assetDataPath);
+                }
+
+                var filePath = Text.Format("{0}/{1}.asset", formHelper.assetDataPath, sheetName);
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
+
+                var fileName = Text.Format("JFramework.Table.{0}DataTable", sheetName);
+                var fileData = formHelper.CreateInstance(fileName);
+                if (fileData == null)
+                {
+                    return;
+                }
+
+                await Task.Run(() =>
+                {
+                    var assembly = formHelper.Path("Assembly", FileAccess.Write);
+                    var itemData = Text.Format("JFramework.Table.{0}Data,{1}", sheetName, assembly);
+                    var instance = (IData)Activator.CreateInstance(Depend.GetType(itemData));
+                    foreach (var scriptText in scriptTexts)
+                    {
+                        if (!string.IsNullOrEmpty(scriptText[0]))
+                        {
+                            instance.Create(scriptText, 0);
+                            fileData.AddData(instance);
+                        }
+                    }
+                });
+
+                formHelper.CreateAsset(fileData, filePath);
             }
         }
     }
