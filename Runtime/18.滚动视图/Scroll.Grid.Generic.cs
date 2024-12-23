@@ -15,11 +15,11 @@ namespace JFramework
     {
         TItem item { get; }
 
-        object content { get; }
-
         TPanel panel { get; }
 
         IScroll scroll { get; }
+        
+        object content { get; }
 
         void SetItem(TItem item);
     }
