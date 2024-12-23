@@ -18,6 +18,7 @@ namespace JFramework
         bool assetPackMode { get; }
         string assetPlatform { get; }
         string assetPackPath { get; }
+        string assetDataPath { get; }
         string assetPackName { get; }
         string assetRemotePath { get; }
         string streamingAssetsPath { get; }

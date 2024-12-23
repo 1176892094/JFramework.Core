@@ -16,7 +16,7 @@ namespace JFramework
 {
     public static partial class Service
     {
-        public static partial class Table
+        public static partial class Form
         {
             private const int NAME_LINE = 1;
             private const int TYPE_LINE = 2;

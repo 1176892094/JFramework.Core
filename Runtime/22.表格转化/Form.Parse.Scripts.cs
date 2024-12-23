@@ -14,14 +14,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace JFramework
 {
     public static partial class Service
     {
-        public static partial class Table
+        public static partial class Form
         {
-            public static void Update(string filePaths)
+            public static async void UpdateScripts(string filePaths)
             {
                 try
                 {
@@ -29,7 +30,7 @@ namespace JFramework
                     var dataTables = new Dictionary<string, string>();
                     foreach (var excelPath in excelPaths)
                     {
-                        var scripts = LoadDataTable(excelPath);
+                        var scripts = LoadScripts(excelPath);
                         foreach (var script in scripts)
                         {
                             if (!dataTables.ContainsKey(script.Key))
@@ -44,7 +45,7 @@ namespace JFramework
                     dataTables.Add(filePath, fileText);
                     foreach (var data in dataTables)
                     {
-                        WriteScript(data.Key, data.Value);
+                        await Task.Run(() => WriteScript(data.Key, data.Value));
                         Log(Text.Format("生成 CSharp 脚本:{0}", data.Key.Color("00FF00")));
                     }
                 }
@@ -54,7 +55,7 @@ namespace JFramework
                 }
             }
 
-            private static Dictionary<string, string> LoadDataTable(string excelPath)
+            private static Dictionary<string, string> LoadScripts(string excelPath)
             {
                 var excelFile = GetDataTable(excelPath);
                 if (excelFile == null)
@@ -70,7 +71,6 @@ namespace JFramework
                     var row = sheetData.GetLength(1);
                     var column = sheetData.GetLength(0);
                     var fields = new Dictionary<string, string>();
-
                     for (var x = 0; x < column; x++)
                     {
                         var name = sheetData[x, NAME_LINE];

@@ -43,6 +43,7 @@ namespace JFramework
 
         private static string WriteEnumPath(string assetName) => Text.Format(pathHelper.Path("Enum", FileAccess.Write), assetName);
 
+        private static string WriteDataPath(string assetName) => Text.Format(pathHelper.Path("Data", FileAccess.Write), assetName);
         private static string GetJsonPath(string fileName)
         {
             var filePath = Path.Combine(streamingAssetsPath, Text.Format("{0}.json", fileName));

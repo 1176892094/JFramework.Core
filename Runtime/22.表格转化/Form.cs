@@ -19,7 +19,7 @@ namespace JFramework
 {
     public static partial class Service
     {
-        public static partial class Table
+        public static partial class Form
         {
             private static List<KeyValuePair<string, string[,]>> GetDataTable(string filePath)
             {
