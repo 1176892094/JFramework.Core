@@ -19,6 +19,12 @@ namespace JFramework
         string assetPackPath { get; }
         string assetPackName { get; }
         string assetRemotePath { get; }
+        string writeTablePath { get; }
+        string writeStructPath { get; }
+        string writeEnumPath { get; }
+        string readTableText { get; }
+        string readStructText { get; }
+        string readEnumText { get; }
         string streamingAssetsPath { get; }
         string persistentDataPath { get; }
     }

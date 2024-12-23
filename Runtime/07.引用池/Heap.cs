@@ -18,27 +18,27 @@ namespace JFramework
     {
         public static class Heap
         {
-            public static T Dequeue<T>() where T : class, IDisposable
+            public static T Dequeue<T>()
             {
                 return LoadPool<T>(typeof(T)).Dequeue();
             }
 
-            public static T Dequeue<T>(Type heapType) where T : class, IDisposable
+            public static T Dequeue<T>(Type heapType)
             {
                 return LoadPool<T>(heapType).Dequeue();
             }
 
-            public static void Enqueue<T>(T heapData) where T : class, IDisposable
+            public static void Enqueue<T>(T heapData)
             {
                 LoadPool<T>(typeof(T)).Enqueue(heapData);
             }
 
-            public static void Enqueue<T>(T heapData, Type heapType) where T : class, IDisposable
+            public static void Enqueue<T>(T heapData, Type heapType)
             {
                 LoadPool<T>(heapType).Enqueue(heapData);
             }
 
-            private static IHeap<T> LoadPool<T>(Type heapType) where T : class, IDisposable
+            private static IHeap<T> LoadPool<T>(Type heapType)
             {
                 if (Service.heapData.TryGetValue(heapType, out var heapData))
                 {
