@@ -21,7 +21,7 @@ namespace JFramework
     {
         public static partial class Form
         {
-            public static async Task WriteScripts(string filePaths)
+            public static async Task<bool> WriteScripts(string filePaths)
             {
                 try
                 {
@@ -38,22 +38,20 @@ namespace JFramework
                     var dataTables = new Dictionary<string, string>();
                     foreach (var excelPath in excelPaths)
                     {
-                        await Task.Run(() =>
+                        var scripts = LoadScripts(excelPath);
+                        foreach (var script in scripts)
                         {
-                            var scripts = LoadScripts(excelPath);
-                            foreach (var script in scripts)
+                            if (!dataTables.ContainsKey(script.Key))
                             {
-                                if (!dataTables.ContainsKey(script.Key))
-                                {
-                                    dataTables.Add(script.Key, script.Value);
-                                }
+                                dataTables.Add(script.Key, script.Value);
                             }
-                        });
+                        }
                     }
 
                     var writeAssets = false;
                     var filePath = formHelper.Path("Assembly", FileAccess.Write);
-                    var fileText = formHelper.Path("Assembly", FileAccess.Read);
+                    var assembly = Path.GetFileNameWithoutExtension(formHelper.Path("Assembly", FileAccess.Write));
+                    var fileText = formHelper.Path("Assembly", FileAccess.Read).Replace("Template", assembly);
                     dataTables.Add(filePath, fileText);
                     foreach (var data in dataTables)
                     {
@@ -66,14 +64,17 @@ namespace JFramework
                         Log(Text.Format("生成 CSharp 脚本:{0}", data.Key.Color("00FF00")));
                     }
 
-                    if (writeAssets)
+                    if (!writeAssets)
                     {
                         await WriteAssets(filePaths);
                     }
+
+                    return writeAssets;
                 }
                 catch (Exception e)
                 {
                     Error(e.ToString());
+                    return false;
                 }
             }
 
@@ -167,7 +168,7 @@ namespace JFramework
                 {
                     count++;
                     var index = field.Key.LastIndexOf(':');
-                    var column = count == fields.Count ? "column++" : "column";
+                    var column = count < fields.Count ? "column++" : "column";
                     var fieldName = index < 0 ? field.Key : field.Key.Substring(0, index);
                     var fieldData = char.ToLower(fieldName[0]) + fieldName.Substring(1);
                     builder.AppendFormat("\t\t\t{0} = Encoding.UTF8.GetBytes(sheet[{1}]);\n", fieldData, column);

@@ -9,7 +9,6 @@
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -118,7 +117,7 @@ namespace JFramework
                     return null;
                 }
 
-                var columnCount = GetMaxColumn(rowNodes);
+                var columnCount = GetDimensions(rowNodes[0]);
                 if (columnCount == 0)
                 {
                     return null;
@@ -129,27 +128,18 @@ namespace JFramework
                 return dataTable;
             }
 
-            private static int GetMaxColumn(XmlNodeList rowNodes)
+            private static int GetDimensions(XmlNode node)
             {
-                var maxColumn = 0;
-                foreach (XmlNode rowNode in rowNodes)
+                var column = 0;
+                var childNode = node.Attributes?["spans"].Value.Split(':')[1];
+                if (childNode != null)
                 {
-                    foreach (XmlNode cellNode in rowNode.ChildNodes)
-                    {
-                        if (cellNode.Attributes != null)
-                        {
-                            var cellReference = cellNode.Attributes["r"]?.Value;
-                            if (!string.IsNullOrEmpty(cellReference))
-                            {
-                                var column = GetDimensions(cellReference);
-                                maxColumn = Math.Max(maxColumn, column);
-                            }
-                        }
-                    }
+                    column = int.Parse(childNode);
                 }
 
-                return maxColumn;
+                return column;
             }
+
 
             private static int GetDimensions(string node)
             {

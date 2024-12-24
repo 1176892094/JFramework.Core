@@ -58,7 +58,7 @@ namespace JFramework
                 {
                     return Type.GetType(name);
                 }
-
+                
                 var assembly = GetAssembly(name.Substring(index + 1).Trim());
                 cachedType = assembly.GetType(name.Substring(0, index));
                 Service.cachedType.Add(name, cachedType);

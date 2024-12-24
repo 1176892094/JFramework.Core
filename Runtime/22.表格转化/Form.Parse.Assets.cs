@@ -140,7 +140,7 @@ namespace JFramework
                     Directory.CreateDirectory(formHelper.assetDataPath);
                 }
 
-                var filePath = Text.Format("{0}/{1}.asset", formHelper.assetDataPath, sheetName);
+                var filePath = Text.Format("{0}/{1}DataTable.asset", formHelper.assetDataPath, sheetName);
                 if (File.Exists(filePath))
                 {
                     File.Delete(filePath);
@@ -153,9 +153,10 @@ namespace JFramework
                     return;
                 }
 
+                var assembly = Path.GetFileNameWithoutExtension(formHelper.Path("Assembly", FileAccess.Write));
+             
                 await Task.Run(() =>
                 {
-                    var assembly = formHelper.Path("Assembly", FileAccess.Write);
                     var itemData = Text.Format("JFramework.Table.{0}Data,{1}", sheetName, assembly);
                     var instance = (IData)Activator.CreateInstance(Depend.GetType(itemData));
                     foreach (var scriptText in scriptTexts)
