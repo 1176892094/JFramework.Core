@@ -50,12 +50,11 @@ namespace JFramework
 
                     var writeAssets = false;
                     var filePath = formHelper.Path("Assembly", FileAccess.Write);
-                    var assembly = Path.GetFileNameWithoutExtension(formHelper.Path("Assembly", FileAccess.Write));
-                    var fileText = formHelper.Path("Assembly", FileAccess.Read).Replace("Template", assembly);
+                    var fileText = formHelper.Path("Assembly", FileAccess.Read).Replace("Template", dataAssembly);
                     dataTables.Add(filePath, fileText);
                     foreach (var data in dataTables)
                     {
-                        var result = await Task.Run(() => WriteScript(data.Key, data.Value));
+                        var result = await Task.Run(() => WriteScripts(data.Key, data.Value));
                         if (result)
                         {
                             writeAssets = true;
@@ -230,7 +229,7 @@ namespace JFramework
                 return new KeyValuePair<string, string>(Text.Format(formHelper.Path("Enum", FileAccess.Write), className), scriptText);
             }
 
-            private static bool WriteScript(string filePath, string fileText)
+            private static bool WriteScripts(string filePath, string fileText)
             {
                 var directory = Path.GetDirectoryName(filePath);
                 if (string.IsNullOrEmpty(directory))

@@ -22,6 +22,8 @@ namespace JFramework
         private static string assetPackData => Text.Format("{0}.json", pathHelper?.assetPackName);
 
         private static string assetPackPath => Text.Format("{0}/{1}", persistentDataPath, pathHelper?.assetPackPath);
+        
+        private static string dataAssembly => Path.GetFileNameWithoutExtension(formHelper.Path("Assembly", FileAccess.Write));
 
         private static string GetScenePath(string assetName) => Text.Format("Scenes/{0}", assetName);
 

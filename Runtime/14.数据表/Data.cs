@@ -23,8 +23,7 @@ namespace JFramework
             public static async void LoadDataTable()
             {
                 if (helper == null) return;
-                var filePath = formHelper.Path("Assembly", FileAccess.Write);
-                var assembly = Depend.GetAssembly(Path.GetFileNameWithoutExtension(filePath));
+                var assembly = Depend.GetAssembly(dataAssembly);
                 if (assembly == null) return;
                 var assetTypes = new List<Type>();
                 foreach (var assetType in assembly.GetTypes())

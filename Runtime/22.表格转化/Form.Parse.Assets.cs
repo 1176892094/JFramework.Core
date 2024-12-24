@@ -52,7 +52,7 @@ namespace JFramework
 
                     foreach (var data in dataTables)
                     {
-                        await WriteAssetTask(data.Key, data.Value);
+                        await WriteAssets(data.Key, data.Value);
                     }
                 }
                 catch (Exception e)
@@ -128,19 +128,21 @@ namespace JFramework
                 return dataTable;
             }
 
-            private static async Task WriteAssetTask(string sheetName, List<string[]> scriptTexts)
+            private static async Task WriteAssets(string sheetName, List<string[]> scriptTexts)
             {
-                if (!File.Exists(Text.Format(formHelper.Path("Table", FileAccess.Write), sheetName)))
+                var filePath = Text.Format(formHelper.Path("Table", FileAccess.Write), sheetName);
+                if (!File.Exists(filePath))
                 {
                     return;
                 }
 
-                if (!Directory.Exists(formHelper.assetDataPath))
+                filePath = Path.GetDirectoryName(formHelper.Path("Data", FileAccess.Write));
+                if (!string.IsNullOrEmpty(filePath) && !Directory.Exists(filePath))
                 {
-                    Directory.CreateDirectory(formHelper.assetDataPath);
+                    Directory.CreateDirectory(filePath);
                 }
 
-                var filePath = Text.Format("{0}/{1}DataTable.asset", formHelper.assetDataPath, sheetName);
+                filePath = Text.Format(formHelper.Path("Data", FileAccess.Write), sheetName);
                 if (File.Exists(filePath))
                 {
                     File.Delete(filePath);
@@ -148,16 +150,11 @@ namespace JFramework
 
                 var fileName = Text.Format("JFramework.Table.{0}DataTable", sheetName);
                 var fileData = formHelper.CreateInstance(fileName);
-                if (fileData == null)
-                {
-                    return;
-                }
-
-                var assembly = Path.GetFileNameWithoutExtension(formHelper.Path("Assembly", FileAccess.Write));
-             
+                if (fileData == null) return;
+                
                 await Task.Run(() =>
                 {
-                    var itemData = Text.Format("JFramework.Table.{0}Data,{1}", sheetName, assembly);
+                    var itemData = Text.Format("JFramework.Table.{0}Data,{1}", sheetName, dataAssembly);
                     var instance = (IData)Activator.CreateInstance(Depend.GetType(itemData));
                     foreach (var scriptText in scriptTexts)
                     {

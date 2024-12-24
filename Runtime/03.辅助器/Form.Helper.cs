@@ -16,8 +16,6 @@ namespace JFramework
 {
     public interface IFormHelper : IBaseHelper
     {
-        string assetDataPath { get; }
-        
         Task<IDataTable> Instantiate(string assetPath);
 
         IDataTable CreateInstance(string assetPath);
