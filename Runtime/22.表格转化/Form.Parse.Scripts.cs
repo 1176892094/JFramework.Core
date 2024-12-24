@@ -52,15 +52,15 @@ namespace JFramework
                     var filePath = formHelper.Path("Assembly", FileAccess.Write);
                     var fileText = formHelper.Path("Assembly", FileAccess.Read).Replace("Template", dataAssembly);
                     dataTables.Add(filePath, fileText);
+                    var progress = 0f;
                     foreach (var data in dataTables)
                     {
                         var result = await Task.Run(() => WriteScripts(data.Key, data.Value));
+                        formHelper.CreateProgress(data.Key, ++progress / dataTables.Count);
                         if (result)
                         {
                             writeAssets = true;
                         }
-
-                        Log(Text.Format("生成 CSharp 脚本:{0}", data.Key.Color("00FF00")));
                     }
 
                     if (!writeAssets)
@@ -253,6 +253,7 @@ namespace JFramework
                 }
 
                 File.WriteAllText(filePath, fileText);
+                Log(Text.Format("生成 CSharp 脚本: {0}", filePath.Color("00FF00")));
                 return true;
             }
         }

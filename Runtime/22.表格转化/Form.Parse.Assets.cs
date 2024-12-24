@@ -50,9 +50,11 @@ namespace JFramework
                         });
                     }
 
+                    var progress = 0f;
                     foreach (var data in dataTables)
                     {
                         await WriteAssets(data.Key, data.Value);
+                        formHelper.CreateProgress(data.Key, ++progress / dataTables.Count);
                     }
                 }
                 catch (Exception e)
@@ -151,10 +153,9 @@ namespace JFramework
                 var fileName = Text.Format("JFramework.Table.{0}DataTable", sheetName);
                 var fileData = formHelper.CreateInstance(fileName);
                 if (fileData == null) return;
-                
+                var itemData = Text.Format("JFramework.Table.{0}Data,{1}", sheetName, dataAssembly);
                 await Task.Run(() =>
                 {
-                    var itemData = Text.Format("JFramework.Table.{0}Data,{1}", sheetName, dataAssembly);
                     var instance = (IData)Activator.CreateInstance(Depend.GetType(itemData));
                     foreach (var scriptText in scriptTexts)
                     {

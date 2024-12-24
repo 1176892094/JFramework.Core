@@ -22,6 +22,8 @@ namespace JFramework
 
         void CreateAsset(IDataTable assetData, string assetPath);
 
+        void CreateProgress(string assetPath, float progress);
+
         string Path(string objectText, FileAccess fileAccess);
     }
 }
