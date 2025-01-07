@@ -76,3 +76,4 @@ crashlytics-build.properties
 global.json
 Runtime/obj*
 Runtime/bin*
+packages*
