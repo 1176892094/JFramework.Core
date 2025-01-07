@@ -17,7 +17,7 @@ namespace JFramework
     public abstract class StateMachine<TEntity> : Agent<TEntity>
     {
         private readonly Dictionary<Type, IState> states = new Dictionary<Type, IState>();
-        private IState state;
+        public IState state { get; private set; }
 
         protected override void Dispose()
         {

@@ -229,7 +229,7 @@ namespace JFramework
                 return new KeyValuePair<string, string>(Text.Format(formHelper.Path("Enum", FileAccess.Write), className), scriptText);
             }
 
-            private static bool WriteScripts(string filePath, string fileText)
+            private static bool WriteScripts(string filePath, string fileData)
             {
                 var directory = Path.GetDirectoryName(filePath);
                 if (string.IsNullOrEmpty(directory))
@@ -247,12 +247,12 @@ namespace JFramework
                     File.Create(filePath).Close();
                 }
 
-                if (File.ReadAllText(filePath) == fileText)
+                if (File.ReadAllText(filePath) == fileData)
                 {
                     return false;
                 }
 
-                File.WriteAllText(filePath, fileText);
+                File.WriteAllText(filePath, fileData);
                 Log(Text.Format("生成 CSharp 脚本: {0}", filePath.Color("00FF00")));
                 return true;
             }

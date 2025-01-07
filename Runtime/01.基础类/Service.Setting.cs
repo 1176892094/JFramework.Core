@@ -15,13 +15,13 @@ namespace JFramework
 {
     public partial class Service
     {
-        private static string persistentDataPath => pathHelper?.persistentDataPath;
+        private static string persistentDataPath => pathHelper.persistentDataPath;
 
-        private static string streamingAssetsPath => pathHelper?.streamingAssetsPath;
+        private static string streamingAssetsPath => pathHelper.streamingAssetsPath;
 
-        private static string assetPackData => Text.Format("{0}.json", pathHelper?.assetPackName);
+        private static string assetPackData => Text.Format("{0}.json", pathHelper.assetPackName);
 
-        private static string assetPackPath => Text.Format("{0}/{1}", persistentDataPath, pathHelper?.assetPackPath);
+        private static string assetPackPath => Text.Format("{0}/{1}", persistentDataPath, pathHelper.assetPackPath);
         
         private static string dataAssembly => Path.GetFileNameWithoutExtension(formHelper.Path("Assembly", FileAccess.Write));
 
