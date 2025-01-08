@@ -45,8 +45,6 @@ namespace JFramework
         private static readonly Dictionary<Type, EnumTable> enumTable = new Dictionary<Type, EnumTable>();
         
         private static readonly Dictionary<Type, IPanel> panelData = new Dictionary<Type, IPanel>();
-
-        private static readonly Dictionary<IPanel, HashSet<string>> groupPanel = new Dictionary<IPanel, HashSet<string>>();
         
         private static readonly Dictionary<IEntity, AgentData> agentData = new Dictionary<IEntity, AgentData>();
 
@@ -69,6 +67,8 @@ namespace JFramework
         private static readonly Dictionary<string, Assembly> assemblies = new Dictionary<string, Assembly>();
 
         private static readonly Dictionary<string, HashSet<IPanel>> panelGroup = new Dictionary<string, HashSet<IPanel>>();
+        
+        private static readonly Dictionary<IPanel, HashSet<string>> groupPanel = new Dictionary<IPanel, HashSet<string>>();
 
         private static IPathHelper pathHelper => (IPathHelper)helper;
         private static IFormHelper formHelper => (IFormHelper)helper;

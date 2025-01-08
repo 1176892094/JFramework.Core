@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace JFramework
 {
@@ -168,8 +169,9 @@ namespace JFramework
                     Service.groupPanel.Remove(panel);
                 }
 
+                panel.Hide();
                 panelData.Remove(assetType);
-                panelHelper.Destroy(panel);
+                Object.Destroy(panel.gameObject);
             }
 
             internal static void Dispose()

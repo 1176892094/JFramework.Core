@@ -16,10 +16,6 @@ namespace JFramework
 {
     public interface IPanelHelper : IHelper
     {
-        Task<object> Instantiate(string assetPath, Type assetType);
-
-        void Destroy(IPanel assetData);
-
         void Surface(IPanel assetData, int index);
     }
 }
