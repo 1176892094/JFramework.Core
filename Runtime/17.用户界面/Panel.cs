@@ -21,6 +21,9 @@ namespace JFramework
     {
         public static class Panel
         {
+            private static readonly Dictionary<int, RectTransform> panelLayers = new Dictionary<int, RectTransform>();
+            private static Canvas canvas;
+
             private static async Task<IPanel> Load(string assetPath, Type assetType)
             {
                 var obj = await Asset.Load<GameObject>(assetPath);
@@ -152,7 +155,44 @@ namespace JFramework
             public static void Surface(IPanel panel, int layer = 1)
             {
                 if (helper == null) return;
-                panelHelper.Surface(panel, layer);
+                if (canvas == null)
+                {
+                    canvas = new GameObject("UIManager").AddComponent<Canvas>();
+                    canvas.renderMode = RenderMode.ScreenSpaceCamera;
+                    Object.DontDestroyOnLoad(canvas.gameObject);
+
+                    // var scaler = canvas.gameObject.AddComponent<CanvasScaler>();
+                    // scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+                    // scaler.referenceResolution = new Vector2(1920, 1080);
+                    // scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
+                    // scaler.matchWidthOrHeight = 0.5f;
+                }
+
+                if (!panelLayers.TryGetValue(layer, out var parent))
+                {
+                    var name = Text.Format("Layer-{0}", layer);
+                    var child = new GameObject(name);
+                    child.transform.SetParent(canvas.transform);
+                    var renderer = child.AddComponent<Canvas>();
+                    renderer.overrideSorting = true;
+                    renderer.sortingOrder = layer;
+                    parent = child.GetComponent<RectTransform>();
+                    parent.anchorMin = Vector2.zero;
+                    parent.anchorMax = Vector2.one;
+                    parent.offsetMin = Vector2.zero;
+                    parent.offsetMax = Vector2.zero;
+                    parent.localScale = Vector3.one;
+                    panelLayers.Add(layer, parent);
+                    parent.SetSiblingIndex(layer);
+                }
+
+                var transform = (RectTransform)panel.transform;
+                transform.SetParent(parent);
+                transform.anchorMin = Vector2.zero;
+                transform.anchorMax = Vector2.one;
+                transform.offsetMin = Vector2.zero;
+                transform.offsetMax = Vector2.zero;
+                transform.localScale = Vector3.one;
             }
 
             private static void Destroy(IPanel panel, Type assetType)

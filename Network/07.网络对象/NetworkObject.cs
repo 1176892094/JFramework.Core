@@ -50,7 +50,7 @@ namespace JFramework.Net
         private void OnValidate()
         {
             var assetType = Service.Depend.GetType("JFramework.EditorSetting, JFramework.Unity");
-            var assetData = assetType.GetMethod("ValidateIdentity", Service.Depend.Static);
+            var assetData = assetType.GetMethod("Validate", Service.Depend.Static);
             if (assetData != null)
             {
                 var assetPair = (KeyValuePair<string, ulong>)assetData.Invoke(null, new object[] { assetId, sceneId, gameObject });
