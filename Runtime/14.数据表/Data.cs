@@ -12,6 +12,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using UnityEngine;
 
 namespace JFramework
 {
@@ -88,7 +89,7 @@ namespace JFramework
                                         continue;
                                     }
 
-                                    Warn(Text.Format("加载数据 {0} 失败。键值重复: {1}", assetType.Name, item));
+                                    Debug.LogWarning(Text.Format("加载数据 {0} 失败。键值重复: {1}", assetType.Name, item));
                                 }
 
                                 return items;
@@ -99,7 +100,7 @@ namespace JFramework
                     }
                     catch (Exception e)
                     {
-                        Error(Text.Format("加载 {0} 数据失败!\n{1}", assetType.Name, e));
+                        Debug.LogError(Text.Format("加载 {0} 数据失败!\n{1}", assetType.Name, e));
                     }
                 }
 
@@ -190,7 +191,7 @@ namespace JFramework
                     return caches;
                 }
 
-                Error(Text.Format("获取 {0} 失败!", typeof(T).Name));
+                Debug.LogError(Text.Format("获取 {0} 失败!", typeof(T).Name));
                 return default;
             }
 

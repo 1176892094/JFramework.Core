@@ -49,20 +49,5 @@ namespace JFramework
 
             return filePath;
         }
-
-        internal static void Log(string message)
-        {
-            helper.Log(message);
-        }
-
-        internal static void Warn(string message)
-        {
-            helper.Warn(message);
-        }
-
-        internal static void Error(string message)
-        {
-            helper.Error(message);
-        }
     }
 }

@@ -13,8 +13,5 @@ namespace JFramework
 {
     public interface IBaseHelper
     {
-        void Log(string message);
-        void Warn(string message);
-        void Error(string message);
     }
 }

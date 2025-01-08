@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace JFramework
 {
@@ -59,7 +60,7 @@ namespace JFramework
                 }
                 catch (Exception e)
                 {
-                    Error(e.ToString());
+                    Debug.LogError(e.ToString());
                 }
             }
 

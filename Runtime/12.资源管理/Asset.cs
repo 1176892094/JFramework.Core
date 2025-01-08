@@ -12,6 +12,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace JFramework
 {
@@ -42,14 +43,14 @@ namespace JFramework
                     {
                         return (T)assetData;
                     }
+
+                    Debug.LogWarning(Text.Format("加载资源 {0} 为空!", assetPath));
                 }
                 catch (Exception e)
                 {
-                    Warn(Text.Format("加载资源 {0} 失败!\n{1}", assetPath, e));
-                    return default;
+                    Debug.LogWarning(Text.Format("加载资源 {0} 失败!\n{1}", assetPath, e));
                 }
 
-                Warn(Text.Format("加载资源 {0} 为空!", assetPath));
                 return default;
             }
 
@@ -64,14 +65,13 @@ namespace JFramework
                         assetAction.Invoke((T)assetData);
                         return;
                     }
+
+                    Debug.LogWarning(Text.Format("加载资源 {0} 为空!", assetPath));
                 }
                 catch (Exception e)
                 {
-                    Warn(Text.Format("加载资源 {0} 失败!\n{1}", assetPath, e));
-                    return;
+                    Debug.LogWarning(Text.Format("加载资源 {0} 失败!\n{1}", assetPath, e));
                 }
-
-                Warn(Text.Format("加载资源 {0} 为空!", assetPath));
             }
 
             private static async Task<object> LoadAsset(string assetPath, Type assetType)

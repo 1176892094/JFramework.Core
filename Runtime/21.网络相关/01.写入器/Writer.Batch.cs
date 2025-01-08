@@ -51,7 +51,7 @@ namespace JFramework.Net
                 var first = writers.Dequeue();
                 if (target.position != 0)
                 {
-                    Service.Warn("拷贝目标不是空的！");
+                    throw new ArgumentException("拷贝目标不是空的！");
                 }
 
                 ArraySegment<byte> segment = first;
@@ -64,7 +64,7 @@ namespace JFramework.Net
             {
                 if (target.position != 0)
                 {
-                    Service.Warn("拷贝目标不是空的！");
+                    throw new ArgumentException("拷贝目标不是空的！");
                 }
 
                 ArraySegment<byte> segment = writer;

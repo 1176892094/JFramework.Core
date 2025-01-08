@@ -13,6 +13,7 @@ using System;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace JFramework
 {
@@ -57,11 +58,11 @@ namespace JFramework
                         smtpClient.Send(mailMessage);
                     });
 
-                    Log("邮件发送成功!");
+                    Debug.Log("邮件发送成功!");
                 }
                 catch (SmtpException e)
                 {
-                    Error(Text.Format("邮件发送失败: {0}", e.Message));
+                    Debug.LogError(Text.Format("邮件发送失败: {0}", e.Message));
                 }
             }
 

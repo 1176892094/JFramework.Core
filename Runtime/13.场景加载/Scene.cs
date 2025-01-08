@@ -11,6 +11,7 @@
 
 using System;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace JFramework
 {
@@ -29,14 +30,13 @@ namespace JFramework
                         assetHelper.LoadScene(assetData);
                         return;
                     }
+
+                    Debug.LogWarning(Text.Format("加载资源 {0} 为空!", assetPath));
                 }
                 catch (Exception e)
                 {
-                    Warn(Text.Format("加载场景 {0} 失败!\n{1}", assetPath, e));
-                    return;
+                    Debug.LogWarning(Text.Format("加载场景 {0} 失败!\n{1}", assetPath, e));
                 }
-
-                Warn(Text.Format("加载资源 {0} 为空!", assetPath));
             }
 
             private static async Task<string> LoadSceneAsset(string assetPath)
