@@ -9,6 +9,8 @@
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
 
+using UnityEngine;
+
 namespace JFramework
 {
     public static partial class Service
@@ -23,7 +25,7 @@ namespace JFramework
                 }
             }
 
-            public static T Load<T>(IEntity entity, float duration) where T : class, ITimer
+            public static T Load<T>(GameObject entity, float duration) where T : class, ITimer
             {
                 if (helper == null) return default;
                 var timerData = Heap.Dequeue<T>();

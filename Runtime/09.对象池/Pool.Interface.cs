@@ -9,10 +9,13 @@
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
 
+using UnityEngine;
+
 namespace JFramework
 {
     public interface IEntity
     {
-        T GetComponent<T>();
+        Transform transform { get; }
+        GameObject gameObject { get; }
     }
 }

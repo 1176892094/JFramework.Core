@@ -64,15 +64,5 @@ namespace JFramework
         {
             helper.Error(message);
         }
-
-        internal static bool IsEntity(IEntity entity)
-        {
-            return poolHelper.IsEntity(entity);
-        }
-
-        internal static bool IsActive(IEntity entity)
-        {
-            return poolHelper.IsActive(entity);
-        }
     }
 }

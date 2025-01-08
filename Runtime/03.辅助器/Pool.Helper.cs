@@ -17,8 +17,6 @@ namespace JFramework
 {
     public interface IPoolHelper : IBaseHelper
     {
-        bool IsEntity(IEntity entity);
-        bool IsActive(IEntity entity);
         Task<object> Instantiate(string assetPath, Type assetType);
         void OnDequeue(IEntity assetData);
         string OnEnqueue(IEntity assetData);

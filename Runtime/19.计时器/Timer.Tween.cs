@@ -10,6 +10,7 @@
 // *********************************************************************************
 
 using System;
+using UnityEngine;
 
 namespace JFramework
 {
@@ -20,7 +21,7 @@ namespace JFramework
         private Action OnFinish;
         private Action<float> OnUpdate;
 
-        private IEntity owner;
+        private GameObject owner;
         private float progress;
         private float waitTime;
 
@@ -34,7 +35,7 @@ namespace JFramework
             OnFinish = null;
         }
 
-        void ITimer.Start(IEntity owner, float duration, Action OnFinish)
+        void ITimer.Start(GameObject owner, float duration, Action OnFinish)
         {
             progress = 0;
             waitTime = 0;
@@ -47,13 +48,13 @@ namespace JFramework
         {
             try
             {
-                if (!Service.IsEntity(owner))
+                if (owner == null)
                 {
                     OnFinish.Invoke();
                     return;
                 }
 
-                if (!Service.IsActive(owner))
+                if (!owner.activeInHierarchy)
                 {
                     OnFinish.Invoke();
                     return;

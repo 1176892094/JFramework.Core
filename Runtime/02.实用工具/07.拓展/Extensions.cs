@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace JFramework
 {
@@ -82,12 +83,12 @@ namespace JFramework
             return enumFlags[Service.Random.Next(enumFlags.Count)];
         }
 
-        public static Watch Watch(this IEntity current, float duration)
+        public static Watch Watch(this GameObject current, float duration)
         {
             return Service.Timer.Load<Watch>(current, duration);
         }
 
-        public static Tween Tween(this IEntity current, float duration)
+        public static Tween Tween(this GameObject current, float duration)
         {
             return Service.Timer.Load<Tween>(current, duration);
         }

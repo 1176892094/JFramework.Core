@@ -10,11 +10,12 @@
 // *********************************************************************************
 
 using System;
+using UnityEngine;
 
 namespace JFramework
 {
     internal interface ITimer : IUpdate
     {
-        void Start(IEntity owner, float duration, Action OnFinish);
+        void Start(GameObject owner, float duration, Action OnFinish);
     }
 }
