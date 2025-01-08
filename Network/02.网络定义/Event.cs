@@ -96,6 +96,16 @@ namespace JFramework.Net
         }
     }
 
+    public struct PingUpdateEvent : IEvent
+    {
+        public double pingTime { get; private set; }
+
+        public PingUpdateEvent(double pingTime)
+        {
+            this.pingTime = pingTime;
+        }
+    }
+
     public struct ServerResponseEvent : IEvent
     {
         public Uri uri { get; private set; }
