@@ -58,7 +58,7 @@ namespace JFramework
                     if (grid != null)
                     {
                         grid.Dispose();
-                        Service.Pool.Hide(grid);
+                        Service.Pool.Hide(grid.gameObject);
                     }
                 }
             }
@@ -84,7 +84,7 @@ namespace JFramework
                         if (grid != null)
                         {
                             grid.Dispose();
-                            Service.Pool.Hide(grid);
+                            Service.Pool.Hide(grid.gameObject);
                         }
 
                         grids.Remove(i);
@@ -98,7 +98,7 @@ namespace JFramework
                         if (grid != null)
                         {
                             grid.Dispose();
-                            Service.Pool.Hide(grid);
+                            Service.Pool.Hide(grid.gameObject);
                         }
 
                         grids.Remove(i);
@@ -114,9 +114,9 @@ namespace JFramework
                 {
                     var index = i;
                     grids[index] = default;
-                    Service.Pool.Show(path, typeof(TGrid), entity =>
+                    Service.Pool.Show(path, gameObject =>
                     {
-                        var grid = entity.GetComponent<TGrid>();
+                        var grid = gameObject.GetComponent<TGrid>();
                         var posX = index % column * width + width / 2;
                         var posY = -(index / column) * height - height / 2;
                         SetGrid(grid, posX, posY);
@@ -124,7 +124,7 @@ namespace JFramework
                         if (!grids.ContainsKey(index))
                         {
                             grid.Dispose();
-                            Service.Pool.Hide(grid);
+                            Service.Pool.Hide(grid.gameObject);
                             return;
                         }
 

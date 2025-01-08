@@ -12,6 +12,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace JFramework
 {
@@ -19,55 +21,59 @@ namespace JFramework
     {
         public static class Pool
         {
-            public static async Task<T> Show<T>(string assetPath) where T : IEntity
+            private static readonly Dictionary<string, GameObject> assetPools = new Dictionary<string, GameObject>();
+            private static GameObject manager;
+
+            public static async Task<GameObject> Show(string assetPath)
             {
                 if (helper == null) return default;
-                var assetData = await LoadPool(assetPath, typeof(T)).Dequeue();
-                poolHelper.OnDequeue(assetData);
-                return (T)assetData;
-            }
-
-            public static async void Show<T>(string assetPath, Action<T> assetAction) where T : IEntity
-            {
-                if (helper == null) return;
-                var assetData = await LoadPool(assetPath, typeof(T)).Dequeue();
-                poolHelper.OnDequeue(assetData);
-                assetAction.Invoke((T)assetData);
-            }
-
-            public static async Task<IEntity> Show(string assetPath, Type assetType)
-            {
-                if (helper == null) return default;
-                var assetData = await LoadPool(assetPath, assetType).Dequeue();
-                poolHelper.OnDequeue(assetData);
+                var assetData = await LoadPool(assetPath).Dequeue();
+                assetData.transform.SetParent(null);
+                assetData.SetActive(true);
                 return assetData;
             }
 
-            public static async void Show(string assetPath, Type assetType, Action<IEntity> assetAction)
+            public static async void Show(string assetPath, Action<GameObject> assetAction)
             {
                 if (helper == null) return;
-                var assetData = await LoadPool(assetPath, assetType).Dequeue();
-                poolHelper.OnDequeue(assetData);
+                var assetData = await LoadPool(assetPath).Dequeue();
+                assetData.transform.SetParent(null);
+                assetData.SetActive(true);
                 assetAction.Invoke(assetData);
             }
 
-            public static bool Hide(IEntity assetData)
+            public static bool Hide(GameObject assetData)
             {
                 if (helper == null) return false;
-                var assetPath = poolHelper.OnEnqueue(assetData);
-                return LoadPool(assetPath, typeof(IEntity)).Enqueue(assetData);
+                var assetPath = assetData.name;
+                if (manager == null)
+                {
+                    manager = new GameObject("PoolManager");
+                    Object.DontDestroyOnLoad(manager);
+                }
+
+                if (!assetPools.TryGetValue(assetPath, out var parent))
+                {
+                    parent = new GameObject(Text.Format("Pool - {0}", assetPath));
+                    parent.transform.SetParent(manager.transform);
+                    assetPools.Add(assetPath, parent);
+                }
+
+                assetData.SetActive(false);
+                assetData.transform.SetParent(parent.transform);
+                return LoadPool(assetData.name).Enqueue(assetData);
             }
 
-            private static IPool<IEntity> LoadPool(string assetPath, Type assetType)
+            private static IPool<GameObject> LoadPool(string assetPath)
             {
                 if (Service.poolData.TryGetValue(assetPath, out var poolData))
                 {
-                    return (IPool<IEntity>)poolData;
+                    return (IPool<GameObject>)poolData;
                 }
 
-                poolData = new Pool<IEntity>(assetPath, assetType);
+                poolData = new EntityPool(assetPath, typeof(GameObject));
                 Service.poolData.Add(assetPath, poolData);
-                return (IPool<IEntity>)poolData;
+                return (IPool<GameObject>)poolData;
             }
 
             public static Reference[] Reference()

@@ -12,18 +12,20 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace JFramework
 {
     public static partial class Service
     {
         [Serializable]
-        private class Pool<T> : IPool<T>
+        private class EntityPool : IPool<GameObject>
         {
-            private readonly HashSet<T> cached = new HashSet<T>();
-            private readonly Queue<T> unused = new Queue<T>();
+            private readonly HashSet<GameObject> cached = new HashSet<GameObject>();
+            private readonly Queue<GameObject> unused = new Queue<GameObject>();
 
-            public Pool(string assetPath, Type assetType)
+            public EntityPool(string assetPath, Type assetType)
             {
                 this.assetPath = assetPath;
                 this.assetType = assetType;
@@ -36,24 +38,26 @@ namespace JFramework
             public int dequeueCount { get; private set; }
             public int enqueueCount { get; private set; }
 
-            public async Task<T> Dequeue()
+            public async Task<GameObject> Dequeue()
             {
                 dequeueCount++;
-                T assetData;
+                GameObject assetData;
                 if (unused.Count > 0)
                 {
                     assetData = unused.Dequeue();
                 }
                 else
                 {
-                    assetData = (T)await poolHelper.Instantiate(assetPath, assetType);
+                    assetData = await Asset.Load<GameObject>(assetPath);
+                    assetData.name = Text.Format("{0}", assetPath);
+                    Object.DontDestroyOnLoad(assetData);
                 }
-
+                
                 cached.Add(assetData);
                 return assetData;
             }
 
-            public bool Enqueue(T assetData)
+            public bool Enqueue(GameObject assetData)
             {
                 if (cached.Remove(assetData))
                 {

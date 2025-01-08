@@ -67,7 +67,6 @@ namespace JFramework
         private static IFormHelper formHelper => (IFormHelper)helper;
         private static IJsonHelper jsonHelper => (IJsonHelper)helper;
         private static IPackHelper packHelper => (IPackHelper)helper;
-        private static IPoolHelper poolHelper => (IPoolHelper)helper;
         private static IPanelHelper panelHelper => (IPanelHelper)helper;
         private static IAudioHelper audioHelper => (IAudioHelper)helper;
         private static IAssetHelper assetHelper => (IAssetHelper)helper;
