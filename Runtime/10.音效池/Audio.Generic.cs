@@ -11,18 +11,20 @@
 
 using System;
 using System.Collections.Generic;
+using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace JFramework
 {
     public static partial class Service
     {
         [Serializable]
-        private class Audio<T> : IHeap<T>
+        private class AudioPool : IHeap<AudioSource>
         {
-            private readonly HashSet<T> cached = new HashSet<T>();
-            private readonly Queue<T> unused = new Queue<T>();
+            private readonly HashSet<AudioSource> cached = new HashSet<AudioSource>();
+            private readonly Queue<AudioSource> unused = new Queue<AudioSource>();
 
-            public Audio(string assetPath, Type assetType)
+            public AudioPool(string assetPath, Type assetType)
             {
                 this.assetPath = assetPath;
                 this.assetType = assetType;
@@ -35,24 +37,25 @@ namespace JFramework
             public int dequeueCount { get; private set; }
             public int enqueueCount { get; private set; }
 
-            public T Dequeue()
+            public AudioSource Dequeue()
             {
                 dequeueCount++;
-                T assetData;
+                AudioSource assetData;
                 if (unused.Count > 0)
                 {
                     assetData = unused.Dequeue();
                 }
                 else
                 {
-                    assetData = (T)audioHelper.Instantiate(assetPath);
+                    assetData = new GameObject(assetPath).AddComponent<AudioSource>();
+                    Object.DontDestroyOnLoad(assetData.gameObject);
                 }
 
                 cached.Add(assetData);
                 return assetData;
             }
 
-            public void Enqueue(T assetData)
+            public void Enqueue(AudioSource assetData)
             {
                 if (cached.Remove(assetData))
                 {

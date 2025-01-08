@@ -45,14 +45,16 @@ namespace JFramework
                 if (unused.Count > 0)
                 {
                     assetData = unused.Dequeue();
+                    if (assetData != null)
+                    {
+                        cached.Add(assetData);
+                        return assetData;
+                    }
                 }
-                else
-                {
-                    assetData = await Asset.Load<GameObject>(assetPath);
-                    assetData.name = Text.Format("{0}", assetPath);
-                    Object.DontDestroyOnLoad(assetData);
-                }
-                
+
+                assetData = await Asset.Load<GameObject>(assetPath);
+                assetData.name = Text.Format("{0}", assetPath);
+                Object.DontDestroyOnLoad(assetData);
                 cached.Add(assetData);
                 return assetData;
             }

@@ -10,6 +10,8 @@
 // *********************************************************************************
 
 using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace JFramework
 {
@@ -17,13 +19,16 @@ namespace JFramework
     {
         public static class Audio
         {
+            private static readonly HashSet<AudioSource> audioSources = new HashSet<AudioSource>();
+            private static AudioSource musicSource;
+
             public static float musicValue
             {
                 get => setting.musicValue;
                 set
                 {
                     setting.musicValue = value;
-                    audioHelper.MusicVolume(value);
+                    musicSource.volume = value;
                     Json.Save(setting, nameof(AudioSetting));
                 }
             }
@@ -34,59 +39,89 @@ namespace JFramework
                 set
                 {
                     setting.audioValue = value;
-                    audioHelper.AudioVolume(value);
+                    foreach (var audioSource in audioSources)
+                    {
+                        audioSource.volume = value;
+                    }
+
                     Json.Save(setting, nameof(AudioSetting));
                 }
             }
 
-            public static async void PlayMain<T>(string assetPath, Action<T> assetAction = null)
+            public static async void PlayMain(string assetPath, Action<AudioSource> assetAction = null)
             {
                 if (helper == null) return;
-                var assetData = LoadPool<T>(assetPath, typeof(T)).Dequeue();
-                await audioHelper.OnDequeue(assetPath, assetData, 0);
+                var assetData = LoadPool(assetPath).Dequeue();
+                assetData.transform.SetParent(null);
+                assetData.gameObject.SetActive(true);
+                assetData.clip = await Asset.Load<AudioClip>(assetPath);
+                assetData.loop = true;
+                assetData.volume = musicValue;
                 assetAction?.Invoke(assetData);
+                assetData.Play();
             }
 
-            public static async void PlayLoop<T>(string assetPath, Action<T> assetAction = null)
+            public static async void PlayLoop(string assetPath, Action<AudioSource> assetAction = null)
             {
                 if (helper == null) return;
-                var assetData = LoadPool<T>(assetPath, typeof(T)).Dequeue();
-                await audioHelper.OnDequeue(assetPath, assetData, 1);
+                var assetData = LoadPool(assetPath).Dequeue();
+                audioSources.Add(assetData);
+                assetData.transform.SetParent(null);
+                assetData.gameObject.SetActive(true);
+                assetData.clip = await Asset.Load<AudioClip>(assetPath);
+                assetData.loop = true;
+                assetData.volume = audioValue;
                 assetAction?.Invoke(assetData);
+                assetData.Play();
             }
 
-            public static async void PlayOnce<T>(string assetPath, Action<T> assetAction = null)
+            public static async void PlayOnce(string assetPath, Action<AudioSource> assetAction = null)
             {
                 if (helper == null) return;
-                var assetData = LoadPool<T>(assetPath, typeof(T)).Dequeue();
-                await audioHelper.OnDequeue(assetPath, assetData, 2);
+                var assetData = LoadPool(assetPath).Dequeue();
+                audioSources.Add(assetData);
+                assetData.transform.SetParent(null);
+                assetData.gameObject.SetActive(true);
+                assetData.clip = await Asset.Load<AudioClip>(assetPath);
+                assetData.loop = false;
+                assetData.volume = audioValue;
                 assetAction?.Invoke(assetData);
+                assetData.Play();
             }
 
-            public static void Stop<T>(T assetData)
+            public static void StopMain(bool pause = true)
             {
                 if (helper == null) return;
-                var assetPath = audioHelper.OnEnqueue(assetData, false);
-                LoadPool<T>(assetPath, typeof(T)).Enqueue(assetData);
+                if (pause)
+                {
+                    musicSource.Pause();
+                }
+                else
+                {
+                    musicSource.Stop();
+                }
+
+                LoadPool(musicSource.name).Enqueue(musicSource);
             }
 
-            public static void Pause<T>(T assetData)
+            public static void StopLoop(AudioSource assetData)
             {
                 if (helper == null) return;
-                var assetPath = audioHelper.OnEnqueue(assetData, true);
-                LoadPool<T>(assetPath, typeof(T)).Enqueue(assetData);
+                assetData.Stop();
+                audioSources.Remove(assetData);
+                LoadPool(assetData.name).Enqueue(assetData);
             }
 
-            private static IHeap<T> LoadPool<T>(string assetPath, Type assetType)
+            private static IHeap<AudioSource> LoadPool(string assetPath)
             {
                 if (Service.poolData.TryGetValue(assetPath, out var poolData))
                 {
-                    return (IHeap<T>)poolData;
+                    return (IHeap<AudioSource>)poolData;
                 }
 
-                poolData = new Audio<T>(assetPath, assetType);
+                poolData = new AudioPool(assetPath, typeof(AudioSource));
                 Service.poolData.Add(assetPath, poolData);
-                return (IHeap<T>)poolData;
+                return (IHeap<AudioSource>)poolData;
             }
         }
     }

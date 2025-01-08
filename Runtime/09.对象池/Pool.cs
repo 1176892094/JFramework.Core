@@ -21,9 +21,6 @@ namespace JFramework
     {
         public static class Pool
         {
-            private static readonly Dictionary<string, GameObject> assetPools = new Dictionary<string, GameObject>();
-            private static GameObject manager;
-
             public static async Task<GameObject> Show(string assetPath)
             {
                 if (helper == null) return default;
