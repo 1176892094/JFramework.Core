@@ -11,7 +11,6 @@
 
 
 using System.Linq;
-using UnityEngine;
 
 namespace JFramework.Net
 {
@@ -21,25 +20,25 @@ namespace JFramework.Net
         {
             if (!NetworkManager.Client.isActive)
             {
-                Debug.LogError(Service.Text.Format("调用 {0} 但是客户端不是活跃的。", methodName), gameObject);
+                Log.Error(Service.Text.Format("调用 {0} 但是客户端不是活跃的。", methodName), gameObject);
                 return;
             }
 
             if (!NetworkManager.Client.isReady)
             {
-                Debug.LogWarning(Service.Text.Format("调用 {0} 但是客户端没有准备就绪的。对象名称：{1}", methodName, name), gameObject);
+                Log.Warn(Service.Text.Format("调用 {0} 但是客户端没有准备就绪的。对象名称：{1}", methodName, name), gameObject);
                 return;
             }
 
             if ((channel & Channel.NonOwner) == 0 && !isOwner)
             {
-                Debug.LogWarning(Service.Text.Format("调用 {0} 但是客户端没有对象权限。对象名称：{1}", methodName, name), gameObject);
+                Log.Warn(Service.Text.Format("调用 {0} 但是客户端没有对象权限。对象名称：{1}", methodName, name), gameObject);
                 return;
             }
 
             if (NetworkManager.Client.connection == null)
             {
-                Debug.LogError(Service.Text.Format("调用 {0} 但是客户端的连接为空。对象名称：{1}", methodName, name), gameObject);
+                Log.Error(Service.Text.Format("调用 {0} 但是客户端的连接为空。对象名称：{1}", methodName, name), gameObject);
                 return;
             }
 
@@ -58,13 +57,13 @@ namespace JFramework.Net
         {
             if (!NetworkManager.Server.isActive)
             {
-                Debug.LogError(Service.Text.Format("调用 {0} 但是服务器不是活跃的。", methodName), gameObject);
+                Log.Error(Service.Text.Format("调用 {0} 但是服务器不是活跃的。", methodName), gameObject);
                 return;
             }
 
             if (!isServer)
             {
-                Debug.LogWarning(Service.Text.Format("调用 {0} 但是对象未初始化。对象名称：{1}", methodName, name), gameObject);
+                Log.Warn(Service.Text.Format("调用 {0} 但是对象未初始化。对象名称：{1}", methodName, name), gameObject);
                 return;
             }
 
@@ -92,13 +91,13 @@ namespace JFramework.Net
         {
             if (!NetworkManager.Server.isActive)
             {
-                Debug.LogError(Service.Text.Format("调用 {0} 但是服务器不是活跃的。", methodName), gameObject);
+                Log.Error(Service.Text.Format("调用 {0} 但是服务器不是活跃的。", methodName), gameObject);
                 return;
             }
 
             if (!isServer)
             {
-                Debug.LogWarning(Service.Text.Format("调用 {0} 但是对象未初始化。对象名称：{1}", methodName, name), gameObject);
+                Log.Warn(Service.Text.Format("调用 {0} 但是对象未初始化。对象名称：{1}", methodName, name), gameObject);
                 return;
             }
 
@@ -106,7 +105,7 @@ namespace JFramework.Net
 
             if (client == null)
             {
-                Debug.LogError(Service.Text.Format("调用 {0} 但是对象的连接为空。对象名称：{1}", methodName, name), gameObject);
+                Log.Error(Service.Text.Format("调用 {0} 但是对象的连接为空。对象名称：{1}", methodName, name), gameObject);
                 return;
             }
 

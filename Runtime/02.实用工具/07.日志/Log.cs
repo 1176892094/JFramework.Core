@@ -10,24 +10,35 @@
 // *********************************************************************************
 
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace JFramework
 {
-    internal static class Log
+    public static class Log
     {
         public static void Info(string message)
         {
             Debug.Log(message);
         }
 
-        public static void Warning(string message)
+        public static void Warn(string message)
         {
             Debug.LogWarning(message);
+        }
+
+        public static void Warn(string message, Object context)
+        {
+            Debug.LogWarning(message, context);
         }
 
         public static void Error(string message)
         {
             Debug.LogError(message);
+        }
+
+        public static void Error(string message, Object context)
+        {
+            Debug.LogError(message, context);
         }
     }
 }

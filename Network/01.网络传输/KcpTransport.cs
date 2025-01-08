@@ -11,7 +11,6 @@
 
 using System;
 using JFramework.Udp;
-using UnityEngine;
 
 namespace JFramework.Net
 {
@@ -24,15 +23,15 @@ namespace JFramework.Net
         public uint fastResend = 2;
         public uint sendWindow = 1024 * 4;
         public uint receiveWindow = 1024 * 4;
-        
+
         private Client client;
         private Server server;
 
         private void Awake()
         {
-            Log.Info = Debug.Log;
-            Log.Warn = Debug.LogWarning;
-            Log.Error = Debug.LogError;
+            Udp.Log.Info = Log.Info;
+            Udp.Log.Warn = Log.Warn;
+            Udp.Log.Error = Log.Error;
             var setting = new Setting(maxUnit, timeout, interval, deadLink, fastResend, sendWindow, receiveWindow);
             client = new Client(setting, ClientConnect, ClientDisconnect, ClientError, ClientReceive);
             server = new Server(setting, ServerConnect, ServerDisconnect, ServerError, ServerReceive);
@@ -55,7 +54,8 @@ namespace JFramework.Net
             void ServerReceive(int clientId, ArraySegment<byte> message, int channel) => OnServerReceive.Invoke(clientId, message, channel);
         }
 
-        public override int MessageSize(int channel) => channel == Channel.Reliable ? Agent.ReliableSize(maxUnit, receiveWindow) : Agent.UnreliableSize(maxUnit);
+        public override int MessageSize(int channel) =>
+            channel == Channel.Reliable ? Agent.ReliableSize(maxUnit, receiveWindow) : Agent.UnreliableSize(maxUnit);
 
         public override void StartServer() => server.Connect(port);
 
@@ -63,7 +63,8 @@ namespace JFramework.Net
 
         public override void StopClient(int clientId) => server.Disconnect(clientId);
 
-        public override void SendToClient(int clientId, ArraySegment<byte> segment, int channel = Channel.Reliable) => server.Send(clientId, segment, channel);
+        public override void SendToClient(int clientId, ArraySegment<byte> segment, int channel = Channel.Reliable) =>
+            server.Send(clientId, segment, channel);
 
         public override void StartClient() => client.Connect(address, port);
 

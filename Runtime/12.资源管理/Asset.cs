@@ -45,11 +45,11 @@ namespace JFramework
                         return (T)assetData;
                     }
 
-                    Log.Warning(Text.Format("加载资源 {0} 为空!", assetPath));
+                    Log.Warn(Text.Format("加载资源 {0} 为空!", assetPath));
                 }
                 catch (Exception e)
                 {
-                    Log.Warning(Text.Format("加载资源 {0} 失败!\n{1}", assetPath, e));
+                    Log.Warn(Text.Format("加载资源 {0} 失败!\n{1}", assetPath, e));
                 }
 
                 return default;
@@ -67,11 +67,11 @@ namespace JFramework
                         return;
                     }
 
-                    Log.Warning(Text.Format("加载资源 {0} 为空!", assetPath));
+                    Log.Warn(Text.Format("加载资源 {0} 为空!", assetPath));
                 }
                 catch (Exception e)
                 {
-                    Log.Warning(Text.Format("加载资源 {0} 失败!\n{1}", assetPath, e));
+                    Log.Warn(Text.Format("加载资源 {0} 失败!\n{1}", assetPath, e));
                 }
             }
 

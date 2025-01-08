@@ -121,13 +121,13 @@ namespace JFramework.Net
             {
                 if (connection == null)
                 {
-                    Debug.LogError("没有连接到有效的服务器！");
+                    Log.Error("没有连接到有效的服务器！");
                     return;
                 }
 
                 if (isReady)
                 {
-                    Debug.LogError("客户端已经准备就绪！");
+                    Log.Error("客户端已经准备就绪！");
                     return;
                 }
 
@@ -140,13 +140,13 @@ namespace JFramework.Net
             {
                 if (string.IsNullOrWhiteSpace(sceneName))
                 {
-                    Debug.LogError("客户端不能加载空场景！");
+                    Log.Error("客户端不能加载空场景！");
                     return;
                 }
 
                 if (isLoadScene && NetworkManager.sceneName == sceneName)
                 {
-                    Debug.LogError(Service.Text.Format("客户端正在加载 {0} 场景", sceneName));
+                    Log.Error(Service.Text.Format("客户端正在加载 {0} 场景", sceneName));
                     return;
                 }
 
@@ -207,7 +207,7 @@ namespace JFramework.Net
                     }
                     catch (Exception e)
                     {
-                        Debug.LogError(Service.Text.Format("{0} 调用失败。传输通道: {1}\n{2}", typeof(T).Name, channel, e));
+                        Log.Error(Service.Text.Format("{0} 调用失败。传输通道: {1}\n{2}", typeof(T).Name, channel, e));
                         client.Disconnect();
                     }
                 };
@@ -248,13 +248,13 @@ namespace JFramework.Net
 
                 if (!spawns.TryGetValue(message.objectId, out var @object))
                 {
-                    Debug.LogWarning(Service.Text.Format("无法同步网络对象: {0}", message.objectId));
+                    Log.Warn(Service.Text.Format("无法同步网络对象: {0}", message.objectId));
                     return;
                 }
 
                 if (@object == null)
                 {
-                    Debug.LogWarning(Service.Text.Format("无法同步网络对象: {0}", message.objectId));
+                    Log.Warn(Service.Text.Format("无法同步网络对象: {0}", message.objectId));
                     return;
                 }
 
@@ -275,7 +275,7 @@ namespace JFramework.Net
             {
                 if (!isConnected)
                 {
-                    Debug.LogWarning("客户端没有通过验证，无法加载场景。");
+                    Log.Warn("客户端没有通过验证，无法加载场景。");
                     return;
                 }
 
@@ -360,7 +360,7 @@ namespace JFramework.Net
             {
                 if (connection == null)
                 {
-                    Debug.LogError("没有连接到有效的服务器！");
+                    Log.Error("没有连接到有效的服务器！");
                     return;
                 }
 
@@ -387,20 +387,20 @@ namespace JFramework.Net
                     6 => "ConnectionClosed",
                     _ => "Unexpected",
                 };
-                Debug.LogWarning(Service.Text.Format("错误代码: {0} => {1}", reason, message));
+                Log.Warn(Service.Text.Format("错误代码: {0} => {1}", reason, message));
             }
 
             internal static void OnClientReceive(ArraySegment<byte> segment, int channel)
             {
                 if (connection == null)
                 {
-                    Debug.LogError("没有连接到有效的服务器！");
+                    Log.Error("没有连接到有效的服务器！");
                     return;
                 }
 
                 if (!connection.reader.AddBatch(segment))
                 {
-                    Debug.LogWarning("无法处理来自服务器的消息。");
+                    Log.Warn("无法处理来自服务器的消息。");
                     connection.Disconnect();
                     return;
                 }
@@ -410,7 +410,7 @@ namespace JFramework.Net
                     using var reader = MemoryReader.Pop(newSeg);
                     if (reader.residue < sizeof(ushort))
                     {
-                        Debug.LogWarning("无法处理来自服务器的消息。没有头部。");
+                        Log.Warn("无法处理来自服务器的消息。没有头部。");
                         connection.Disconnect();
                         return;
                     }
@@ -418,7 +418,7 @@ namespace JFramework.Net
                     var message = reader.ReadUShort();
                     if (!messages.TryGetValue(message, out var action))
                     {
-                        Debug.LogWarning(Service.Text.Format("无法处理来自服务器的消息。未知的消息{0}", message));
+                        Log.Warn(Service.Text.Format("无法处理来自服务器的消息。未知的消息{0}", message));
                         connection.Disconnect();
                         return;
                     }
@@ -429,7 +429,7 @@ namespace JFramework.Net
 
                 if (!isLoadScene && connection.reader.Count > 0)
                 {
-                    Debug.LogWarning(Service.Text.Format("无法处理来自服务器的消息。残留消息: {0}", connection.reader.Count));
+                    Log.Warn(Service.Text.Format("无法处理来自服务器的消息。残留消息: {0}", connection.reader.Count));
                 }
             }
         }
@@ -458,19 +458,19 @@ namespace JFramework.Net
 
                     if (!prefab.TryGetComponent(out @object))
                     {
-                        Debug.LogError(Service.Text.Format("无法注册网络对象 {0}。没有 NetworkObject 组件。", prefab.name));
+                        Log.Error(Service.Text.Format("无法注册网络对象 {0}。没有 NetworkObject 组件。", prefab.name));
                         return;
                     }
 
                     if (@object.sceneId != 0)
                     {
-                        Debug.LogError(Service.Text.Format("无法注册网络对象 {0}。因为该预置体为场景对象。", @object.name));
+                        Log.Error(Service.Text.Format("无法注册网络对象 {0}。因为该预置体为场景对象。", @object.name));
                         return;
                     }
 
                     if (@object.GetComponentsInChildren<NetworkObject>().Length > 1)
                     {
-                        Debug.LogError(Service.Text.Format("无法注册网络对象 {0}。持有多个 NetworkObject 组件。", @object.name));
+                        Log.Error(Service.Text.Format("无法注册网络对象 {0}。持有多个 NetworkObject 组件。", @object.name));
                         return;
                     }
                 }
@@ -478,7 +478,7 @@ namespace JFramework.Net
                 {
                     if (!scenes.TryGetValue(message.sceneId, out @object))
                     {
-                        Debug.LogError(Service.Text.Format("无法注册网络对象 {0}。场景标识无效。", message.sceneId));
+                        Log.Error(Service.Text.Format("无法注册网络对象 {0}。场景标识无效。", message.sceneId));
                         return;
                     }
 

@@ -90,13 +90,13 @@ namespace JFramework.Net
         {
             if (entities == null)
             {
-                Debug.LogError("网络对象持有的 NetworkEntity 为空", gameObject);
+                Log.Error("网络对象持有的 NetworkEntity 为空", gameObject);
                 return false;
             }
 
             if (entities.Length > 64)
             {
-                Debug.LogError("网络对象持有的 NetworkEntity 的数量不能超过 64");
+                Log.Error("网络对象持有的 NetworkEntity 的数量不能超过 64");
                 return false;
             }
 
@@ -107,19 +107,19 @@ namespace JFramework.Net
         {
             if (this == null)
             {
-                Debug.LogWarning(Service.Text.Format("调用了已经删除的网络对象。{0} [{1}] {2}", mode, function, objectId));
+                Log.Warn(Service.Text.Format("调用了已经删除的网络对象。{0} [{1}] {2}", mode, function, objectId));
                 return;
             }
 
             if (index >= entities.Length)
             {
-                Debug.LogWarning(Service.Text.Format("网络对象{0}，没有找到组件{1}", objectId, index));
+                Log.Warn(Service.Text.Format("网络对象{0}，没有找到组件{1}", objectId, index));
                 return;
             }
 
             if (!NetworkDelegate.Invoke(function, mode, client, reader, entities[index]))
             {
-                Debug.LogError(Service.Text.Format("无法调用{0} [{1}] 网络对象: {2} 网络标识: {3}", mode, function, gameObject.name, objectId));
+                Log.Error(Service.Text.Format("无法调用{0} [{1}] 网络对象: {2} 网络标识: {3}", mode, function, gameObject.name, objectId));
             }
         }
 
@@ -165,7 +165,7 @@ namespace JFramework.Net
                 }
                 catch (Exception e)
                 {
-                    Debug.LogException(e, entity.gameObject);
+                    Log.Warn(e.ToString(),  entity.gameObject);
                 }
             }
         }
@@ -185,7 +185,7 @@ namespace JFramework.Net
                 }
                 catch (Exception e)
                 {
-                    Debug.LogException(e, entity.gameObject);
+                    Log.Warn(e.ToString(), entity.gameObject);
                 }
             }
         }
@@ -200,7 +200,7 @@ namespace JFramework.Net
                 }
                 catch (Exception e)
                 {
-                    Debug.LogException(e, entity.gameObject);
+                    Log.Warn(e.ToString(),  entity.gameObject);
                 }
             }
         }
@@ -215,7 +215,7 @@ namespace JFramework.Net
                 }
                 catch (Exception e)
                 {
-                    Debug.LogException(e, entity.gameObject);
+                    Log.Warn(e.ToString(),  entity.gameObject);
                 }
             }
         }
@@ -251,7 +251,7 @@ namespace JFramework.Net
                 }
                 catch (Exception e)
                 {
-                    Debug.LogException(e, entity.gameObject);
+                    Log.Warn(e.ToString(),  entity.gameObject);
                 }
             }
         }
@@ -266,7 +266,7 @@ namespace JFramework.Net
                 }
                 catch (Exception e)
                 {
-                    Debug.LogException(e, entity.gameObject);
+                    Log.Warn(e.ToString(),  entity.gameObject);
                 }
             }
         }

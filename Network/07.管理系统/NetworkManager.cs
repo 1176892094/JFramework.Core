@@ -105,7 +105,7 @@ namespace JFramework.Net
         {
             if (Server.isActive)
             {
-                Debug.LogWarning("服务器已经连接！");
+                Log.Warn("服务器已经连接！");
                 return;
             }
 
@@ -116,7 +116,7 @@ namespace JFramework.Net
         {
             if (!Server.isActive)
             {
-                Debug.LogWarning("服务器已经停止！");
+                Log.Warn("服务器已经停止！");
                 return;
             }
 
@@ -127,7 +127,7 @@ namespace JFramework.Net
         {
             if (Client.isActive)
             {
-                Debug.LogWarning("客户端已经连接！");
+                Log.Warn("客户端已经连接！");
                 return;
             }
 
@@ -138,7 +138,7 @@ namespace JFramework.Net
         {
             if (Client.isActive)
             {
-                Debug.LogWarning("客户端已经连接！");
+                Log.Warn("客户端已经连接！");
                 return;
             }
 
@@ -149,7 +149,7 @@ namespace JFramework.Net
         {
             if (!Client.isActive)
             {
-                Debug.LogWarning("客户端已经停止！");
+                Log.Warn("客户端已经停止！");
                 return;
             }
 
@@ -165,7 +165,7 @@ namespace JFramework.Net
         {
             if (Server.isActive || Client.isActive)
             {
-                Debug.LogWarning("客户端或服务器已经连接！");
+                Log.Warn("客户端或服务器已经连接！");
                 return;
             }
 

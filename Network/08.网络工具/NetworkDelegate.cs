@@ -11,7 +11,6 @@
 
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace JFramework.Net
 {
@@ -50,7 +49,7 @@ namespace JFramework.Net
             {
                 var target = Service.Text.Format("[{0} {1}]", component, func.Method.Name);
                 var origin = Service.Text.Format("[{0} {1}]", message.component, message.func.Method.Name);
-                Debug.LogError(Service.Text.Format("远程调用 {0} 与 {1} 冲突。", origin, target));
+                Log.Error(Service.Text.Format("远程调用 {0} 与 {1} 冲突。", origin, target));
             }
         }
 

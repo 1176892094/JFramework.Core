@@ -89,7 +89,7 @@ namespace JFramework
                                         continue;
                                     }
 
-                                    Log.Warning(Text.Format("加载数据 {0} 失败。键值重复: {1}", assetType.Name, item));
+                                    Log.Warn(Text.Format("加载数据 {0} 失败。键值重复: {1}", assetType.Name, item));
                                 }
 
                                 return items;

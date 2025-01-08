@@ -87,7 +87,7 @@ namespace JFramework.Net
             }
             catch (Exception e)
             {
-                Debug.LogError(Service.Text.Format("序列化对象失败。对象名称: {0}[{1}][{2}]\n{3}", name, GetType(), @object.sceneId, e));
+                Log.Error(Service.Text.Format("序列化对象失败。对象名称: {0}[{1}][{2}]\n{3}", name, GetType(), @object.sceneId, e));
             }
 
             var endPosition = writer.position;
@@ -109,7 +109,7 @@ namespace JFramework.Net
             }
             catch (Exception e)
             {
-                Debug.LogError(Service.Text.Format("反序列化对象失败。对象名称: {0}[{1}][{2}]\n{3}", name, GetType(), @object.sceneId, e));
+                Log.Error(Service.Text.Format("反序列化对象失败。对象名称: {0}[{1}][{2}]\n{3}", name, GetType(), @object.sceneId, e));
                 result = false;
             }
 
@@ -117,7 +117,7 @@ namespace JFramework.Net
             var sizeHash = (byte)(size & 0xFF);
             if (sizeHash != safety)
             {
-                Debug.LogError(Service.Text.Format("反序列化字节不匹配。读取字节: {0} 哈希对比:{1}/{2}", size, sizeHash, safety));
+                Log.Error(Service.Text.Format("反序列化字节不匹配。读取字节: {0} 哈希对比:{1}/{2}", size, sizeHash, safety));
                 var cleared = (uint)size & 0xFFFFFF00;
                 reader.position = chunkStart + (int)(cleared | safety);
                 result = false;
