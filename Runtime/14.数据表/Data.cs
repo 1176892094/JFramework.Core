@@ -51,7 +51,7 @@ namespace JFramework
                     try
                     {
                         if (string.IsNullOrEmpty(assetType.FullName)) continue;
-                        var dataTable = await formHelper.Instantiate(GetTablePath(assetType.Name));
+                        var dataTable = (IDataTable)await Asset.Load<ScriptableObject>(GetTablePath(assetType.Name));
                         var children = assembly.GetType(assetType.FullName.Substring(0, assetType.FullName.Length - 5));
                         var properties = children.GetProperties(Depend.Instance);
                         foreach (var property in properties)

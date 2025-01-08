@@ -15,7 +15,6 @@ namespace JFramework
 {
     public interface IAssetHelper : IBaseHelper
     {
-        void LoadScene(string assetPath);
         string[] GetAllDependency(object assetPack, string assetPath);
         string[] GetAllAssetPacks(object assetPack);
         string[] GetAllScenePaths(object assetPack);

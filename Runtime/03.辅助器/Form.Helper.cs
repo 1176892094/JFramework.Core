@@ -10,16 +10,11 @@
 // *********************************************************************************
 
 using System.IO;
-using System.Threading.Tasks;
 
 namespace JFramework
 {
     public interface IFormHelper : IBaseHelper
     {
-        Task<IDataTable> Instantiate(string assetPath);
-
-        IDataTable CreateInstance(string assetPath);
-
         void CreateAsset(IDataTable assetData, string assetPath);
 
         void CreateProgress(string assetPath, float progress);

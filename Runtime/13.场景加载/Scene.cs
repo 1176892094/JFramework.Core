@@ -12,6 +12,7 @@
 using System;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace JFramework
 {
@@ -27,7 +28,18 @@ namespace JFramework
                     var assetData = await LoadSceneAsset(GetScenePath(assetPath));
                     if (assetData != null)
                     {
-                        assetHelper.LoadScene(assetData);
+                        Event.Invoke(new SceneAwakeEvent(assetPath));
+                        var request = SceneManager.LoadSceneAsync(assetPath, LoadSceneMode.Single);
+                        if (request != null)
+                        {
+                            while (!request.isDone && helper != null)
+                            {
+                                Event.Invoke(new SceneUpdateEvent(request.progress));
+                                await Task.Yield();
+                            }
+                        }
+
+                        Event.Invoke(new SceneCompleteEvent());
                         return;
                     }
 
