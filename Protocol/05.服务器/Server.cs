@@ -26,8 +26,7 @@ namespace JFramework.Udp
         private EndPoint endPoint;
         private Socket socket;
 
-        public Server(Setting setting, Action<int> OnConnect, Action<int> OnDisconnect, Action<int, int, string> OnError,
-            Action<int, ArraySegment<byte>, int> OnReceive)
+        public Server(Setting setting, Action<int> OnConnect, Action<int> OnDisconnect, Action<int, int, string> OnError, Action<int, ArraySegment<byte>, int> OnReceive)
         {
             this.setting = setting;
             this.OnError = OnError;
@@ -227,9 +226,7 @@ namespace JFramework.Udp
         {
             public readonly EndPoint endPoint;
 
-            public Client(Action<Client> OnConnect, Action OnDisconnect, Action<int, string> OnError,
-                Action<ArraySegment<byte>, int> OnReceive, Action<ArraySegment<byte>> OnSend, Setting setting, uint cookie,
-                EndPoint endPoint) : base(setting, cookie)
+            public Client(Action<Client> OnConnect, Action OnDisconnect, Action<int, string> OnError, Action<ArraySegment<byte>, int> OnReceive, Action<ArraySegment<byte>> OnSend, Setting setting, uint cookie, EndPoint endPoint) : base(setting, cookie)
             {
                 this.OnSend = OnSend;
                 this.OnError = OnError;
@@ -248,7 +245,7 @@ namespace JFramework.Udp
 
             protected override void Connected()
             {
-                SendReliable(Reliable.Connect, default);
+                SendReliable(Reliable.Connect);
                 OnConnect?.Invoke(this);
             }
 
@@ -258,7 +255,7 @@ namespace JFramework.Udp
 
             protected override void Receive(ArraySegment<byte> message, int channel) => OnReceive?.Invoke(message, channel);
 
-            protected override void Logger(Error error, string message) => OnError?.Invoke((int)error, message);
+            internal override void Logger(Error error, string message) => OnError?.Invoke((int)error, message);
 
             public void Input(ArraySegment<byte> segment)
             {

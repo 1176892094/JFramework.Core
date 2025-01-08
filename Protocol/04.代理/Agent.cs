@@ -4,7 +4,7 @@
 // # Author: 云谷千羽
 // # Version: 1.0.0
 // # History: 2025-01-08 19:01:30
-// # Recently: 2025-01-08 20:01:56
+// # Recently: 2025-01-08 20:01:54
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
@@ -25,12 +25,12 @@ namespace JFramework.Udp
         private readonly byte[] receiveBuffer;
         private readonly int unreliableSize;
         private readonly Stopwatch watch = new Stopwatch();
-        protected uint cookie;
         private Kcp kcp;
+        internal Status status;
+        private uint timeout;
         private uint pingTime;
         private uint receiveTime;
-        protected Status status;
-        private uint timeout;
+        protected uint cookie;
 
         protected Agent(Setting setting, uint cookie = 0)
         {
@@ -152,7 +152,7 @@ namespace JFramework.Udp
             Send(segment);
         }
 
-        protected void SendReliable(Reliable header, ArraySegment<byte> segment)
+        internal void SendReliable(Reliable header, ArraySegment<byte> segment = default)
         {
             if (segment.Count > kcpSendBuffer.Length - 1)
             {
@@ -172,7 +172,7 @@ namespace JFramework.Udp
             }
         }
 
-        private void SendUnreliable(Unreliable header, ArraySegment<byte> segment)
+        private void SendUnreliable(Unreliable header, ArraySegment<byte> segment = default)
         {
             if (segment.Count > unreliableSize)
             {
@@ -191,7 +191,7 @@ namespace JFramework.Udp
             Send(new ArraySegment<byte>(rawSendBuffer, 0, segment.Count + 1 + 4 + 1));
         }
 
-        public void SendData(ArraySegment<byte> data, int channel)
+        internal void SendData(ArraySegment<byte> data, int channel)
         {
             if (data.Count == 0)
             {
@@ -221,7 +221,7 @@ namespace JFramework.Udp
             {
                 for (var i = 0; i < 5; ++i)
                 {
-                    SendUnreliable(Unreliable.Disconnect, default);
+                    SendUnreliable(Unreliable.Disconnect);
                 }
             }
             finally
@@ -256,7 +256,7 @@ namespace JFramework.Udp
 
             if (time >= pingTime + PING_INTERVAL)
             {
-                SendReliable(Reliable.Ping, default);
+                SendReliable(Reliable.Ping);
                 pingTime = time;
             }
 
@@ -347,7 +347,7 @@ namespace JFramework.Udp
         protected abstract void Connected();
         protected abstract void Send(ArraySegment<byte> segment);
         protected abstract void Receive(ArraySegment<byte> message, int channel);
-        protected abstract void Logger(Error error, string message);
+        internal abstract void Logger(Error error, string message);
         protected abstract void Disconnected();
     }
 }

@@ -22,8 +22,7 @@ namespace JFramework.Udp
         private EndPoint endPoint;
         private Socket socket;
 
-        public Client(Setting setting, Action OnConnect, Action OnDisconnect, Action<int, string> OnError,
-            Action<ArraySegment<byte>, int> OnReceive) : base(setting)
+        public Client(Setting setting, Action OnConnect, Action OnDisconnect, Action<int, string> OnError, Action<ArraySegment<byte>, int> OnReceive) : base(setting)
         {
             this.setting = setting;
             this.OnError = OnError;
@@ -58,7 +57,7 @@ namespace JFramework.Udp
                     Common.SetBuffer(socket);
                     socket.Connect(endPoint);
                     Log.Info($"客户端连接到：{addresses[0]} 端口：{port}。");
-                    SendReliable(Reliable.Connect, default);
+                    SendReliable(Reliable.Connect);
                 }
             }
             catch (SocketException e)
@@ -103,7 +102,7 @@ namespace JFramework.Udp
             SendData(segment, channel);
         }
         
-        public void Input(ArraySegment<byte> segment)
+        private void Input(ArraySegment<byte> segment)
         {
             if (segment.Count <= 1 + 4)
             {
@@ -162,7 +161,7 @@ namespace JFramework.Udp
             OnReceive?.Invoke(message, channel);
         }
 
-        protected override void Logger(Error error, string message)
+        internal override void Logger(Error error, string message)
         {
             OnError?.Invoke((int)error, message);
         }

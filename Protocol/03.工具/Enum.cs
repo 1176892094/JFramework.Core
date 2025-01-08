@@ -11,7 +11,7 @@
 
 namespace JFramework.Udp
 {
-    public enum Error : byte
+    internal enum Error : byte
     {
         DnsResolve = 1,       // 无法解析主机地址
         Timeout = 2,          // Ping链接超时
@@ -22,21 +22,21 @@ namespace JFramework.Udp
         Unexpected = 7        // 意外错误异常，需要修复
     }
 
-    public enum Status : byte
+    internal enum Status : byte
     {
         Connect,
         Connected,
         Disconnect
     }
 
-    public enum Reliable : byte
+    internal enum Reliable : byte
     {
         Connect = 1,
         Ping = 2,
         Data = 3,
     }
 
-    public enum Unreliable : byte
+    internal enum Unreliable : byte
     {
         Data = 4,
         Disconnect = 5,
