@@ -9,6 +9,8 @@
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
 
+using UnityEngine;
+
 namespace JFramework
 {
     public interface IScroll
@@ -19,6 +21,6 @@ namespace JFramework
         float width { get; }
         float height { get; }
         float position { get; }
-        object content { get; }
+        RectTransform content { get; }
     }
 }

@@ -4,34 +4,36 @@
 // # Author: 云谷千羽
 // # Version: 1.0.0
 // # History: 2024-12-23 18:12:21
-// # Recently: 2025-01-08 17:01:33
+// # Recently: 2025-01-08 19:01:13
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
 
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace JFramework
 {
     [Serializable]
-    public abstract class Scroll<T, TItem, TGrid> : Agent<T> where T : IPanel, IScroll where TGrid : IGrid<T, TItem>
+    public sealed class Scroll<T, TItem, TGrid> : Agent<T> where T : IPanel, IScroll where TGrid : IGrid<T, TItem>
     {
-        private int column;
         private Dictionary<int, TGrid> grids = new Dictionary<int, TGrid>();
-        private float height;
         private List<TItem> items;
         private int oldMaxIndex = -1;
         private int oldMinIndex = -1;
-        private string path;
+     
         private int row;
+        private int column;
         private float width;
-
+        private float height;
+        private string path;
+        
         protected override void Dispose()
         {
             row = 0;
-            column = 0;
             width = 0;
+            column = 0;
             height = 0;
             path = null;
             items = null;
@@ -42,11 +44,14 @@ namespace JFramework
 
         protected override void Awake()
         {
-            path = owner.path;
             row = owner.row;
-            column = owner.column;
+            path = owner.path;
             width = owner.width;
+            column = owner.column;
             height = owner.height;
+            owner.content.pivot = Vector2.up;
+            owner.content.anchorMin = Vector2.up;
+            owner.content.anchorMax = Vector2.one;
         }
 
         public void SetItem(List<TItem> items)
@@ -65,8 +70,8 @@ namespace JFramework
 
             grids.Clear();
             this.items = items;
-            var newHeight = (float)Math.Ceiling((float)items.Count / column) * height + 1;
-            SetItem(newHeight);
+            owner.content.anchoredPosition = Vector2.zero;
+            owner.content.sizeDelta = new Vector2(0, (float)Math.Ceiling((float)items.Count / column) * height + 1);
         }
 
         public void Update()
@@ -114,13 +119,18 @@ namespace JFramework
                 {
                     var index = i;
                     grids[index] = default;
-                    Service.Pool.Show(path, gameObject =>
+                    var posX = index % column * width + width / 2;
+                    var posY = -(index / column) * height - height / 2;
+                    Service.Pool.Show(path, obj =>
                     {
-                        var grid = gameObject.GetComponent<TGrid>();
-                        var posX = index % column * width + width / 2;
-                        var posY = -(index / column) * height - height / 2;
-                        SetGrid(grid, posX, posY);
+                        var transform = (RectTransform)obj.transform;
+                        transform.SetParent(owner.content);
+                        transform.localScale = Vector3.one;
+                        transform.localPosition = new Vector3(posX, posY, 0);
 
+                        var grid = obj.GetComponent<TGrid>();
+                        grid ??= (TGrid)(object)obj.AddComponent(typeof(TGrid));
+                        transform.sizeDelta = new Vector2(grid.scroll.width, grid.scroll.height);
                         if (!grids.ContainsKey(index))
                         {
                             grid.Dispose();
@@ -134,9 +144,5 @@ namespace JFramework
                 }
             }
         }
-
-        protected abstract void SetItem(float height);
-
-        protected abstract void SetGrid(TGrid grid, float posX, float posY);
     }
 }

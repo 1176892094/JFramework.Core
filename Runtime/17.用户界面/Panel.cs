@@ -11,6 +11,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using UnityEngine;
 
 namespace JFramework
 {
@@ -18,19 +20,31 @@ namespace JFramework
     {
         public static class Panel
         {
+            private static async Task<IPanel> Load(string assetPath, Type assetType)
+            {
+                var obj = await Asset.Load<GameObject>(assetPath);
+                var component = obj.GetComponent(assetType);
+                if (component == null)
+                {
+                    component = obj.AddComponent(assetType);
+                }
+
+                var panel = (IPanel)component;
+                panelData.Add(assetType, panel);
+                Surface(panel);
+                return panel;
+            }
+
             public static async void Show<T>(Action<T> assetAction = null) where T : IPanel
             {
                 if (helper == null) return;
                 var assetPath = GetPanelPath(typeof(T).Name);
                 if (!panelData.TryGetValue(typeof(T), out var panel))
                 {
-                    panel = (IPanel)await panelHelper.Instantiate(assetPath, typeof(T));
-                    panelData.Add(typeof(T), panel);
-                    Surface(panel);
+                    panel = await Load(assetPath, typeof(T));
                     panel.Show();
                 }
-
-                if (Group.ShowInGroup(panel))
+                else if (Group.ShowInGroup(panel))
                 {
                     panel.Show();
                 }
@@ -76,13 +90,10 @@ namespace JFramework
                 var assetPath = GetPanelPath(assetType.Name);
                 if (!panelData.TryGetValue(assetType, out var panel))
                 {
-                    panel = (IPanel)await panelHelper.Instantiate(assetPath, assetType);
-                    panelData.Add(assetType, panel);
-                    Surface(panel);
+                    panel = await Load(assetPath, assetType);
                     panel.Show();
                 }
-
-                if (Group.ShowInGroup(panel))
+                else if (Group.ShowInGroup(panel))
                 {
                     panel.Show();
                 }
