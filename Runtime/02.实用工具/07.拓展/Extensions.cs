@@ -11,11 +11,10 @@
 
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace JFramework
 {
-    public static class Extensions
+    public static partial class Extensions
     {
         public static bool IsNullOrEmpty(this string result)
         {
@@ -81,31 +80,6 @@ namespace JFramework
             }
 
             return enumFlags[Service.Random.Next(enumFlags.Count)];
-        }
-
-        public static Watch Watch(this GameObject current, float duration)
-        {
-            return Service.Timer.Load<Watch>(current, duration);
-        }
-
-        public static Tween Tween(this GameObject current, float duration)
-        {
-            return Service.Timer.Load<Tween>(current, duration);
-        }
-
-        public static IAgent Agent(this IEntity current, Type agentType)
-        {
-            return Service.Agent.GetAgent(current, agentType);
-        }
-
-        public static T Agent<T>(this IEntity current) where T : class, IAgent
-        {
-            return Service.Agent.GetAgent<T>(current);
-        }
-
-        public static void Destroy(this IEntity current)
-        {
-            Service.Agent.Destroy(current);
         }
     }
 }
