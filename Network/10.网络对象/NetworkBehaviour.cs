@@ -126,9 +126,15 @@ namespace JFramework.Net
             return result;
         }
 
-        protected virtual void OnSerialize(MemoryWriter writer, bool status) => SerializeSyncVars(writer, status);
+        protected virtual void OnSerialize(MemoryWriter writer, bool status)
+        {
+            SerializeSyncVars(writer, status);
+        }
 
-        protected virtual void OnDeserialize(MemoryReader reader, bool status) => DeserializeSyncVars(reader, status);
+        protected virtual void OnDeserialize(MemoryReader reader, bool status)
+        {
+            DeserializeSyncVars(reader, status);
+        }
 
         protected virtual void SerializeSyncVars(MemoryWriter writer, bool status)
         {
