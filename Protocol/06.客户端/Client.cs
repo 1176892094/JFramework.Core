@@ -3,8 +3,8 @@
 // # Unity: 6000.3.5f1
 // # Author: 云谷千羽
 // # Version: 1.0.0
-// # History: 2024-11-29 13:11:20
-// # Recently: 2024-12-22 20:12:12
+// # History: 2025-01-08 19:01:30
+// # Recently: 2025-01-08 20:01:57
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
@@ -23,7 +23,7 @@ namespace JFramework.Udp
         private Socket socket;
 
         public Client(Setting setting, Action OnConnect, Action OnDisconnect, Action<int, string> OnError,
-            Action<ArraySegment<byte>, int> OnReceive) : base(setting, 0)
+            Action<ArraySegment<byte>, int> OnReceive) : base(setting)
         {
             this.setting = setting;
             this.OnError = OnError;
@@ -67,8 +67,7 @@ namespace JFramework.Udp
                 OnDisconnect?.Invoke();
             }
         }
-
-
+        
         private bool TryReceive(out ArraySegment<byte> segment)
         {
             segment = default;
@@ -103,8 +102,7 @@ namespace JFramework.Udp
 
             SendData(segment, channel);
         }
-
-
+        
         public void Input(ArraySegment<byte> segment)
         {
             if (segment.Count <= 1 + 4)

@@ -3,8 +3,8 @@
 // # Unity: 6000.3.5f1
 // # Author: 云谷千羽
 // # Version: 1.0.0
-// # History: 2024-11-29 13:11:20
-// # Recently: 2024-12-22 20:12:12
+// # History: 2025-01-08 19:01:30
+// # Recently: 2025-01-08 20:01:58
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
@@ -15,32 +15,15 @@ using System.Security.Cryptography;
 
 namespace JFramework.Udp
 {
-    public static class Common
+    internal static class Common
     {
-        internal const int BUFFER_DEF = 1024 * 1027 * 7;
-        internal const int PING_INTERVAL = 1000;
-
-        internal const int CHANNEL_HEADER_SIZE = 1;
-        internal const int COOKIE_HEADER_SIZE = 4;
-        internal const int METADATA_SIZE = CHANNEL_HEADER_SIZE + COOKIE_HEADER_SIZE;
-
         private static readonly RNGCryptoServiceProvider cryptoRandom = new RNGCryptoServiceProvider();
         private static readonly byte[] cryptoRandomBuffer = new byte[4];
-        
-        public static uint GenerateCookie()
+
+        internal static uint GenerateCookie()
         {
             cryptoRandom.GetBytes(cryptoRandomBuffer);
             return BitConverter.ToUInt32(cryptoRandomBuffer, 0);
-        }
-
-        public static int ReliableSize(int mtu, uint rcv_wnd)
-        {
-            return (mtu - Kcp.OVERHEAD - METADATA_SIZE) * ((int)Math.Min(rcv_wnd, Kcp.FRG_MAX) - 1) - 1;
-        }
-
-        public static int UnreliableSize(int mtu)
-        {
-            return mtu - METADATA_SIZE - 1;
         }
 
         internal static bool ParseReliable(byte value, out Reliable header)
@@ -67,20 +50,20 @@ namespace JFramework.Udp
             return false;
         }
 
-        internal static void SetBuffer(Socket socket)
+        internal static void SetBuffer(Socket socket, int buffer = 1024 * 1024 * 7)
         {
             socket.Blocking = false;
             var sendBuffer = socket.SendBufferSize;
             var receiveBuffer = socket.ReceiveBufferSize;
             try
             {
-                socket.SendBufferSize = BUFFER_DEF;
-                socket.ReceiveBufferSize = BUFFER_DEF;
+                socket.SendBufferSize = buffer;
+                socket.ReceiveBufferSize = buffer;
             }
             catch (SocketException)
             {
-                Log.Info($"发送缓存: {BUFFER_DEF} => {sendBuffer} : {sendBuffer / BUFFER_DEF:F}");
-                Log.Info($"接收缓存: {BUFFER_DEF} => {receiveBuffer} : {receiveBuffer / BUFFER_DEF:F}");
+                Log.Info($"发送缓存: {buffer} => {sendBuffer} : {sendBuffer / buffer:F}");
+                Log.Info($"接收缓存: {buffer} => {receiveBuffer} : {receiveBuffer / buffer:F}");
             }
         }
     }

@@ -3,8 +3,8 @@
 // # Unity: 6000.3.5f1
 // # Author: 云谷千羽
 // # Version: 1.0.0
-// # History: 2024-11-29 13:11:20
-// # Recently: 2024-12-22 20:12:11
+// # History: 2025-01-08 19:01:30
+// # Recently: 2025-01-08 20:01:56
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
@@ -17,6 +17,9 @@ namespace JFramework.Udp
 {
     public abstract class Agent
     {
+        private const int PING_INTERVAL = 1000;
+        private const int METADATA_SIZE = sizeof(byte) + sizeof(int);
+
         private readonly byte[] kcpSendBuffer;
         private readonly byte[] rawSendBuffer;
         private readonly byte[] receiveBuffer;
@@ -29,12 +32,12 @@ namespace JFramework.Udp
         protected Status status;
         private uint timeout;
 
-        protected Agent(Setting setting, uint cookie)
+        protected Agent(Setting setting, uint cookie = 0)
         {
             Reset(setting);
             this.cookie = cookie;
-            unreliableSize = Common.UnreliableSize(setting.MaxUnit);
-            var reliableSize = Common.ReliableSize(setting.MaxUnit, setting.ReceiveWindow);
+            unreliableSize = UnreliableSize(setting.MaxUnit);
+            var reliableSize = ReliableSize(setting.MaxUnit, setting.ReceiveWindow);
             rawSendBuffer = new byte[setting.MaxUnit];
             receiveBuffer = new byte[1 + reliableSize];
             kcpSendBuffer = new byte[1 + reliableSize];
@@ -50,11 +53,21 @@ namespace JFramework.Udp
             watch.Restart();
 
             kcp = new Kcp(0, SendReliable);
-            kcp.SetMtu((uint)config.MaxUnit - Common.METADATA_SIZE);
+            kcp.SetMtu((uint)config.MaxUnit - METADATA_SIZE);
             kcp.SetWindowSize(config.SendWindow, config.ReceiveWindow);
             kcp.SetNoDelay(config.NoDelay ? 1U : 0U, config.Interval, config.FastResend, !config.Congestion);
             kcp.dead_link = config.DeadLink;
             timeout = config.Timeout;
+        }
+
+        public static int ReliableSize(int mtu, uint rcv_wnd)
+        {
+            return (mtu - Kcp.OVERHEAD - METADATA_SIZE) * ((int)Math.Min(rcv_wnd, Kcp.FRG_MAX) - 1) - 1;
+        }
+
+        public static int UnreliableSize(int mtu)
+        {
+            return mtu - METADATA_SIZE - 1;
         }
 
         private bool TryReceive(out Reliable header, out ArraySegment<byte> message)
@@ -241,7 +254,7 @@ namespace JFramework.Udp
                 Disconnect();
             }
 
-            if (time >= pingTime + Common.PING_INTERVAL)
+            if (time >= pingTime + PING_INTERVAL)
             {
                 SendReliable(Reliable.Ping, default);
                 pingTime = time;
