@@ -15,7 +15,7 @@ namespace JFramework
 {
     public static partial class Service
     {
-        public static class Memory
+        public static class Unsafe
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static unsafe void Write<T>(byte[] buffer, T value, ref int position) where T : unmanaged

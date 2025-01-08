@@ -31,13 +31,13 @@ namespace JFramework.Net
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T Read<T>() where T : unmanaged
         {
-            return Service.Memory.Read<T>(buffer.Array, buffer.Offset, ref position);
+            return Service.Unsafe.Read<T>(buffer.Array, buffer.Offset, ref position);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T? ReadNullable<T>() where T : unmanaged
         {
-            return Read<byte>() != 0 ? Service.Memory.Read<T>(buffer.Array, buffer.Offset, ref position) : default(T?);
+            return Read<byte>() != 0 ? Service.Unsafe.Read<T>(buffer.Array, buffer.Offset, ref position) : default(T?);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
