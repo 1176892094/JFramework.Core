@@ -27,6 +27,7 @@ namespace JFramework
                     if (assetData != null)
                     {
                         assetHelper.LoadScene(assetData);
+                        return;
                     }
                 }
                 catch (Exception e)
