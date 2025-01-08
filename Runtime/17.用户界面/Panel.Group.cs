@@ -63,7 +63,7 @@ namespace JFramework
                 {
                     foreach (var panel in panelGroup)
                     {
-                        if (!IsActive(panel))
+                        if (!panel.gameObject.activeInHierarchy)
                         {
                             panel.Show();
                         }
@@ -77,7 +77,7 @@ namespace JFramework
                 {
                     foreach (var panel in panelGroup)
                     {
-                        if (IsActive(panel))
+                        if (panel.gameObject.activeInHierarchy)
                         {
                             panel.Hide();
                         }
@@ -102,14 +102,14 @@ namespace JFramework
 
                     foreach (var other in panelGroup)
                     {
-                        if (panel != other && IsActive(other))
+                        if (panel != other && other.gameObject.activeInHierarchy)
                         {
                             Pool.Hide(other);
                         }
                     }
                 }
 
-                return !IsActive(panel);
+                return !panel.gameObject.activeInHierarchy;
             }
 
             internal static void Dispose()

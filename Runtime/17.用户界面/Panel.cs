@@ -43,7 +43,7 @@ namespace JFramework
                 if (helper == null) return;
                 if (panelData.TryGetValue(typeof(T), out var panel))
                 {
-                    if (IsActive(panel))
+                    if (panel.gameObject.activeInHierarchy)
                     {
                         panel.Hide();
                     }
@@ -95,7 +95,7 @@ namespace JFramework
                 if (helper == null) return;
                 if (panelData.TryGetValue(assetType, out var panel))
                 {
-                    if (IsActive(panel))
+                    if (panel.gameObject.activeInHierarchy)
                     {
                         panel.Hide();
                     }
