@@ -10,6 +10,7 @@
 // *********************************************************************************
 
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace JFramework
 {
@@ -18,6 +19,6 @@ namespace JFramework
         Task<string> LoadServerRequest(string packName, string packUri);
         Task<byte[]> LoadPacketRequest(string packName, string packUri);
         Task<string> LoadClientRequest(string persistentData, string streamingAssets);
-        Task<object> LoadAssetRequest(string persistentData, string streamingAssets);
+        Task<AssetBundle> LoadAssetRequest(string persistentData, string streamingAssets);
     }
 }

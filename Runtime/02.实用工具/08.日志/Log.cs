@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace JFramework
 {
-    public static class Log
+    internal static class Log
     {
         public static void Info(string message)
         {

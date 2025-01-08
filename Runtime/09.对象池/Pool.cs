@@ -42,11 +42,11 @@ namespace JFramework
             {
                 if (helper == null) return false;
                 var assetPath = assetData.name;
-                if (!assetPools.TryGetValue(assetPath, out var parent))
+                if (!poolGroup.TryGetValue(assetPath, out var parent))
                 {
                     parent = new GameObject(Text.Format("Pool - {0}", assetPath));
-                    parent.transform.SetParent(manager.transform);
-                    assetPools.Add(assetPath, parent);
+                    parent.transform.SetParent(poolManager.transform);
+                    poolGroup.Add(assetPath, parent);
                 }
 
                 assetData.SetActive(false);

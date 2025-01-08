@@ -19,24 +19,16 @@ namespace JFramework
         {
             public static void Register(IBaseHelper helper)
             {
-                if (manager == null)
-                {
-                    manager = new GameObject("PoolManager");
-                    Object.DontDestroyOnLoad(manager);
-                }
-
-                if (musicSource == null)
-                {
-                    musicSource = manager.AddComponent<AudioSource>();
-                }
-
                 Service.helper = helper;
                 Json.Load(setting, nameof(AudioSetting));
+                poolManager = new GameObject("PoolManager");
+                musicSource = poolManager.AddComponent<AudioSource>();
+                Object.DontDestroyOnLoad(poolManager);
             }
 
-            public static void Update(float elapsedTime, float unscaleTime)
+            public static void Update()
             {
-                Timer.Update(elapsedTime, unscaleTime);
+                Timer.Update(Time.time, Time.unscaledTime);
             }
 
             public static void UnRegister()

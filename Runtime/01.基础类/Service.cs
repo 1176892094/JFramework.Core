@@ -25,7 +25,7 @@ namespace JFramework
     public static partial class Service
     {
         private static IBaseHelper helper;
-        private static GameObject manager;
+        private static GameObject poolManager;
         private static AudioSource musicSource;
 
         private static readonly AudioSetting setting = new AudioSetting();
@@ -43,32 +43,32 @@ namespace JFramework
         private static readonly Dictionary<Type, NameTable> nameTable = new Dictionary<Type, NameTable>();
 
         private static readonly Dictionary<Type, EnumTable> enumTable = new Dictionary<Type, EnumTable>();
+        
+        private static readonly Dictionary<Type, IPanel> panelData = new Dictionary<Type, IPanel>();
+
+        private static readonly Dictionary<IPanel, HashSet<string>> groupPanel = new Dictionary<IPanel, HashSet<string>>();
+        
+        private static readonly Dictionary<IEntity, AgentData> agentData = new Dictionary<IEntity, AgentData>();
 
         private static readonly Dictionary<string, PackData> clientPacks = new Dictionary<string, PackData>();
 
         private static readonly Dictionary<string, PackData> serverPacks = new Dictionary<string, PackData>();
 
-        private static readonly Dictionary<string, object> assetPack = new Dictionary<string, object>();
-
         private static readonly Dictionary<string, AssetData> assetData = new Dictionary<string, AssetData>();
+        
+        private static readonly Dictionary<string, AssetBundle> assetPack = new Dictionary<string, AssetBundle>();
 
-        private static readonly Dictionary<string, Task<object>> assetTask = new Dictionary<string, Task<object>>();
+        private static readonly Dictionary<string, Task<AssetBundle>> assetTask = new Dictionary<string, Task<AssetBundle>>();
+        
+        private static readonly Dictionary<string, IPool> poolData = new Dictionary<string, IPool>();
+
+        private static readonly Dictionary<string, GameObject> poolGroup = new Dictionary<string, GameObject>();
 
         private static readonly Dictionary<string, Type> cachedType = new Dictionary<string, Type>();
 
         private static readonly Dictionary<string, Assembly> assemblies = new Dictionary<string, Assembly>();
 
-        private static readonly Dictionary<string, IPool> poolData = new Dictionary<string, IPool>();
-
-        private static readonly Dictionary<string, GameObject> assetPools = new Dictionary<string, GameObject>();
-
-        private static readonly Dictionary<IEntity, AgentData> agentData = new Dictionary<IEntity, AgentData>();
-
         private static readonly Dictionary<string, HashSet<IPanel>> panelGroup = new Dictionary<string, HashSet<IPanel>>();
-
-        private static readonly Dictionary<IPanel, HashSet<string>> groupPanel = new Dictionary<IPanel, HashSet<string>>();
-
-        private static readonly Dictionary<Type, IPanel> panelData = new Dictionary<Type, IPanel>();
 
         private static IPathHelper pathHelper => (IPathHelper)helper;
         private static IFormHelper formHelper => (IFormHelper)helper;
