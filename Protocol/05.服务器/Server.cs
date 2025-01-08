@@ -62,13 +62,13 @@ namespace JFramework.Udp
                     Log.Warn($"服务器不能设置成双模式！\n{e}");
                 }
 
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    const uint IOC_IN = 0x80000000U;
-                    const uint IOC_VENDOR = 0x18000000U;
-                    const int SIO_UDP_RESET = unchecked((int)(IOC_IN | IOC_VENDOR | 12));
-                    socket.IOControl(SIO_UDP_RESET, new byte[] { 0x00 }, null);
-                }
+                // if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                // {
+                //     const uint IOC_IN = 0x80000000U;
+                //     const uint IOC_VENDOR = 0x18000000U;
+                //     const int SIO_UDP_RESET = unchecked((int)(IOC_IN | IOC_VENDOR | 12));
+                //     socket.IOControl(SIO_UDP_RESET, new byte[] { 0x00 }, null);
+                // }
 
                 socket.Bind(new IPEndPoint(IPAddress.IPv6Any, port));
             }

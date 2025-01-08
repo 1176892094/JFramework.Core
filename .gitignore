@@ -78,3 +78,4 @@ Runtime/obj*
 Runtime/bin*
 /packages
 /Protocol/obj
+/Network/obj

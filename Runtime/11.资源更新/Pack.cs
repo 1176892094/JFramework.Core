@@ -37,7 +37,7 @@ namespace JFramework
                 var serverRequest = await packHelper.LoadServerRequest(assetPackData, fileUri);
                 if (!string.IsNullOrEmpty(serverRequest))
                 {
-                    var assetPacks = jsonHelper.FromJson<List<PackData>>(serverRequest);
+                    var assetPacks = Json.FromJson<List<PackData>>(serverRequest);
                     foreach (var assetPack in assetPacks)
                     {
                         serverPacks.Add(assetPack.name, assetPack);
@@ -62,7 +62,7 @@ namespace JFramework
                 var clientRequest = await packHelper.LoadClientRequest(persistentData, streamingAssets);
                 if (!string.IsNullOrEmpty(clientRequest))
                 {
-                    var assetPacks = jsonHelper.FromJson<List<PackData>>(clientRequest);
+                    var assetPacks = Json.FromJson<List<PackData>>(clientRequest);
                     foreach (var assetPack in assetPacks)
                     {
                         clientPacks.Add(assetPack.name, assetPack);

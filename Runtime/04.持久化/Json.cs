@@ -16,12 +16,12 @@ namespace JFramework
 {
     public static partial class Service
     {
-        public static class Json
+        public static partial class Json
         {
             public static void Save<T>(T data, string name)
             {
                 var path = GetJsonPath(name);
-                var json = jsonHelper.ToJson(data);
+                var json = ToJson(data);
                 File.WriteAllText(path, json);
             }
 
@@ -34,13 +34,13 @@ namespace JFramework
                 }
 
                 var json = File.ReadAllText(path);
-                jsonHelper.FromJson(json, data);
+                FromJson(json, data);
             }
 
             public static void Encrypt<T>(T data, string name)
             {
                 var path = GetJsonPath(name);
-                var json = jsonHelper.ToJson(data);
+                var json = ToJson(data);
                 json = Zip.Compress(json);
                 var item = Encoding.UTF8.GetBytes(json);
                 item = Xor.Encrypt(item);
@@ -59,7 +59,7 @@ namespace JFramework
                 item = Xor.Decrypt(item);
                 var json = Encoding.UTF8.GetString(item);
                 json = Zip.Decompress(json);
-                jsonHelper.FromJson(json, data);
+                FromJson(json, data);
             }
         }
     }
