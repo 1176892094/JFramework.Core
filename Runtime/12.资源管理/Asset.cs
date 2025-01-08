@@ -12,6 +12,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace JFramework
 {
@@ -32,7 +34,7 @@ namespace JFramework
                 Event.Invoke(new AssetCompleteEvent());
             }
 
-            public static async Task<T> Load<T>(string assetPath)
+            public static async Task<T> Load<T>(string assetPath) where T : Object
             {
                 try
                 {
@@ -53,7 +55,7 @@ namespace JFramework
                 return default;
             }
 
-            public static async void Load<T>(string assetPath, Action<T> assetAction)
+            public static async void Load<T>(string assetPath, Action<T> assetAction) where T : Object
             {
                 try
                 {
@@ -73,7 +75,7 @@ namespace JFramework
                 }
             }
 
-            private static async Task<object> LoadAsset(string assetPath, Type assetType)
+            private static async Task<Object> LoadAsset(string assetPath, Type assetType)
             {
                 if (pathHelper.assetPackMode)
                 {
@@ -120,7 +122,7 @@ namespace JFramework
                 return assetData;
             }
 
-            private static async Task<object> LoadAssetPack(string assetPath)
+            private static async Task<AssetBundle> LoadAssetPack(string assetPath)
             {
                 if (string.IsNullOrEmpty(assetPath))
                 {

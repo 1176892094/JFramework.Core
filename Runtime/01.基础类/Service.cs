@@ -24,7 +24,7 @@ namespace JFramework
 {
     public static partial class Service
     {
-        private static IBaseHelper helper;
+        private static IHelper helper;
         private static GameObject poolManager;
         private static AudioSource musicSource;
 

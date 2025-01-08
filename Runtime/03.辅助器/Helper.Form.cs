@@ -3,20 +3,23 @@
 // # Unity: 6000.3.5f1
 // # Author: 云谷千羽
 // # Version: 1.0.0
-// # History: 2024-12-23 18:12:21
-// # Recently: 2025-01-08 17:01:32
+// # History: 2024-12-24 03:12:32
+// # Recently: 2025-01-08 17:01:31
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
 
+using System.IO;
+using UnityEngine;
+
 namespace JFramework
 {
-    public interface IJsonHelper : IBaseHelper
+    public interface IFormHelper : IHelper
     {
-        string ToJson<T>(T data);
+        void CreateAsset(Object assetData, string assetPath);
 
-        void FromJson<T>(string json, T data);
+        void CreateProgress(string assetPath, float progress);
 
-        T FromJson<T>(string json);
+        string Path(string objectText, FileAccess fileAccess);
     }
 }

@@ -51,8 +51,7 @@ namespace JFramework
 
                     Event.Invoke(new PackAwakeEvent(sizes));
                 }
-
-                if (string.IsNullOrEmpty(serverRequest))
+                else
                 {
                     Event.Invoke(new PackCompleteEvent(false, "没有连接到服务器!"));
                     return;

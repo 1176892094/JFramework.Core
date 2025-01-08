@@ -20,8 +20,8 @@ namespace JFramework
             this.dequeueCount = dequeueCount;
             this.enqueueCount = enqueueCount;
         }
-        
-        public Reference(Type assetType,string assetPath, int cachedCount, int unusedCount, int dequeueCount, int enqueueCount)
+
+        public Reference(Type assetType, string assetPath, int cachedCount, int unusedCount, int dequeueCount, int enqueueCount)
         {
             this.assetType = assetType;
             this.assetPath = assetPath;

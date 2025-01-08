@@ -17,7 +17,7 @@ namespace JFramework
     {
         public static class Entry
         {
-            public static void Register(IBaseHelper helper)
+            public static void Register(IHelper helper)
             {
                 Service.helper = helper;
                 Json.Load(setting, nameof(AudioSetting));
