@@ -4,7 +4,7 @@
 // # Author: 云谷千羽
 // # Version: 1.0.0
 // # History: 2024-12-23 20:12:06
-// # Recently: 2024-12-24 01:12:31
+// # Recently: 2025-01-08 17:01:26
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
@@ -14,7 +14,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using UnityEngine;
 
 namespace JFramework
 {
@@ -73,7 +72,7 @@ namespace JFramework
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError(e.ToString());
+                    Log.Error(e.ToString());
                     return false;
                 }
             }
@@ -254,7 +253,7 @@ namespace JFramework
                 }
 
                 File.WriteAllText(filePath, fileData);
-                Debug.Log(Text.Format("生成 CSharp 脚本: {0}", filePath.Color("00FF00")));
+                Log.Info(Text.Format("生成 CSharp 脚本: {0}", filePath.Color("00FF00")));
                 return true;
             }
         }

@@ -3,23 +3,31 @@
 // # Unity: 6000.3.5f1
 // # Author: 云谷千羽
 // # Version: 1.0.0
-// # History: 2024-12-23 18:12:21
-// # Recently: 2025-01-08 17:01:40
+// # History: 2025-01-08 17:01:50
+// # Recently: 2025-01-08 17:01:25
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
 
-using System.Threading.Tasks;
+using UnityEngine;
 
 namespace JFramework
 {
-    public static partial class Service
+    public static class Log
     {
-        private interface IPool<T> : IPool
+        public static void Info(string message)
         {
-            Task<T> Dequeue();
+            Debug.Log(message);
+        }
 
-            bool Enqueue(T assetData);
+        public static void Warning(string message)
+        {
+            Debug.LogWarning(message);
+        }
+
+        public static void Error(string message)
+        {
+            Debug.LogError(message);
         }
     }
 }

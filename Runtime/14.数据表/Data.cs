@@ -4,7 +4,7 @@
 // # Author: 云谷千羽
 // # Version: 1.0.0
 // # History: 2024-12-23 18:12:21
-// # Recently: 2024-12-24 01:12:43
+// # Recently: 2025-01-08 17:01:43
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
@@ -89,7 +89,7 @@ namespace JFramework
                                         continue;
                                     }
 
-                                    Debug.LogWarning(Text.Format("加载数据 {0} 失败。键值重复: {1}", assetType.Name, item));
+                                    Log.Warning(Text.Format("加载数据 {0} 失败。键值重复: {1}", assetType.Name, item));
                                 }
 
                                 return items;
@@ -100,7 +100,7 @@ namespace JFramework
                     }
                     catch (Exception e)
                     {
-                        Debug.LogError(Text.Format("加载 {0} 数据失败!\n{1}", assetType.Name, e));
+                        Log.Error(Text.Format("加载 {0} 数据失败!\n{1}", assetType.Name, e));
                     }
                 }
 
@@ -191,7 +191,7 @@ namespace JFramework
                     return caches;
                 }
 
-                Debug.LogError(Text.Format("获取 {0} 失败!", typeof(T).Name));
+                Log.Error(Text.Format("获取 {0} 失败!", typeof(T).Name));
                 return default;
             }
 

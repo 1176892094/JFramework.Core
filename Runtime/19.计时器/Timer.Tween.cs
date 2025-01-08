@@ -4,7 +4,7 @@
 // # Author: 云谷千羽
 // # Version: 1.0.0
 // # History: 2024-12-23 18:12:21
-// # Recently: 2024-12-24 01:12:32
+// # Recently: 2025-01-08 17:01:28
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
@@ -81,7 +81,7 @@ namespace JFramework
             catch (Exception e)
             {
                 OnFinish.Invoke();
-                Debug.Log(Service.Text.Format("缓动差值无法执行方法：\n{0}", e));
+                Log.Info(Service.Text.Format("缓动差值无法执行方法：\n{0}", e));
             }
         }
 

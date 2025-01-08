@@ -4,7 +4,7 @@
 // # Author: 云谷千羽
 // # Version: 1.0.0
 // # History: 2024-12-23 18:12:21
-// # Recently: 2024-12-24 01:12:40
+// # Recently: 2025-01-08 17:01:39
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
@@ -58,7 +58,7 @@ namespace JFramework
                 {
                     return Type.GetType(name);
                 }
-                
+
                 var assembly = GetAssembly(name.Substring(index + 1).Trim());
                 cachedType = assembly.GetType(name.Substring(0, index));
                 Service.cachedType.Add(name, cachedType);

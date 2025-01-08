@@ -4,7 +4,7 @@
 // # Author: 云谷千羽
 // # Version: 1.0.0
 // # History: 2024-12-23 18:12:21
-// # Recently: 2024-12-24 01:12:39
+// # Recently: 2025-01-08 17:01:37
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
@@ -31,7 +31,7 @@ namespace JFramework
         private static readonly AudioSetting setting = new AudioSetting();
 
         private static readonly List<IUpdate> timerData = new List<IUpdate>();
-        
+
         private static readonly HashSet<AudioSource> audioData = new HashSet<AudioSource>();
 
         private static readonly Dictionary<Type, IPool> heapData = new Dictionary<Type, IPool>();
@@ -59,7 +59,7 @@ namespace JFramework
         private static readonly Dictionary<string, Assembly> assemblies = new Dictionary<string, Assembly>();
 
         private static readonly Dictionary<string, IPool> poolData = new Dictionary<string, IPool>();
-        
+
         private static readonly Dictionary<string, GameObject> assetPools = new Dictionary<string, GameObject>();
 
         private static readonly Dictionary<IEntity, AgentData> agentData = new Dictionary<IEntity, AgentData>();

@@ -4,7 +4,7 @@
 // # Author: 云谷千羽
 // # Version: 1.0.0
 // # History: 2024-12-23 23:12:53
-// # Recently: 2024-12-24 01:12:39
+// # Recently: 2025-01-08 17:01:38
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
@@ -60,7 +60,7 @@ namespace JFramework
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError(e.ToString());
+                    Log.Error(e.ToString());
                 }
             }
 

@@ -4,7 +4,7 @@
 // # Author: 云谷千羽
 // # Version: 1.0.0
 // # History: 2024-12-23 18:12:21
-// # Recently: 2024-12-24 01:12:42
+// # Recently: 2025-01-08 17:01:42
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
@@ -12,7 +12,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using UnityEngine;
 
 namespace JFramework
 {
@@ -44,11 +43,11 @@ namespace JFramework
                         return (T)assetData;
                     }
 
-                    Debug.LogWarning(Text.Format("加载资源 {0} 为空!", assetPath));
+                    Log.Warning(Text.Format("加载资源 {0} 为空!", assetPath));
                 }
                 catch (Exception e)
                 {
-                    Debug.LogWarning(Text.Format("加载资源 {0} 失败!\n{1}", assetPath, e));
+                    Log.Warning(Text.Format("加载资源 {0} 失败!\n{1}", assetPath, e));
                 }
 
                 return default;
@@ -66,11 +65,11 @@ namespace JFramework
                         return;
                     }
 
-                    Debug.LogWarning(Text.Format("加载资源 {0} 为空!", assetPath));
+                    Log.Warning(Text.Format("加载资源 {0} 为空!", assetPath));
                 }
                 catch (Exception e)
                 {
-                    Debug.LogWarning(Text.Format("加载资源 {0} 失败!\n{1}", assetPath, e));
+                    Log.Warning(Text.Format("加载资源 {0} 失败!\n{1}", assetPath, e));
                 }
             }
 

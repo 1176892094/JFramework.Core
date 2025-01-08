@@ -4,7 +4,7 @@
 // # Author: 云谷千羽
 // # Version: 1.0.0
 // # History: 2024-12-23 18:12:21
-// # Recently: 2024-12-24 01:12:30
+// # Recently: 2025-01-08 17:01:25
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
@@ -13,7 +13,6 @@ using System;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
-using UnityEngine;
 
 namespace JFramework
 {
@@ -58,11 +57,11 @@ namespace JFramework
                         smtpClient.Send(mailMessage);
                     });
 
-                    Debug.Log("邮件发送成功!");
+                    Log.Info("邮件发送成功!");
                 }
                 catch (SmtpException e)
                 {
-                    Debug.LogError(Text.Format("邮件发送失败: {0}", e.Message));
+                    Log.Error(Text.Format("邮件发送失败: {0}", e.Message));
                 }
             }
 
