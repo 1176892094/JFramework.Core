@@ -9,8 +9,6 @@
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
 
-using System.IO;
-
 namespace JFramework
 {
     public interface IPathHelper : IBaseHelper
@@ -20,7 +18,5 @@ namespace JFramework
         string assetPackPath { get; }
         string assetPackName { get; }
         string assetRemotePath { get; }
-        string streamingAssetsPath { get; }
-        string persistentDataPath { get; }
     }
 }

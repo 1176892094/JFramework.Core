@@ -9,6 +9,8 @@
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
 
+using UnityEngine;
+
 namespace JFramework
 {
     public static partial class Service
@@ -17,6 +19,17 @@ namespace JFramework
         {
             public static void Register(IBaseHelper helper)
             {
+                if (manager == null)
+                {
+                    manager = new GameObject("PoolManager");
+                    Object.DontDestroyOnLoad(manager);
+                }
+
+                if (musicSource == null)
+                {
+                    musicSource = manager.AddComponent<AudioSource>();
+                }
+
                 Service.helper = helper;
                 Json.Load(setting, nameof(AudioSetting));
             }

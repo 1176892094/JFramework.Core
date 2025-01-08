@@ -44,13 +44,18 @@ namespace JFramework
                 if (unused.Count > 0)
                 {
                     assetData = unused.Dequeue();
-                }
-                else
-                {
-                    assetData = new GameObject(assetPath).AddComponent<AudioSource>();
-                    Object.DontDestroyOnLoad(assetData.gameObject);
+                    if (assetData != null)
+                    {
+                        cached.Add(assetData);
+                        return assetData;
+                    }
+
+                    enqueueCount++;
+                    cached.Remove(assetData);
                 }
 
+                assetData = new GameObject(assetPath).AddComponent<AudioSource>();
+                Object.DontDestroyOnLoad(assetData.gameObject);
                 cached.Add(assetData);
                 return assetData;
             }

@@ -50,6 +50,9 @@ namespace JFramework
                         cached.Add(assetData);
                         return assetData;
                     }
+
+                    enqueueCount++;
+                    cached.Remove(assetData);
                 }
 
                 assetData = await Asset.Load<GameObject>(assetPath);

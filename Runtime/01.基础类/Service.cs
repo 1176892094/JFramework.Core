@@ -26,10 +26,13 @@ namespace JFramework
     {
         private static IBaseHelper helper;
         private static GameObject manager;
+        private static AudioSource musicSource;
 
         private static readonly AudioSetting setting = new AudioSetting();
 
         private static readonly List<IUpdate> timerData = new List<IUpdate>();
+        
+        private static readonly HashSet<AudioSource> audioData = new HashSet<AudioSource>();
 
         private static readonly Dictionary<Type, IPool> heapData = new Dictionary<Type, IPool>();
 

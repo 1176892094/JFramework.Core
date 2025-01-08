@@ -10,14 +10,15 @@
 // *********************************************************************************
 
 using System.IO;
+using UnityEngine;
 
 namespace JFramework
 {
     public partial class Service
     {
-        private static string persistentDataPath => pathHelper.persistentDataPath;
+        private static string persistentDataPath => Application.persistentDataPath;
 
-        private static string streamingAssetsPath => pathHelper.streamingAssetsPath;
+        private static string streamingAssetsPath => Application.streamingAssetsPath;
 
         private static string assetPackData => Text.Format("{0}.json", pathHelper.assetPackName);
 

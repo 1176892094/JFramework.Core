@@ -10,7 +10,6 @@
 // *********************************************************************************
 
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace JFramework
@@ -19,9 +18,6 @@ namespace JFramework
     {
         public static class Audio
         {
-            private static readonly HashSet<AudioSource> audioSources = new HashSet<AudioSource>();
-            private static AudioSource musicSource;
-
             public static float musicValue
             {
                 get => setting.musicValue;
@@ -39,7 +35,7 @@ namespace JFramework
                 set
                 {
                     setting.audioValue = value;
-                    foreach (var audioSource in audioSources)
+                    foreach (var audioSource in audioData)
                     {
                         audioSource.volume = value;
                     }
@@ -51,21 +47,20 @@ namespace JFramework
             public static async void PlayMain(string assetPath, Action<AudioSource> assetAction = null)
             {
                 if (helper == null) return;
-                var assetData = LoadPool(assetPath).Dequeue();
-                assetData.transform.SetParent(null);
-                assetData.gameObject.SetActive(true);
-                assetData.clip = await Asset.Load<AudioClip>(assetPath);
-                assetData.loop = true;
-                assetData.volume = musicValue;
-                assetAction?.Invoke(assetData);
-                assetData.Play();
+                musicSource.transform.SetParent(null);
+                musicSource.gameObject.SetActive(true);
+                musicSource.clip = await Asset.Load<AudioClip>(assetPath);
+                musicSource.loop = true;
+                musicSource.volume = musicValue;
+                assetAction?.Invoke(musicSource);
+                musicSource.Play();
             }
 
             public static async void PlayLoop(string assetPath, Action<AudioSource> assetAction = null)
             {
                 if (helper == null) return;
                 var assetData = LoadPool(assetPath).Dequeue();
-                audioSources.Add(assetData);
+                audioData.Add(assetData);
                 assetData.transform.SetParent(null);
                 assetData.gameObject.SetActive(true);
                 assetData.clip = await Asset.Load<AudioClip>(assetPath);
@@ -79,7 +74,7 @@ namespace JFramework
             {
                 if (helper == null) return;
                 var assetData = LoadPool(assetPath).Dequeue();
-                audioSources.Add(assetData);
+                audioData.Add(assetData);
                 assetData.transform.SetParent(null);
                 assetData.gameObject.SetActive(true);
                 assetData.clip = await Asset.Load<AudioClip>(assetPath);
@@ -108,7 +103,7 @@ namespace JFramework
             {
                 if (helper == null) return;
                 assetData.Stop();
-                audioSources.Remove(assetData);
+                audioData.Remove(assetData);
                 LoadPool(assetData.name).Enqueue(assetData);
             }
 

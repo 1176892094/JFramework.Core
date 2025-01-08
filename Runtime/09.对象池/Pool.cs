@@ -43,12 +43,6 @@ namespace JFramework
             {
                 if (helper == null) return false;
                 var assetPath = assetData.name;
-                if (manager == null)
-                {
-                    manager = new GameObject("PoolManager");
-                    Object.DontDestroyOnLoad(manager);
-                }
-
                 if (!assetPools.TryGetValue(assetPath, out var parent))
                 {
                     parent = new GameObject(Text.Format("Pool - {0}", assetPath));
