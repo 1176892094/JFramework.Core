@@ -18,9 +18,9 @@ namespace JFramework.Net
 {
     public abstract partial class NetworkBehaviour : MonoBehaviour, IEntity
     {
-        [SerializeField] internal SyncMode syncDirection;
+        public SyncMode syncDirection;
 
-        [SerializeField, Range(0, 2)] internal float syncInterval;
+        [Range(0, 2)] public float syncInterval;
 
         internal byte componentId;
 

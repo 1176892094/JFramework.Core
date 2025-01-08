@@ -10,6 +10,7 @@
 // *********************************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
@@ -43,6 +44,18 @@ namespace JFramework.Net
                     entities[i].@object = this;
                     entities[i].componentId = (byte)i;
                 }
+            }
+        }
+
+        private void OnValidate()
+        {
+            var assetType = Service.Depend.GetType("JFramework.EditorSetting, JFramework.Unity");
+            var assetData = assetType.GetMethod("ValidateIdentity", Service.Depend.Static);
+            if (assetData != null)
+            {
+                var assetPair = (KeyValuePair<string, ulong>)assetData.Invoke(null, new object[] { assetId, sceneId, gameObject });
+                assetId = assetPair.Key;
+                sceneId = assetPair.Value;
             }
         }
 

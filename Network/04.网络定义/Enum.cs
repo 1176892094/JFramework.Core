@@ -21,7 +21,7 @@ namespace JFramework.Net
         Client = 3,
     }
 
-    internal enum SyncMode : byte
+    public enum SyncMode : byte
     {
         Server,
         Client

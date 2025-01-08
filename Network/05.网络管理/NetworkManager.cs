@@ -24,7 +24,7 @@ namespace JFramework.Net
 
         [SerializeField] private Transport transport;
 
-        [SerializeField, Range(30, 120)] internal int sendRate = 30;
+        [SerializeField, Range(30, 120)] private int sendRate = 30;
 
         public int connection = 100;
 
@@ -250,9 +250,9 @@ namespace JFramework.Net
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static bool Tick(float sendRate, ref double sendTime)
+        public static bool Tick(ref double sendTime)
         {
-            var duration = 1.0 / sendRate;
+            var duration = 1.0 / Instance.sendRate;
             if (sendTime + duration <= Time.unscaledTimeAsDouble)
             {
                 sendTime = (long)(Time.unscaledTimeAsDouble / duration) * duration;

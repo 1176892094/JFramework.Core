@@ -44,7 +44,7 @@ namespace JFramework.Net
 
             public static NetworkServer connection { get; private set; }
 
-            internal static bool isConnected => state == StateMode.Connected;
+            public static bool isConnected => state == StateMode.Connected;
 
             internal static void Start(EntryMode mode)
             {
@@ -537,7 +537,7 @@ namespace JFramework.Net
             {
                 if (isActive)
                 {
-                    if (Tick(Instance.sendRate, ref sendTime))
+                    if (Tick(ref sendTime))
                     {
                         Broadcast();
                     }
