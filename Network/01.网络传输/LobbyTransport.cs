@@ -11,18 +11,17 @@
 
 using System;
 using System.Collections.Generic;
-using JFramework.Udp;
 using UnityEngine;
 using UnityEngine.Networking;
 
 namespace JFramework.Net
 {
-    public sealed class LobbyTransport : MonoBehaviour, Transport
+    public sealed class LobbyTransport : Transport
     {
         public Transport transport;
-        public bool isPublic = true;
         public string roomName;
         public string roomData;
+        public RoomMode roomMode;
         public string serverId;
         public string serverKey = "Secret Key";
 
@@ -33,26 +32,17 @@ namespace JFramework.Net
         private int objectId;
         private StateMode state = StateMode.Disconnect;
 
-        string IAddress.address
+        public override string address
         {
             get => transport.address;
             set => transport.address = value;
         }
 
-        ushort IAddress.port
+        public override ushort port
         {
             get => transport.port;
             set => transport.port = value;
         }
-
-        public Action OnClientConnect { get; set; }
-        public Action OnClientDisconnect { get; set; }
-        public Action<int, string> OnClientError { get; set; }
-        public Action<ArraySegment<byte>, int> OnClientReceive { get; set; }
-        public Action<int> OnServerConnect { get; set; }
-        public Action<int> OnServerDisconnect { get; set; }
-        public Action<int, int, string> OnServerError { get; set; }
-        public Action<int, ArraySegment<byte>, int> OnServerReceive { get; set; }
 
         private void Awake()
         {
@@ -98,7 +88,7 @@ namespace JFramework.Net
                 Log.Warn("大厅服务器已经连接！");
                 return;
             }
-            
+
             transport.StartClient();
         }
 
@@ -148,7 +138,7 @@ namespace JFramework.Net
                 writer.WriteByte((byte)OpCodes.UpdateRoom);
                 writer.WriteString(roomName);
                 writer.WriteString(roomData);
-                writer.WriteBool(isPublic);
+                writer.WriteByte((byte)roomMode);
                 writer.WriteInt(NetworkManager.Instance.connection);
                 transport.SendToServer(writer);
             }
@@ -230,12 +220,12 @@ namespace JFramework.Net
             }
         }
 
-        public int MessageSize(int channel)
+        public override int MessageSize(int channel)
         {
             return transport.MessageSize(channel);
         }
 
-        public void SendToClient(int clientId, ArraySegment<byte> segment, int channel = Channel.Reliable)
+        public override void SendToClient(int clientId, ArraySegment<byte> segment, int channel = Channel.Reliable)
         {
             if (players.TryGetValue(clientId, out var playerId))
             {
@@ -247,7 +237,7 @@ namespace JFramework.Net
             }
         }
 
-        public void SendToServer(ArraySegment<byte> segment, int channel = Channel.Reliable)
+        public override void SendToServer(ArraySegment<byte> segment, int channel = Channel.Reliable)
         {
             using var writer = MemoryWriter.Pop();
             writer.WriteByte((byte)OpCodes.UpdateData);
@@ -256,7 +246,7 @@ namespace JFramework.Net
             transport.SendToServer(writer);
         }
 
-        public void StartServer()
+        public override void StartServer()
         {
             if (state != StateMode.Connected)
             {
@@ -280,11 +270,11 @@ namespace JFramework.Net
             writer.WriteString(roomName);
             writer.WriteString(roomData);
             writer.WriteInt(NetworkManager.Instance.connection);
-            writer.WriteBool(isPublic);
+            writer.WriteByte((byte)roomMode);
             transport.SendToServer(writer);
         }
 
-        public void StopServer()
+        public override void StopServer()
         {
             if (isServer)
             {
@@ -295,7 +285,7 @@ namespace JFramework.Net
             }
         }
 
-        public void StopClient(int clientId)
+        public override void StopClient(int clientId)
         {
             if (players.TryGetValue(clientId, out var playerId))
             {
@@ -306,7 +296,7 @@ namespace JFramework.Net
             }
         }
 
-        public void StartClient()
+        public override void StartClient()
         {
             if (state != StateMode.Connected)
             {
@@ -328,7 +318,7 @@ namespace JFramework.Net
             transport.SendToServer(writer);
         }
 
-        public void StartClient(Uri uri)
+        public override void StartClient(Uri uri)
         {
             if (uri != null)
             {
@@ -338,7 +328,7 @@ namespace JFramework.Net
             StartClient();
         }
 
-        public void StopClient()
+        public override void StopClient()
         {
             if (state != StateMode.Disconnect)
             {
@@ -349,21 +339,21 @@ namespace JFramework.Net
             }
         }
 
-        public void ClientEarlyUpdate()
+        public override void ClientEarlyUpdate()
         {
             transport.ClientEarlyUpdate();
         }
 
-        public void ClientAfterUpdate()
+        public override void ClientAfterUpdate()
         {
             transport.ClientAfterUpdate();
         }
 
-        public void ServerEarlyUpdate()
+        public override void ServerEarlyUpdate()
         {
         }
 
-        public void ServerAfterUpdate()
+        public override void ServerAfterUpdate()
         {
         }
 
@@ -373,22 +363,10 @@ namespace JFramework.Net
             public string roomId;
             public string roomName;
             public string roomData;
+            public RoomMode roomMode;
             public int maxCount;
             public int clientId;
-            public bool isPublic;
             public int[] clients;
-        }
-
-        private enum OpCodes : byte
-        {
-            Connect = 1,
-            Connected = 2,
-            JoinRoom = 3,
-            CreateRoom = 4,
-            UpdateRoom = 5,
-            LeaveRoom = 6,
-            UpdateData = 7,
-            KickRoom = 8,
         }
     }
 }

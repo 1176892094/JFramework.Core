@@ -142,7 +142,7 @@ namespace JFramework.Net
                         roomName = reader.ReadString(),
                         roomData = reader.ReadString(),
                         maxCount = reader.ReadInt(),
-                        isPublic = reader.ReadBool(),
+                        roomMode = reader.ReadByte(),
                         clients = new HashSet<int>(),
                     };
 
@@ -184,7 +184,7 @@ namespace JFramework.Net
                     {
                         room.roomName = reader.ReadString();
                         room.roomData = reader.ReadString();
-                        room.isPublic = reader.ReadBool();
+                        room.roomMode = reader.ReadByte();
                         room.maxCount = reader.ReadInt();
                     }
                 }

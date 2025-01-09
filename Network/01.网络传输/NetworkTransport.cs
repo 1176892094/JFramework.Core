@@ -15,10 +15,10 @@ using UnityEngine;
 
 namespace JFramework.Net
 {
-    public sealed class NetworkTransport : MonoBehaviour, Transport
+    public sealed class NetworkTransport : Transport
     {
-        public string address = "localhost";
-        public ushort port = 20974;
+        [SerializeField] private string _address = "localhost";
+        [SerializeField] private ushort _port = 20974;
         public int maxUnit = 1200;
         public uint timeout = 10000;
         public uint interval = 10;
@@ -29,27 +29,18 @@ namespace JFramework.Net
 
         private Client client;
         private Server server;
-        
-        string IAddress.address
+
+        public override ushort port
         {
-            get => address;
-            set => address = value;
+            get => _port;
+            set => _port = value;
         }
 
-        ushort IAddress.port
+        public override string address
         {
-            get => port;
-            set => port = value;
+            get => _address;
+            set => _address = value;
         }
-
-        public Action OnClientConnect { get; set; }
-        public Action OnClientDisconnect { get; set; }
-        public Action<int, string> OnClientError { get; set; }
-        public Action<ArraySegment<byte>, int> OnClientReceive { get; set; }
-        public Action<int> OnServerConnect { get; set; }
-        public Action<int> OnServerDisconnect { get; set; }
-        public Action<int, int, string> OnServerError { get; set; }
-        public Action<int, ArraySegment<byte>, int> OnServerReceive { get; set; }
 
         private void Awake()
         {
@@ -102,67 +93,67 @@ namespace JFramework.Net
             }
         }
 
-        public int MessageSize(int channel)
+        public override int MessageSize(int channel)
         {
             return channel == Channel.Reliable ? Agent.ReliableSize(maxUnit, receiveWindow) : Agent.UnreliableSize(maxUnit);
         }
 
-        public void StartServer()
+        public override void StartServer()
         {
-            server.Connect(port);
+            server.Connect(_port);
         }
 
-        public void StopServer()
+        public override void StopServer()
         {
             server.StopServer();
         }
 
-        public void StopClient(int clientId)
+        public override void StopClient(int clientId)
         {
             server.Disconnect(clientId);
         }
 
-        public void SendToClient(int clientId, ArraySegment<byte> segment, int channel = Channel.Reliable)
+        public override void SendToClient(int clientId, ArraySegment<byte> segment, int channel = Channel.Reliable)
         {
             server.Send(clientId, segment, channel);
         }
 
-        public void StartClient()
+        public override void StartClient()
         {
-            client.Connect(address, port);
+            client.Connect(_address, _port);
         }
 
-        public void StartClient(Uri uri)
+        public override void StartClient(Uri uri)
         {
-            client.Connect(uri.Host, (ushort)(uri.IsDefaultPort ? port : uri.Port));
+            client.Connect(uri.Host, (ushort)(uri.IsDefaultPort ? _port : uri.Port));
         }
 
-        public void StopClient()
+        public override void StopClient()
         {
             client.Disconnect();
         }
 
-        public void SendToServer(ArraySegment<byte> segment, int channel = Channel.Reliable)
+        public override void SendToServer(ArraySegment<byte> segment, int channel = Channel.Reliable)
         {
             client.Send(segment, channel);
         }
 
-        public void ClientEarlyUpdate()
+        public override void ClientEarlyUpdate()
         {
             client.EarlyUpdate();
         }
 
-        public void ClientAfterUpdate()
+        public override void ClientAfterUpdate()
         {
             client.AfterUpdate();
         }
 
-        public void ServerEarlyUpdate()
+        public override void ServerEarlyUpdate()
         {
             server.EarlyUpdate();
         }
 
-        public void ServerAfterUpdate()
+        public override void ServerAfterUpdate()
         {
             server.AfterUpdate();
         }

@@ -30,7 +30,7 @@ namespace JFramework.Net
         /// <summary>
         /// 是否显示
         /// </summary>
-        public bool isPublic;
+        public byte roomMode;
 
         /// <summary>
         /// 房间最大人数
