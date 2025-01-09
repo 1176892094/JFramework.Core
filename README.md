@@ -1,9 +1,23 @@
-1.作用：
+1.Analysis 文件夹
 
-用于JFramework-Net在服务器中进行玩家匹配。
+JFramework-Log.dll源代码。
 
-中继转发支持自动分配房间，内网穿透支持自动分配IP和端口。
+2.Network 文件夹
 
-2.使用
+JFramework-Net.dll源代码。
 
-Unity只需要导入Client文件夹中的脚本就行，Server文件夹存放的是服务器程序的源代码。
+3.Program 文件夹
+
+JFramework.Lobby.dll源代码。
+
+4.Protocol 文件夹
+
+JFramework.Kcp.dll源代码。
+
+5.Runtime 文件夹
+
+JFramework.dll源代码。
+
+6.Solution 文件夹
+
+JFramework.Editor.dll源代码。
