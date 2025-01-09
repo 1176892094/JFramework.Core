@@ -9,6 +9,8 @@
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
 
+using UnityEngine;
+
 namespace JFramework
 {
     public interface IGrid<out TPanel, TItem> : IGrid where TPanel : IPanel
@@ -17,9 +19,7 @@ namespace JFramework
 
         TPanel panel { get; }
 
-        IScroll scroll { get; }
-
-        object content { get; }
+        RectTransform content { get; }
 
         void SetItem(TItem item);
     }

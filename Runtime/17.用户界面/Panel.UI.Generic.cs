@@ -16,7 +16,7 @@ using UnityEngine;
 namespace JFramework
 {
     [Serializable]
-    public abstract class UIPanel<TItem, TGrid> : UIPanel, IScroll where TGrid : IGrid<UIPanel<TItem, TGrid>, TItem>
+    public abstract class UIPanel<TItem, TGrid> : UIPanel, IScroll where TGrid : Component, IGrid<UIPanel<TItem, TGrid>, TItem>
     {
         [SerializeField, Inject] protected Scroll<UIPanel<TItem, TGrid>, TItem, TGrid> scroll;
         [SerializeField, Inject] protected RectTransform content;
@@ -28,12 +28,11 @@ namespace JFramework
             scroll.Update();
         }
 
-        string IScroll.path => assetPath;
+        string IScroll.prefab => assetPath;
         int IScroll.row => (int)assetRect.x;
         int IScroll.column => (int)assetRect.y;
         float IScroll.width => assetRect.width;
         float IScroll.height => assetRect.height;
-        float IScroll.position => content.anchoredPosition.y;
         RectTransform IScroll.content => content;
 
         public void Spawn(List<TItem> items)

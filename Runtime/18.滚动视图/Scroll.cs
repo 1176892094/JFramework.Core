@@ -16,19 +16,19 @@ using UnityEngine;
 namespace JFramework
 {
     [Serializable]
-    public sealed class Scroll<T, TItem, TGrid> : Agent<T> where T : IPanel, IScroll where TGrid : IGrid<T, TItem>
+    public sealed class Scroll<T, TItem, TGrid> : Agent<T> where T : IPanel, IScroll where TGrid : Component, IGrid<T, TItem>
     {
         private Dictionary<int, TGrid> grids = new Dictionary<int, TGrid>();
         private List<TItem> items;
         private int oldMaxIndex = -1;
         private int oldMinIndex = -1;
-     
+
         private int row;
         private int column;
         private float width;
         private float height;
         private string path;
-        
+
         protected override void Dispose()
         {
             row = 0;
@@ -45,7 +45,7 @@ namespace JFramework
         protected override void Awake()
         {
             row = owner.row;
-            path = owner.path;
+            path = owner.prefab;
             width = owner.width;
             column = owner.column;
             height = owner.height;
@@ -77,8 +77,9 @@ namespace JFramework
         public void Update()
         {
             if (items == null) return;
-            var minIndex = Math.Max(0, (int)(owner.position / height) * column);
-            var maxIndex = Math.Min((int)((owner.position + row * height) / height) * column + column - 1, items.Count - 1);
+            var position = owner.content.anchoredPosition.y;
+            var minIndex = Math.Max(0, (int)(position / height) * column);
+            var maxIndex = Math.Min((int)((position + row * height) / height) * column + column - 1, items.Count - 1);
 
             if (minIndex != oldMinIndex || maxIndex != oldMaxIndex)
             {
@@ -123,14 +124,18 @@ namespace JFramework
                     var posY = -(index / column) * height - height / 2;
                     Service.Pool.Show(path, obj =>
                     {
-                        var transform = (RectTransform)obj.transform;
+                        var grid = obj.GetComponent<TGrid>();
+                        if (grid == null)
+                        {
+                            grid = obj.AddComponent<TGrid>();
+                        }
+
+                        var transform = grid.transform;
                         transform.SetParent(owner.content);
                         transform.localScale = Vector3.one;
                         transform.localPosition = new Vector3(posX, posY, 0);
+                        ((RectTransform)transform).sizeDelta = new Vector2(width / column, height / row);
 
-                        var grid = obj.GetComponent<TGrid>();
-                        grid ??= (TGrid)(object)obj.AddComponent(typeof(TGrid));
-                        transform.sizeDelta = new Vector2(grid.scroll.width, grid.scroll.height);
                         if (!grids.ContainsKey(index))
                         {
                             grid.Dispose();
