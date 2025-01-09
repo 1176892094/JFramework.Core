@@ -1,5 +1,17 @@
-﻿using System;
+﻿// *********************************************************************************
+// # Project: JFramework.Lobby
+// # Unity: 6000.3.5f1
+// # Author: 云谷千羽
+// # Version: 1.0.0
+// # History: 2024-08-28 20:08:49
+// # Recently: 2024-12-23 00:12:22
+// # Copyright: 2024, 云谷千羽
+// # Description: This is an automatically generated comment.
+// *********************************************************************************
+
+using System;
 using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
@@ -17,14 +29,14 @@ namespace JFramework.Net
 
         public async Task MainAsync()
         {
-            var transport = new Transport();
+            Transport transport = null;
             try
             {
                 Debug.Log("运行服务器...");
                 if (!File.Exists("setting.json"))
                 {
                     var contents = JsonConvert.SerializeObject(new Setting(), Formatting.Indented);
-                    File.WriteAllText("setting.json", contents);
+                    await File.WriteAllTextAsync("setting.json", contents);
 
                     Debug.LogWarning("请将 setting.json 文件配置正确并重新运行。");
                     Console.ReadKey();
@@ -32,9 +44,22 @@ namespace JFramework.Net
                     return;
                 }
 
-                Setting = JsonConvert.DeserializeObject<Setting>(File.ReadAllText("setting.json"));
+                Setting = JsonConvert.DeserializeObject<Setting>(await File.ReadAllTextAsync("setting.json"));
 
-                Debug.Log("初始化传输类...");
+                Debug.Log("加载程序集...");
+                var assembly = Assembly.LoadFile(Path.GetFullPath(Setting.Assembly));
+
+                Debug.Log("加载传输类...");
+                transport = assembly.CreateInstance(Setting.Transport) as Transport;
+                if (transport == null)
+                {
+                    Debug.LogError("没有找到传输类!");
+                    Console.ReadKey();
+                    Environment.Exit(0);
+                    return;
+                }
+
+                transport.Awake();
                 Process = new Process(transport);
                 transport.OnServerError = Process.ServerError;
                 transport.OnServerConnect = Process.ServerConnect;

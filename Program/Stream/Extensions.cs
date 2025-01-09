@@ -105,7 +105,7 @@ namespace JFramework.Net
 
         public static void WriteArraySegment(this NetworkWriter writer, ArraySegment<byte> value)
         {
-            if (value == default)
+            if (value == null)
             {
                 writer.WriteUInt(0);
                 return;
@@ -119,7 +119,7 @@ namespace JFramework.Net
         public static ArraySegment<byte> ReadArraySegment(this NetworkReader reader)
         {
             var count = reader.ReadUInt();
-            return count == 0 ? default : reader.ReadArraySegment(checked((int)(count - 1)));
+            return count == 0 ? null : reader.ReadArraySegment(checked((int)(count - 1)));
         }
     }
 }

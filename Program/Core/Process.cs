@@ -1,10 +1,10 @@
-// *********************************************************************************
-// # Project: JFramework
+﻿// *********************************************************************************
+// # Project: JFramework.Lobby
 // # Unity: 6000.3.5f1
 // # Author: 云谷千羽
 // # Version: 1.0.0
-// # History: 2025-01-09 14:01:01
-// # Recently: 2025-01-09 14:01:01
+// # History: 2024-08-28 20:08:49
+// # Recently: 2024-12-23 00:12:20
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
@@ -15,7 +15,7 @@ using System.Linq;
 
 namespace JFramework.Net
 {
-    internal class Process
+    public class Process
     {
         private readonly Dictionary<string, Room> rooms = new Dictionary<string, Room>();
         private readonly Dictionary<int, Room> clients = new Dictionary<int, Room>();

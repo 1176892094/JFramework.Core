@@ -1,10 +1,10 @@
-// *********************************************************************************
-// # Project: JFramework
+﻿// *********************************************************************************
+// # Project: JFramework.Lobby
 // # Unity: 6000.3.5f1
 // # Author: 云谷千羽
 // # Version: 1.0.0
-// # History: 2025-01-09 14:01:37
-// # Recently: 2025-01-09 14:01:37
+// # History: 2024-08-28 20:08:49
+// # Recently: 2024-12-23 00:12:21
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
@@ -16,6 +16,16 @@ namespace JFramework.Net
     [Serializable]
     public class Setting
     {
+        /// <summary>
+        /// 程序集
+        /// </summary>
+        public string Assembly = "Transport.dll";
+        
+        /// <summary>
+        /// 使用传输
+        /// </summary>
+        public string Transport = "JFramework.Net.KcpTransport";
+        
         /// <summary>
         /// 服务器密钥
         /// </summary>
