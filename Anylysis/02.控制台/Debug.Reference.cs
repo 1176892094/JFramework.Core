@@ -15,7 +15,7 @@ using UnityEngine;
 
 namespace JFramework
 {
-    internal partial class DebugManager
+    public partial class DebugManager
     {
         private readonly Dictionary<string, List<Reference>> poolDataInfos = new Dictionary<string, List<Reference>>();
         private Pool pool = Pool.Heap;

@@ -16,7 +16,7 @@ using UnityEngine;
 namespace JFramework
 {
     [DefaultExecutionOrder(-20)]
-    internal partial class DebugManager : MonoBehaviour, IEvent<PingUpdateEvent>
+    public partial class DebugManager : MonoBehaviour, IEvent<PingUpdateEvent>
     {
         private float frameData;
         private double framePing;
@@ -38,6 +38,7 @@ namespace JFramework
         private Vector2 scrollScreenView = Vector2.zero;
         private Vector2 scrollMemoryView = Vector2.zero;
         private Vector2 scrollProjectView = Vector2.zero;
+        private event Action<GUILayoutOption> OnWindow;
 
         private void Awake()
         {
@@ -158,12 +159,10 @@ namespace JFramework
             GUI.skin.textField.alignment = fieldAlignment;
         }
 
-        public void Execute(PingUpdateEvent message)
+        void IEvent<PingUpdateEvent>.Execute(PingUpdateEvent message)
         {
             framePing = message.pingTime;
         }
-
-        private event Action<GUILayoutOption> OnWindow;
 
         private void MaxWindow(int id)
         {

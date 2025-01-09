@@ -16,7 +16,7 @@ using UnityEngine.Profiling;
 
 namespace JFramework
 {
-    internal partial class DebugManager
+    public partial class DebugManager
     {
         private readonly Dictionary<string, MemoryData> memoryData = new Dictionary<string, MemoryData>
         {

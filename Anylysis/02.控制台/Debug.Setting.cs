@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace JFramework
 {
-    internal partial class DebugManager
+    public partial class DebugManager
     {
         private void SettingWindow()
         {

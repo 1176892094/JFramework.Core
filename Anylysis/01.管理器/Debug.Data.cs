@@ -14,7 +14,7 @@ using UnityEngine;
 
 namespace JFramework
 {
-    internal partial class DebugManager
+    public partial class DebugManager
     {
         private static Vector2 ScreenRate = new Vector2(2560, 1440);
         private static Rect WindowRect = new Rect(10, 20, 108, 69);

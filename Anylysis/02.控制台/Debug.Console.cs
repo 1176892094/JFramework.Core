@@ -16,7 +16,7 @@ using UnityEngine;
 
 namespace JFramework
 {
-    internal partial class DebugManager
+    public partial class DebugManager
     {
         private readonly Dictionary<LogType, LogInfo> logInfos = new Dictionary<LogType, LogInfo>
         {
