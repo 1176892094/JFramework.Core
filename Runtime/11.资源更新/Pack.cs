@@ -22,19 +22,19 @@ namespace JFramework
             public static async void LoadAssetData()
             {
                 if (helper == null) return;
-                if (!pathHelper.assetPackMode)
+                if (!assetHelper.assetPackMode)
                 {
                     Event.Invoke(new PackCompleteEvent(false, "启动本地资源加载。"));
                     return;
                 }
 
-                if (pathHelper.assetPackMode && !Directory.Exists(assetPackPath))
+                if (assetHelper.assetPackMode && !Directory.Exists(assetPackPath))
                 {
                     Directory.CreateDirectory(assetPackPath);
                 }
 
                 var fileUri = GetServerPath(assetPackData);
-                var serverRequest = await packHelper.LoadServerRequest(assetPackData, fileUri);
+                var serverRequest = await assetHelper.LoadServerRequest(assetPackData, fileUri);
                 if (!string.IsNullOrEmpty(serverRequest))
                 {
                     var assetPacks = Json.FromJson<List<PackData>>(serverRequest);
@@ -59,7 +59,7 @@ namespace JFramework
 
                 var persistentData = GetPacketPath(assetPackData);
                 var streamingAssets = GetClientPath(assetPackData);
-                var clientRequest = await packHelper.LoadClientRequest(persistentData, streamingAssets);
+                var clientRequest = await assetHelper.LoadClientRequest(persistentData, streamingAssets);
                 if (!string.IsNullOrEmpty(clientRequest))
                 {
                     var assetPacks = Json.FromJson<List<PackData>>(clientRequest);
@@ -114,7 +114,7 @@ namespace JFramework
                     foreach (var packName in packNames)
                     {
                         var packUri = GetServerPath(packName);
-                        var packData = await packHelper.LoadPacketRequest(packName, packUri);
+                        var packData = await assetHelper.LoadPacketRequest(packName, packUri);
                         var packPath = GetPacketPath(packName);
                         await Task.Run(() => File.WriteAllBytes(packPath, packData));
                         if (fileNames.Contains(packName))

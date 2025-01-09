@@ -20,9 +20,9 @@ namespace JFramework
 
         private static string streamingAssetsPath => Application.streamingAssetsPath;
 
-        private static string assetPackData => Text.Format("{0}.json", pathHelper.assetPackName);
+        private static string assetPackData => Text.Format("{0}.json", assetHelper.assetPackName);
 
-        private static string assetPackPath => Text.Format("{0}/{1}", persistentDataPath, pathHelper.assetPackPath);
+        private static string assetPackPath => Text.Format("{0}/{1}", persistentDataPath, assetHelper.assetPackPath);
 
         private static string dataAssembly => Path.GetFileNameWithoutExtension(formHelper.Path("Assembly", FileAccess.Write));
 
@@ -34,11 +34,11 @@ namespace JFramework
 
         private static string GetPacketPath(string fileName) => Path.Combine(assetPackPath, fileName);
 
-        private static string GetServerPath(string fileName) => Path.Combine(pathHelper.assetRemotePath, GetPlatform(fileName));
+        private static string GetServerPath(string fileName) => Path.Combine(assetHelper.assetRemotePath, GetPlatform(fileName));
 
         private static string GetClientPath(string fileName) => Path.Combine(streamingAssetsPath, GetPlatform(fileName));
 
-        private static string GetPlatform(string fileName) => Path.Combine(pathHelper.assetPlatform, fileName);
+        private static string GetPlatform(string fileName) => Path.Combine(assetHelper.assetPlatform, fileName);
 
         private static string GetJsonPath(string fileName)
         {

@@ -28,6 +28,7 @@ namespace JFramework
         private static Canvas canvas;
         private static GameObject poolManager;
         private static AudioSource musicSource;
+        private static AssetBundleManifest manifest;
 
         private static readonly AudioSetting setting = new AudioSetting();
 
@@ -72,10 +73,8 @@ namespace JFramework
         private static readonly Dictionary<string, HashSet<IPanel>> panelGroup = new Dictionary<string, HashSet<IPanel>>();
         
         private static readonly Dictionary<IPanel, HashSet<string>> groupPanel = new Dictionary<IPanel, HashSet<string>>();
-
-        private static IPathHelper pathHelper => (IPathHelper)helper;
+        
         private static IFormHelper formHelper => (IFormHelper)helper;
-        private static IPackHelper packHelper => (IPackHelper)helper;
         private static IAssetHelper assetHelper => (IAssetHelper)helper;
     }
 }

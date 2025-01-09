@@ -8,7 +8,6 @@
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
-
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -23,8 +22,11 @@ namespace JFramework
         {
             public static async void LoadAssetData()
             {
-                var manifest = await LoadAssetPack(pathHelper.assetPlatform);
-                var assetPacks = assetHelper.GetAllAssetPacks(manifest);
+                var platform = await LoadAssetPack(assetHelper.assetPlatform);
+                manifest ??= platform.LoadAsset<AssetBundleManifest>(nameof(AssetBundleManifest));
+                Event.Invoke(new AssetAwakeEvent(manifest.GetAllAssetBundles()));
+
+                var assetPacks = manifest.GetAllAssetBundles();
                 foreach (var assetPack in assetPacks)
                 {
                     _ = LoadAssetPack(assetPack);
@@ -77,7 +79,7 @@ namespace JFramework
 
             private static async Task<Object> LoadAsset(string assetPath, Type assetType)
             {
-                if (pathHelper.assetPackMode)
+                if (assetHelper.assetPackMode)
                 {
                     var assetPair = await LoadAssetPair(assetPath);
                     var assetPack = await LoadAssetPack(assetPair.Key);
@@ -95,7 +97,6 @@ namespace JFramework
 
             private static async Task<KeyValuePair<string, string>> LoadAssetPair(string assetPath)
             {
-                var manifest = await LoadAssetPack(pathHelper.assetPlatform);
                 if (!Service.assetData.TryGetValue(assetPath, out var assetData))
                 {
                     var index = assetPath.LastIndexOf('/');
@@ -112,8 +113,10 @@ namespace JFramework
                     Service.assetData.Add(assetPath, assetData);
                 }
 
+                var platform = await LoadAssetPack(assetHelper.assetPlatform);
+                manifest ??= platform.LoadAsset<AssetBundleManifest>(nameof(AssetBundleManifest));
 
-                var assetPacks = assetHelper.GetAllDependency(manifest, assetData.Key);
+                var assetPacks = manifest.GetAllDependencies(assetData.Key);
                 foreach (var assetPack in assetPacks)
                 {
                     _ = LoadAssetPack(assetPack);
@@ -141,7 +144,7 @@ namespace JFramework
 
                 var persistentData = GetPacketPath(assetPath);
                 var streamingAssets = GetClientPath(assetPath);
-                assetTask = packHelper.LoadAssetRequest(persistentData, streamingAssets);
+                assetTask = assetHelper.LoadAssetRequest(persistentData, streamingAssets);
                 Service.assetTask.Add(assetPath, assetTask);
                 try
                 {
