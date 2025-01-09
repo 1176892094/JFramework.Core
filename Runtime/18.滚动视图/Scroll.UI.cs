@@ -16,9 +16,9 @@ using UnityEngine;
 namespace JFramework
 {
     [Serializable]
-    public abstract class UIPanel<TItem, TGrid> : UIPanel, IScroll where TGrid : Component, IGrid<UIPanel<TItem, TGrid>, TItem>
+    public abstract class UIScroll<TItem, TGrid> : UIPanel, IScroll where TGrid : Component, IGrid<UIScroll<TItem, TGrid>, TItem>
     {
-        [SerializeField, Inject] protected Scroll<UIPanel<TItem, TGrid>, TItem, TGrid> scroll;
+        [SerializeField, Inject] protected Scroll<UIScroll<TItem, TGrid>, TItem, TGrid> scroll;
         [SerializeField, Inject] protected RectTransform content;
         [SerializeField] protected Rect assetRect;
         [SerializeField] protected string assetPath;
