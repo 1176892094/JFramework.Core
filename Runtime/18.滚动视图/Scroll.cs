@@ -16,39 +16,28 @@ using UnityEngine;
 namespace JFramework
 {
     [Serializable]
-    public sealed class Scroll<T, TItem, TGrid> : Agent<T> where T : IPanel, IScroll where TGrid : Component, IGrid<T, TItem>
+    public sealed class Scroll<TPanel, TItem, TGrid> : Agent<TPanel> where TPanel : IPanel, IScroll where TGrid : Component, IGrid<TPanel, TItem>
     {
         private Dictionary<int, TGrid> grids = new Dictionary<int, TGrid>();
         private List<TItem> items;
         private int oldMaxIndex = -1;
         private int oldMinIndex = -1;
-
-        private int row;
-        private int column;
-        private float width;
-        private float height;
-        private string path;
+        private int row => owner.row;
+        private int column => owner.column;
+        private float width => owner.width;
+        private float height => owner.height;
+        private string prefab => owner.prefab;
 
         protected override void Dispose()
         {
-            row = 0;
-            width = 0;
-            column = 0;
-            height = 0;
-            path = null;
             items = null;
+            grids.Clear();
             oldMinIndex = -1;
             oldMaxIndex = -1;
-            grids.Clear();
         }
 
         protected override void Awake()
         {
-            row = owner.row;
-            path = owner.prefab;
-            width = owner.width;
-            column = owner.column;
-            height = owner.height;
             owner.content.pivot = Vector2.up;
             owner.content.anchorMin = Vector2.up;
             owner.content.anchorMax = Vector2.one;
@@ -71,15 +60,15 @@ namespace JFramework
             grids.Clear();
             this.items = items;
             owner.content.anchoredPosition = Vector2.zero;
-            owner.content.sizeDelta = new Vector2(0, (float)Math.Ceiling((float)items.Count / column) * height + 1);
+            owner.content.sizeDelta = new Vector2(0, Mathf.Ceil((float)items.Count / column * height + 1));
         }
 
         public void Update()
         {
             if (items == null) return;
             var position = owner.content.anchoredPosition.y;
-            var minIndex = Math.Max(0, (int)(position / height) * column);
-            var maxIndex = Math.Min((int)((position + row * height) / height) * column + column - 1, items.Count - 1);
+            var minIndex = Mathf.Max(0, (int)(position / height) * column);
+            var maxIndex = Mathf.Min((int)((position + row * height) / height) * column + column - 1, items.Count - 1);
 
             if (minIndex != oldMinIndex || maxIndex != oldMaxIndex)
             {
@@ -122,7 +111,7 @@ namespace JFramework
                     grids[index] = default;
                     var posX = index % column * width + width / 2;
                     var posY = -(index / column) * height - height / 2;
-                    Service.Pool.Show(path, obj =>
+                    Service.Pool.Show(prefab, obj =>
                     {
                         var grid = obj.GetComponent<TGrid>();
                         if (grid == null)
