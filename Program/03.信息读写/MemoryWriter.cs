@@ -90,18 +90,18 @@ namespace JFramework.Net
                 Array.Resize(ref buffer, Math.Max(length, buffer.Length * 2));
             }
         }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static implicit operator ArraySegment<byte>(MemoryWriter writer)
-        {
-            return new ArraySegment<byte>(writer.buffer, 0, writer.position);
-        }
-
+        
         public void WriteBytes(byte[] segment, int offset, int count)
         {
             AddCapacity(position + count);
             Buffer.BlockCopy(segment, offset, buffer, position, count);
             position += count;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static implicit operator ArraySegment<byte>(MemoryWriter writer)
+        {
+            return new ArraySegment<byte>(writer.buffer, 0, writer.position);
         }
     }
 }
