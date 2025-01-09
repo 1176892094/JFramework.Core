@@ -13,7 +13,7 @@ using System.Collections.Generic;
 
 namespace JFramework.Net
 {
-    public static class NetworkPool<T> where T : new()
+    internal static class Pool<T> where T : new()
     {
         private static readonly Queue<T> unused = new Queue<T>();
         private static readonly HashSet<T> cached = new HashSet<T>();

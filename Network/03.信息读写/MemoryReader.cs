@@ -37,7 +37,7 @@ namespace JFramework.Net
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T? ReadNullable<T>() where T : unmanaged
         {
-            return Read<byte>() != 0 ? Service.Unsafe.Read<T>(buffer.Array, buffer.Offset, ref position) : default(T?);
+            return Read<byte>() != 0 ? Read<T>() : default(T?);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

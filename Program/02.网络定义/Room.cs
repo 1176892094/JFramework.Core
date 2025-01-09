@@ -4,51 +4,52 @@
 // # Author: 云谷千羽
 // # Version: 1.0.0
 // # History: 2024-08-28 20:08:49
-// # Recently: 2024-12-23 00:12:21
+// # Recently: 2024-12-23 00:12:22
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
 
 using System;
+using System.Collections.Generic;
 
 namespace JFramework.Net
 {
     [Serializable]
-    public class Setting
+    internal class Room
     {
         /// <summary>
-        /// 程序集
+        /// 房间拥有者
         /// </summary>
-        public string Assembly = "Transport.dll";
-        
-        /// <summary>
-        /// 使用传输
-        /// </summary>
-        public string Transport = "JFramework.Net.KcpTransport";
-        
-        /// <summary>
-        /// 服务器密钥
-        /// </summary>
-        public string ServerKey = "Secret Key";
+        public int clientId;
 
         /// <summary>
-        /// Rest服务器端口
+        /// 客户端数量
         /// </summary>
-        public ushort RestPort = 8080;
+        public HashSet<int> clients;
 
         /// <summary>
-        /// 主线程循环时间
+        /// 是否显示
         /// </summary>
-        public int UpdateTime = 10;
-        
-        /// <summary>
-        /// 是否请求服务器列表
-        /// </summary>
-        public bool RequestRoom = true;
+        public bool isPublic;
 
         /// <summary>
-        /// 是否启用Rest服务
+        /// 房间最大人数
         /// </summary>
-        public bool UseEndPoint = true;
+        public int maxCount;
+
+        /// <summary>
+        /// 额外房间数据
+        /// </summary>
+        public string roomData;
+
+        /// <summary>
+        /// 房间Id
+        /// </summary>
+        public string roomId;
+
+        /// <summary>
+        /// 房间名称
+        /// </summary>
+        public string roomName;
     }
 }

@@ -15,7 +15,7 @@ using System.Linq;
 
 namespace JFramework.Net
 {
-    public class Process
+    internal class Process
     {
         private readonly Dictionary<string, Room> rooms = new Dictionary<string, Room>();
         private readonly Dictionary<int, Room> clients = new Dictionary<int, Room>();
@@ -67,7 +67,7 @@ namespace JFramework.Net
         public void ServerConnect(int clientId)
         {
             connections.Add(clientId);
-            using var writer = NetworkWriter.Pop();
+            using var writer = MemoryWriter.Pop();
             writer.WriteByte((byte)OpCodes.Connect);
             transport.SendToClient(clientId, writer);
         }
@@ -79,7 +79,7 @@ namespace JFramework.Net
             {
                 if (room.clientId == clientId) // 主机断开
                 {
-                    using var writer = NetworkWriter.Pop();
+                    using var writer = MemoryWriter.Pop();
                     writer.WriteByte((byte)OpCodes.LeaveRoom);
                     foreach (var client in room.clients)
                     {
@@ -95,7 +95,7 @@ namespace JFramework.Net
 
                 if (room.clients.Remove(clientId)) // 客户端断开
                 {
-                    using var writer = NetworkWriter.Pop();
+                    using var writer = MemoryWriter.Pop();
                     writer.WriteByte((byte)OpCodes.KickRoom);
                     writer.WriteInt(clientId);
                     transport.SendToClient(room.clientId, writer);
@@ -109,7 +109,7 @@ namespace JFramework.Net
         {
             try
             {
-                using var reader = NetworkReader.Pop(segment);
+                using var reader = MemoryReader.Pop(segment);
                 var opcode = (OpCodes)reader.ReadByte();
                 if (opcode == OpCodes.Connected)
                 {
@@ -118,7 +118,7 @@ namespace JFramework.Net
                         var serverKey = reader.ReadString();
                         if (serverKey == Program.Setting.ServerKey)
                         {
-                            using var writer = NetworkWriter.Pop();
+                            using var writer = MemoryWriter.Pop();
                             writer.WriteByte((byte)OpCodes.Connected);
                             transport.SendToClient(clientId, writer);
                         }
@@ -150,7 +150,7 @@ namespace JFramework.Net
                     clients.Add(clientId, room);
                     Debug.Log($"客户端 {clientId} 创建游戏房间。房间名：{room.roomName} 房间数：{rooms.Count} 连接数：{clients.Count}");
 
-                    using var writer = NetworkWriter.Pop();
+                    using var writer = MemoryWriter.Pop();
                     writer.WriteByte((byte)OpCodes.CreateRoom);
                     writer.WriteString(room.roomId);
                     transport.SendToClient(clientId, writer);
@@ -165,7 +165,7 @@ namespace JFramework.Net
                         clients.Add(clientId, room);
                         Debug.Log($"客户端 {clientId} 加入游戏房间。房间名：{room.roomName} 房间数：{rooms.Count} 连接数：{clients.Count}");
 
-                        using var writer = NetworkWriter.Pop();
+                        using var writer = MemoryWriter.Pop();
                         writer.WriteByte((byte)OpCodes.JoinRoom);
                         writer.WriteInt(clientId);
                         transport.SendToClient(clientId, writer);
@@ -173,7 +173,7 @@ namespace JFramework.Net
                     }
                     else
                     {
-                        using var writer = NetworkWriter.Pop();
+                        using var writer = MemoryWriter.Pop();
                         writer.WriteByte((byte)OpCodes.LeaveRoom);
                         transport.SendToClient(clientId, writer);
                     }
@@ -209,7 +209,7 @@ namespace JFramework.Net
                         {
                             if (room.clients.Contains(targetId))
                             {
-                                using var writer = NetworkWriter.Pop();
+                                using var writer = MemoryWriter.Pop();
                                 writer.WriteByte((byte)OpCodes.UpdateData);
                                 writer.WriteArraySegment(message);
                                 transport.SendToClient(targetId, writer, channel);
@@ -217,7 +217,7 @@ namespace JFramework.Net
                         }
                         else
                         {
-                            using var writer = NetworkWriter.Pop();
+                            using var writer = MemoryWriter.Pop();
                             writer.WriteByte((byte)OpCodes.UpdateData);
                             writer.WriteArraySegment(message);
                             writer.WriteInt(clientId);
@@ -233,7 +233,7 @@ namespace JFramework.Net
                     {
                         if (room.clientId == targetId) // 踢掉的是主机
                         {
-                            using var writer = NetworkWriter.Pop();
+                            using var writer = MemoryWriter.Pop();
                             writer.WriteByte((byte)OpCodes.LeaveRoom);
                             foreach (var client in room.clients)
                             {
@@ -251,7 +251,7 @@ namespace JFramework.Net
                         {
                             if (room.clients.Remove(targetId))
                             {
-                                using var writer = NetworkWriter.Pop();
+                                using var writer = MemoryWriter.Pop();
                                 writer.WriteByte((byte)OpCodes.KickRoom);
                                 writer.WriteInt(targetId);
                                 transport.SendToClient(room.clientId, writer);

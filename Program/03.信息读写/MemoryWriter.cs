@@ -15,22 +15,19 @@ using System.Text;
 
 namespace JFramework.Net
 {
-    [Serializable]
-    public class NetworkWriter : IDisposable
+    internal class MemoryWriter : IDisposable
     {
-        internal readonly UTF8Encoding encoding = new UTF8Encoding(false, true);
-
-        internal byte[] buffer = new byte[1500];
-
+        public readonly UTF8Encoding encoding = new UTF8Encoding(false, true);
+        public byte[] buffer = new byte[1500];
         public int position;
 
         void IDisposable.Dispose()
         {
-            NetworkPool<NetworkWriter>.Enqueue(this);
+            Pool<MemoryWriter>.Enqueue(this);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal unsafe void Write<T>(T value) where T : unmanaged
+        public unsafe void Write<T>(T value) where T : unmanaged
         {
             AddCapacity(position + sizeof(T));
             fixed (byte* ptr = &buffer[position])
@@ -40,25 +37,44 @@ namespace JFramework.Net
 
             position += sizeof(T);
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void WriteNullable<T>(T? value) where T : unmanaged
+        {
+            if (!value.HasValue)
+            {
+                Write((byte)0);
+                return;
+            }
+
+            Write((byte)1);
+            Write(value.Value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Invoke<T>(T value)
+        {
+            Writer<T>.write?.Invoke(this, value);
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal void Reset()
+        public void Reset()
         {
             position = 0;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static NetworkWriter Pop()
+        public static MemoryWriter Pop()
         {
-            var writer = NetworkPool<NetworkWriter>.Dequeue();
+            var writer = Pool<MemoryWriter>.Dequeue();
             writer.Reset();
             return writer;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Push(NetworkWriter writer)
+        public static void Push(MemoryWriter writer)
         {
-            NetworkPool<NetworkWriter>.Enqueue(writer);
+            Pool<MemoryWriter>.Enqueue(writer);
         }
 
         public override string ToString()
@@ -67,7 +83,7 @@ namespace JFramework.Net
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal void AddCapacity(int length)
+        public void AddCapacity(int length)
         {
             if (buffer.Length < length)
             {
@@ -76,7 +92,7 @@ namespace JFramework.Net
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static implicit operator ArraySegment<byte>(NetworkWriter writer)
+        public static implicit operator ArraySegment<byte>(MemoryWriter writer)
         {
             return new ArraySegment<byte>(writer.buffer, 0, writer.position);
         }

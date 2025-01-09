@@ -13,7 +13,7 @@ using System;
 
 namespace JFramework.Net
 {
-    public static class Debug
+    internal static class Debug
     {
         public static void Log(string message)
         {

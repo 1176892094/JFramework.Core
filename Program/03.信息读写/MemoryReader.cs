@@ -1,10 +1,10 @@
 // *********************************************************************************
-// # Project: JFramework.Lobby
+// # Project: JFramework
 // # Unity: 6000.3.5f1
 // # Author: 云谷千羽
 // # Version: 1.0.0
-// # History: 2024-08-28 20:08:49
-// # Recently: 2024-12-23 00:12:04
+// # History: 2025-01-09 16:01:17
+// # Recently: 2025-01-09 17:01:45
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
@@ -15,24 +15,21 @@ using System.Text;
 
 namespace JFramework.Net
 {
-    [Serializable]
-    public class NetworkReader : IDisposable
+    internal class MemoryReader : IDisposable
     {
-        internal readonly UTF8Encoding encoding = new UTF8Encoding(false, true);
-
-        internal ArraySegment<byte> buffer;
-
-        internal int position;
+        public readonly UTF8Encoding encoding = new UTF8Encoding(false, true);
+        public ArraySegment<byte> buffer;
+        public int position;
 
         public int residue => buffer.Count - position;
 
         void IDisposable.Dispose()
         {
-            NetworkPool<NetworkReader>.Enqueue(this);
+            Pool<MemoryReader>.Enqueue(this);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal unsafe T Read<T>() where T : unmanaged
+        public unsafe T Read<T>() where T : unmanaged
         {
             T value;
             fixed (byte* ptr = &buffer.Array[buffer.Offset + position])
@@ -45,6 +42,18 @@ namespace JFramework.Net
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public T? ReadNullable<T>() where T : unmanaged
+        {
+            return Read<byte>() != 0 ? Read<T>() : default(T?);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public T Invoke<T>()
+        {
+            return Reader<T>.read != null ? Reader<T>.read.Invoke(this) : default;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Reset(ArraySegment<byte> segment)
         {
             buffer = segment;
@@ -52,17 +61,17 @@ namespace JFramework.Net
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static NetworkReader Pop(ArraySegment<byte> segment)
+        public static MemoryReader Pop(ArraySegment<byte> segment)
         {
-            var reader = NetworkPool<NetworkReader>.Dequeue();
+            var reader = Pool<MemoryReader>.Dequeue();
             reader.Reset(segment);
             return reader;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Push(NetworkReader reader)
+        public static void Push(MemoryReader reader)
         {
-            NetworkPool<NetworkReader>.Enqueue(reader);
+            Pool<MemoryReader>.Enqueue(reader);
         }
 
         public override string ToString()

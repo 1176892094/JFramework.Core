@@ -14,7 +14,7 @@ using JFramework.Udp;
 
 namespace JFramework.Net
 {
-    public sealed class Transport : Udp.Transport
+    internal sealed class Transport : Udp.Transport
     {
         public string address = "localhost";
         public ushort port = 20974;

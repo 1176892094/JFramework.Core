@@ -24,7 +24,7 @@ using HttpStatusCode = Grapevine.HttpStatusCode;
 namespace JFramework.Net
 {
     [RestResource]
-    public class RestService
+    internal class RestService
     {
         [RestRoute("Get", "/api/compressed/servers")]
         public async Task ServerListCompressed(IHttpContext context)
