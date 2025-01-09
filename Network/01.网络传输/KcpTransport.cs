@@ -11,11 +11,14 @@
 
 using System;
 using JFramework.Udp;
+using UnityEngine;
 
 namespace JFramework.Net
 {
-    public class KcpTransport : Transport
+    public sealed class KcpTransport : MonoBehaviour, Transport
     {
+        public string address = "localhost";
+        public ushort port = 20974;
         public int maxUnit = 1200;
         public uint timeout = 10000;
         public uint interval = 10;
@@ -26,6 +29,27 @@ namespace JFramework.Net
 
         private Client client;
         private Server server;
+        
+        string IAddress.address
+        {
+            get => address;
+            set => address = value;
+        }
+
+        ushort IAddress.port
+        {
+            get => port;
+            set => port = value;
+        }
+
+        public Action OnClientConnect { get; set; }
+        public Action OnClientDisconnect { get; set; }
+        public Action<int, string> OnClientError { get; set; }
+        public Action<ArraySegment<byte>, int> OnClientReceive { get; set; }
+        public Action<int> OnServerConnect { get; set; }
+        public Action<int> OnServerDisconnect { get; set; }
+        public Action<int, int, string> OnServerError { get; set; }
+        public Action<int, ArraySegment<byte>, int> OnServerReceive { get; set; }
 
         private void Awake()
         {
@@ -37,49 +61,110 @@ namespace JFramework.Net
             server = new Server(setting, ServerConnect, ServerDisconnect, ServerError, ServerReceive);
             return;
 
-            void ClientConnect() => OnClientConnect.Invoke();
+            void ClientConnect()
+            {
+                OnClientConnect.Invoke();
+            }
 
-            void ClientDisconnect() => OnClientDisconnect.Invoke();
+            void ClientDisconnect()
+            {
+                OnClientDisconnect.Invoke();
+            }
 
-            void ClientError(int error, string message) => OnClientError?.Invoke(error, message);
+            void ClientError(int error, string message)
+            {
+                OnClientError?.Invoke(error, message);
+            }
 
-            void ClientReceive(ArraySegment<byte> message, int channel) => OnClientReceive.Invoke(message, channel);
+            void ClientReceive(ArraySegment<byte> message, int channel)
+            {
+                OnClientReceive.Invoke(message, channel);
+            }
 
-            void ServerConnect(int clientId) => OnServerConnect.Invoke(clientId);
+            void ServerConnect(int clientId)
+            {
+                OnServerConnect.Invoke(clientId);
+            }
 
-            void ServerDisconnect(int clientId) => OnServerDisconnect.Invoke(clientId);
+            void ServerDisconnect(int clientId)
+            {
+                OnServerDisconnect.Invoke(clientId);
+            }
 
-            void ServerError(int clientId, int error, string message) => OnServerError?.Invoke(clientId, error, message);
+            void ServerError(int clientId, int error, string message)
+            {
+                OnServerError?.Invoke(clientId, error, message);
+            }
 
-            void ServerReceive(int clientId, ArraySegment<byte> message, int channel) => OnServerReceive.Invoke(clientId, message, channel);
+            void ServerReceive(int clientId, ArraySegment<byte> message, int channel)
+            {
+                OnServerReceive.Invoke(clientId, message, channel);
+            }
         }
 
-        public override int MessageSize(int channel) =>
-            channel == Channel.Reliable ? Agent.ReliableSize(maxUnit, receiveWindow) : Agent.UnreliableSize(maxUnit);
+        public int MessageSize(int channel)
+        {
+            return channel == Channel.Reliable ? Agent.ReliableSize(maxUnit, receiveWindow) : Agent.UnreliableSize(maxUnit);
+        }
 
-        public override void StartServer() => server.Connect(port);
+        public void StartServer()
+        {
+            server.Connect(port);
+        }
 
-        public override void StopServer() => server.StopServer();
+        public void StopServer()
+        {
+            server.StopServer();
+        }
 
-        public override void StopClient(int clientId) => server.Disconnect(clientId);
+        public void StopClient(int clientId)
+        {
+            server.Disconnect(clientId);
+        }
 
-        public override void SendToClient(int clientId, ArraySegment<byte> segment, int channel = Channel.Reliable) =>
+        public void SendToClient(int clientId, ArraySegment<byte> segment, int channel = Channel.Reliable)
+        {
             server.Send(clientId, segment, channel);
+        }
 
-        public override void StartClient() => client.Connect(address, port);
+        public void StartClient()
+        {
+            client.Connect(address, port);
+        }
 
-        public override void StartClient(Uri uri) => client.Connect(uri.Host, (ushort)(uri.IsDefaultPort ? port : uri.Port));
+        public void StartClient(Uri uri)
+        {
+            client.Connect(uri.Host, (ushort)(uri.IsDefaultPort ? port : uri.Port));
+        }
 
-        public override void StopClient() => client.Disconnect();
+        public void StopClient()
+        {
+            client.Disconnect();
+        }
 
-        public override void SendToServer(ArraySegment<byte> segment, int channel = Channel.Reliable) => client.Send(segment, channel);
+        public void SendToServer(ArraySegment<byte> segment, int channel = Channel.Reliable)
+        {
+            client.Send(segment, channel);
+        }
 
-        public override void ClientEarlyUpdate() => client.EarlyUpdate();
+        public void ClientEarlyUpdate()
+        {
+            client.EarlyUpdate();
+        }
 
-        public override void ClientAfterUpdate() => client.AfterUpdate();
+        public void ClientAfterUpdate()
+        {
+            client.AfterUpdate();
+        }
 
-        public override void ServerEarlyUpdate() => server.EarlyUpdate();
+        public void ServerEarlyUpdate()
+        {
+            server.EarlyUpdate();
+        }
 
-        public override void ServerAfterUpdate() => server.AfterUpdate();
+        public void ServerAfterUpdate()
+        {
+            server.AfterUpdate();
+        }
     }
 }

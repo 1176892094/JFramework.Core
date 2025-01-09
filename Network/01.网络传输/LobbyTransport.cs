@@ -11,13 +11,16 @@
 
 using System;
 using System.Collections.Generic;
+using JFramework.Udp;
 using UnityEngine;
 using UnityEngine.Networking;
 
 namespace JFramework.Net
 {
-    public class LobbyTransport : Transport
+    public sealed class LobbyTransport : MonoBehaviour, Transport
     {
+        public string address = "localhost";
+        public ushort port = 20974;
         public Transport transport;
         public bool isPublic = true;
         public string roomName;
@@ -31,6 +34,27 @@ namespace JFramework.Net
         private bool isServer;
         private int objectId;
         private StateMode state = StateMode.Disconnect;
+
+        string IAddress.address
+        {
+            get => address;
+            set => address = value;
+        }
+
+        ushort IAddress.port
+        {
+            get => port;
+            set => port = value;
+        }
+
+        public Action OnClientConnect { get; set; }
+        public Action OnClientDisconnect { get; set; }
+        public Action<int, string> OnClientError { get; set; }
+        public Action<ArraySegment<byte>, int> OnClientReceive { get; set; }
+        public Action<int> OnServerConnect { get; set; }
+        public Action<int> OnServerDisconnect { get; set; }
+        public Action<int, int, string> OnServerError { get; set; }
+        public Action<int, ArraySegment<byte>, int> OnServerReceive { get; set; }
 
         private void Awake()
         {
@@ -210,12 +234,12 @@ namespace JFramework.Net
             }
         }
 
-        public override int MessageSize(int channel)
+        public int MessageSize(int channel)
         {
             return transport.MessageSize(channel);
         }
 
-        public override void SendToClient(int clientId, ArraySegment<byte> segment, int channel = Channel.Reliable)
+        public void SendToClient(int clientId, ArraySegment<byte> segment, int channel = Channel.Reliable)
         {
             if (players.TryGetValue(clientId, out var playerId))
             {
@@ -227,7 +251,7 @@ namespace JFramework.Net
             }
         }
 
-        public override void SendToServer(ArraySegment<byte> segment, int channel = Channel.Reliable)
+        public void SendToServer(ArraySegment<byte> segment, int channel = Channel.Reliable)
         {
             using var writer = MemoryWriter.Pop();
             writer.WriteByte((byte)OpCodes.UpdateData);
@@ -236,7 +260,7 @@ namespace JFramework.Net
             transport.SendToServer(writer);
         }
 
-        public override void StartServer()
+        public void StartServer()
         {
             if (state != StateMode.Connected)
             {
@@ -264,7 +288,7 @@ namespace JFramework.Net
             transport.SendToServer(writer);
         }
 
-        public override void StopServer()
+        public void StopServer()
         {
             if (isServer)
             {
@@ -275,7 +299,7 @@ namespace JFramework.Net
             }
         }
 
-        public override void StopClient(int clientId)
+        public void StopClient(int clientId)
         {
             if (players.TryGetValue(clientId, out var playerId))
             {
@@ -286,7 +310,7 @@ namespace JFramework.Net
             }
         }
 
-        public override void StartClient()
+        public void StartClient()
         {
             if (state != StateMode.Connected)
             {
@@ -308,7 +332,7 @@ namespace JFramework.Net
             transport.SendToServer(writer);
         }
 
-        public override void StartClient(Uri uri)
+        public void StartClient(Uri uri)
         {
             if (uri != null)
             {
@@ -318,7 +342,7 @@ namespace JFramework.Net
             StartClient();
         }
 
-        public override void StopClient()
+        public void StopClient()
         {
             if (state != StateMode.Disconnect)
             {
@@ -329,21 +353,21 @@ namespace JFramework.Net
             }
         }
 
-        public override void ClientEarlyUpdate()
+        public void ClientEarlyUpdate()
         {
             transport.ClientEarlyUpdate();
         }
 
-        public override void ClientAfterUpdate()
+        public void ClientAfterUpdate()
         {
             transport.ClientAfterUpdate();
         }
 
-        public override void ServerEarlyUpdate()
+        public void ServerEarlyUpdate()
         {
         }
 
-        public override void ServerAfterUpdate()
+        public void ServerAfterUpdate()
         {
         }
 

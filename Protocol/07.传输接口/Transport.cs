@@ -10,61 +10,50 @@
 // *********************************************************************************
 
 using System;
-using UnityEngine;
 
-namespace JFramework.Net
+namespace JFramework.Udp
 {
-    public abstract class Transport : MonoBehaviour
+    public interface Transport : IAddress
     {
-        /// <summary>
-        /// 地址
-        /// </summary>
-        public string address = "localhost";
-
-        /// <summary>
-        /// 端口
-        /// </summary>
-        public ushort port = 20974;
-
         /// <summary>
         /// 客户端连接事件
         /// </summary>
-        public Action OnClientConnect;
+        public Action OnClientConnect { get; set; }
 
         /// <summary>
         /// 客户端断开事件
         /// </summary>
-        public Action OnClientDisconnect;
+        public Action OnClientDisconnect { get; set; }
 
         /// <summary>
         /// 客户端错误事件
         /// </summary>
-        public Action<int, string> OnClientError;
+        public Action<int, string> OnClientError { get; set; }
 
         /// <summary>
         /// 客户端接收事件
         /// </summary>
-        public Action<ArraySegment<byte>, int> OnClientReceive;
+        public Action<ArraySegment<byte>, int> OnClientReceive { get; set; }
 
         /// <summary>
         /// 客户端连接到服务器的事件
         /// </summary>
-        public Action<int> OnServerConnect;
+        public Action<int> OnServerConnect { get; set; }
 
         /// <summary>
         /// 客户端从服务器断开的事件
         /// </summary>
-        public Action<int> OnServerDisconnect;
+        public Action<int> OnServerDisconnect { get; set; }
 
         /// <summary>
         /// 服务器错误事件
         /// </summary>
-        public Action<int, int, string> OnServerError;
+        public Action<int, int, string> OnServerError { get; set; }
 
         /// <summary>
         /// 服务器接收客户端消息的事件
         /// </summary>
-        public Action<int, ArraySegment<byte>, int> OnServerReceive;
+        public Action<int, ArraySegment<byte>, int> OnServerReceive { get; set; }
 
         /// <summary>
         /// 获取最大网络消息大小
