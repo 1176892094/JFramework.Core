@@ -19,7 +19,6 @@ namespace JFramework
 {
     public static partial class Service
     {
-        [Serializable]
         private class EntityPool : IPool<GameObject>
         {
             private readonly HashSet<GameObject> cached = new HashSet<GameObject>();

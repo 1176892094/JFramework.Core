@@ -10,6 +10,7 @@
 // *********************************************************************************
 
 using System;
+using UnityEngine;
 
 namespace JFramework
 {
@@ -20,7 +21,7 @@ namespace JFramework
             return Service.Agent.Show(current, agentType);
         }
 
-        public static T Agent<T>(this IEntity current) where T : class, IAgent
+        public static T Agent<T>(this IEntity current) where T : ScriptableObject, IAgent
         {
             return Service.Agent.Show<T>(current);
         }

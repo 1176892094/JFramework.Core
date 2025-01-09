@@ -14,14 +14,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-
 namespace JFramework
 {
     public static partial class Service
     {
         internal static class Agent
         {
-            public static T Show<T>(IEntity entity) where T : class, IAgent
+            public static T Show<T>(IEntity entity) where T : ScriptableObject, IAgent
             {
                 if (helper == null) return default;
                 if (!Service.agentData.TryGetValue(entity, out var agentData))
@@ -33,7 +32,7 @@ namespace JFramework
                 if (!agentData.TryGetValue(typeof(T), out var agent))
                 {
                     Service.entity = entity;
-                    agent = Model.Dequeue<T>();
+                    agent = (IAgent)LoadPool(typeof(T)).Dequeue();
                     agentData.Add(typeof(T), agent);
                     agent.OnAwake(entity);
                 }
@@ -53,7 +52,7 @@ namespace JFramework
                 if (!agentData.TryGetValue(agentType, out var agent))
                 {
                     Service.entity = entity;
-                    agent = Model.Dequeue<IAgent>(agentType);
+                    agent = (IAgent)LoadPool(agentType).Dequeue();
                     agentData.Add(agentType, agent);
                     agent.OnAwake(entity);
                 }
@@ -69,7 +68,7 @@ namespace JFramework
                     foreach (var agent in agentData.Values)
                     {
                         agent.Dispose();
-                        Model.Enqueue(agent, agent.GetType());
+                        LoadPool(agent.GetType()).Enqueue((ScriptableObject)agent);
                     }
 
                     agentData.Clear();
@@ -77,19 +76,16 @@ namespace JFramework
                 }
             }
 
-            private static void Destroy(IEntity entity)
+            private static IHeap<ScriptableObject> LoadPool(Type heapType)
             {
-                if (helper == null) return;
-                if (Service.agentData.TryGetValue(entity, out var agentData))
+                if (Service.heapData.TryGetValue(heapType, out var heapData))
                 {
-                    foreach (var agent in agentData.Values)
-                    {
-                        Object.Destroy((ScriptableObject)agent);
-                    }
-
-                    agentData.Clear();
-                    Service.agentData.Remove(entity);
+                    return (IHeap<ScriptableObject>)heapData;
                 }
+
+                heapData = new AgentPool(heapType);
+                Service.heapData.Add(heapType, heapData);
+                return (IHeap<ScriptableObject>)heapData;
             }
 
             internal static void Dispose()
@@ -97,7 +93,16 @@ namespace JFramework
                 var agentCaches = new List<IEntity>(agentData.Keys);
                 foreach (var cache in agentCaches)
                 {
-                    Destroy(cache);
+                    if (Service.agentData.TryGetValue(cache, out var agentData))
+                    {
+                        foreach (var agent in agentData.Values)
+                        {
+                            Object.Destroy((ScriptableObject)agent);
+                        }
+
+                        agentData.Clear();
+                        Service.agentData.Remove(cache);
+                    }
                 }
 
                 agentData.Clear();
