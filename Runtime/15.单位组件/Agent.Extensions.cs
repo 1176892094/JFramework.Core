@@ -17,17 +17,17 @@ namespace JFramework
     {
         public static IAgent Agent(this IEntity current, Type agentType)
         {
-            return Service.Agent.GetAgent(current, agentType);
+            return Service.Agent.Show(current, agentType);
         }
 
         public static T Agent<T>(this IEntity current) where T : class, IAgent
         {
-            return Service.Agent.GetAgent<T>(current);
+            return Service.Agent.Show<T>(current);
         }
 
         public static void Destroy(this IEntity current)
         {
-            Service.Agent.Destroy(current);
+            Service.Agent.Hide(current);
         }
     }
 }

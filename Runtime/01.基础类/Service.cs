@@ -24,11 +24,13 @@ namespace JFramework
 {
     public static partial class Service
     {
-        private static Helper helper;
-        
         public static Canvas canvas;
         
         public static GameObject manager;
+        
+        internal static IEntity entity;
+        
+        private static Helper helper;
         
         private static AudioSource musicSource;
         

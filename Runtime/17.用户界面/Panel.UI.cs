@@ -15,6 +15,8 @@ namespace JFramework
 {
     public abstract class UIPanel : MonoBehaviour, IPanel
     {
+        public UIState state { get; set; } = UIState.Common;
+        
         protected virtual void Awake()
         {
             this.Inject();
@@ -24,8 +26,6 @@ namespace JFramework
         {
             this.Destroy();
         }
-
-        public UIState state { get; set; } = UIState.Common;
 
         public virtual void Show()
         {

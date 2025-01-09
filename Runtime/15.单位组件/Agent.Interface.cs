@@ -15,6 +15,6 @@ namespace JFramework
 {
     public interface IAgent : IDisposable
     {
-        void OnAwake(object owner);
+        void OnAwake(IEntity owner);
     }
 }

@@ -14,12 +14,12 @@ using System.Collections.Generic;
 
 namespace JFramework
 {
-    public abstract class StateMachine<TEntity> : Agent<TEntity>
+    public abstract class StateMachine<TEntity> : Agent<TEntity> where TEntity : IEntity
     {
         private readonly Dictionary<Type, IState> states = new Dictionary<Type, IState>();
         public IState state { get; private set; }
 
-        protected override void Dispose()
+        public override void Dispose()
         {
             state = null;
             var copies = new List<IState>(states.Values);

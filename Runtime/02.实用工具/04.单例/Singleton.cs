@@ -14,7 +14,7 @@ using UnityEngine;
 
 namespace JFramework
 {
-    public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T>
+    public abstract class Singleton<T> : MonoBehaviour where T : Singleton<T>
     {
         private static readonly object locked = typeof(T);
 

@@ -9,32 +9,18 @@
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
 
-using System;
+using UnityEngine;
 
 namespace JFramework
 {
-    public abstract class Agent<T> : IAgent
+    public abstract class Agent<T> : ScriptableObject, IAgent where T : IEntity
     {
-        public T owner { get; private set; }
+        private T instance;
 
-        void IAgent.OnAwake(object owner)
-        {
-            this.owner = (T)owner;
-            Awake();
-        }
+        public T owner => instance ??= (T)Service.entity;
 
-        void IDisposable.Dispose()
-        {
-            Dispose();
-            owner = default;
-        }
+        public virtual void OnAwake(IEntity owner) => instance ??= (T)owner;
 
-        protected virtual void Awake()
-        {
-        }
-
-        protected virtual void Dispose()
-        {
-        }
+        public virtual void Dispose() => instance = default;
     }
 }

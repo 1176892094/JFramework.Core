@@ -14,7 +14,7 @@ using System;
 namespace JFramework
 {
     [Serializable]
-    public abstract class State<T> : Agent<T>, IState
+    public abstract class State<T> : Agent<T>, IState where T : IEntity
     {
         void IState.OnEnter() => OnEnter();
 

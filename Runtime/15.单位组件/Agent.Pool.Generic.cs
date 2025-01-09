@@ -3,8 +3,8 @@
 // # Unity: 6000.3.5f1
 // # Author: 云谷千羽
 // # Version: 1.0.0
-// # History: 2024-12-23 18:12:21
-// # Recently: 2025-01-08 17:01:28
+// # History: 2025-01-10 02:01:43
+// # Recently: 2025-01-10 02:01:44
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
@@ -12,20 +12,18 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace JFramework
 {
     public static partial class Service
     {
-        private class AudioPool : IHeap<AudioSource>
+        private class AgentPool : IHeap<ScriptableObject>
         {
-            private readonly HashSet<AudioSource> cached = new HashSet<AudioSource>();
-            private readonly Queue<AudioSource> unused = new Queue<AudioSource>();
+            private readonly HashSet<ScriptableObject> cached = new HashSet<ScriptableObject>();
+            private readonly Queue<ScriptableObject> unused = new Queue<ScriptableObject>();
 
-            public AudioPool(string assetPath, Type assetType)
+            public AgentPool(Type assetType)
             {
-                this.assetPath = assetPath;
                 this.assetType = assetType;
             }
 
@@ -36,10 +34,10 @@ namespace JFramework
             public int dequeueCount { get; private set; }
             public int enqueueCount { get; private set; }
 
-            public AudioSource Dequeue()
+            public ScriptableObject Dequeue()
             {
                 dequeueCount++;
-                AudioSource assetData;
+                ScriptableObject assetData;
                 if (unused.Count > 0)
                 {
                     assetData = unused.Dequeue();
@@ -53,13 +51,12 @@ namespace JFramework
                     cached.Remove(assetData);
                 }
 
-                assetData = new GameObject(assetPath).AddComponent<AudioSource>();
-                Object.DontDestroyOnLoad(assetData.gameObject);
+                assetData = ScriptableObject.CreateInstance(assetType);
                 cached.Add(assetData);
                 return assetData;
             }
 
-            public void Enqueue(AudioSource assetData)
+            public void Enqueue(ScriptableObject assetData)
             {
                 if (cached.Remove(assetData))
                 {

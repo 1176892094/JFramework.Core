@@ -27,20 +27,20 @@ namespace JFramework
         private float width => owner.width;
         private float height => owner.height;
         private string prefab => owner.prefab;
+        
+        private void Awake()
+        {
+            owner.content.pivot = Vector2.up;
+            owner.content.anchorMin = Vector2.up;
+            owner.content.anchorMax = Vector2.one;
+        }
 
-        protected override void Dispose()
+        public override void Dispose()
         {
             items = null;
             grids.Clear();
             oldMinIndex = -1;
             oldMaxIndex = -1;
-        }
-
-        protected override void Awake()
-        {
-            owner.content.pivot = Vector2.up;
-            owner.content.anchorMin = Vector2.up;
-            owner.content.anchorMax = Vector2.one;
         }
 
         public void SetItem(List<TItem> items)

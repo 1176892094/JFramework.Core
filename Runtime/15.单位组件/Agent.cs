@@ -11,6 +11,9 @@
 
 using System;
 using System.Collections.Generic;
+using UnityEngine;
+using Object = UnityEngine.Object;
+
 
 namespace JFramework
 {
@@ -18,7 +21,7 @@ namespace JFramework
     {
         internal static class Agent
         {
-            public static T GetAgent<T>(IEntity entity) where T : class, IAgent
+            public static T Show<T>(IEntity entity) where T : class, IAgent
             {
                 if (helper == null) return default;
                 if (!Service.agentData.TryGetValue(entity, out var agentData))
@@ -29,7 +32,8 @@ namespace JFramework
 
                 if (!agentData.TryGetValue(typeof(T), out var agent))
                 {
-                    agent = Heap.Dequeue<T>();
+                    Service.entity = entity;
+                    agent = Model.Dequeue<T>();
                     agentData.Add(typeof(T), agent);
                     agent.OnAwake(entity);
                 }
@@ -37,7 +41,7 @@ namespace JFramework
                 return (T)Service.agentData[entity][typeof(T)];
             }
 
-            public static IAgent GetAgent(IEntity entity, Type agentType)
+            public static IAgent Show(IEntity entity, Type agentType)
             {
                 if (helper == null) return default;
                 if (!Service.agentData.TryGetValue(entity, out var agentData))
@@ -48,7 +52,8 @@ namespace JFramework
 
                 if (!agentData.TryGetValue(agentType, out var agent))
                 {
-                    agent = Heap.Dequeue<IAgent>(agentType);
+                    Service.entity = entity;
+                    agent = Model.Dequeue<IAgent>(agentType);
                     agentData.Add(agentType, agent);
                     agent.OnAwake(entity);
                 }
@@ -56,7 +61,7 @@ namespace JFramework
                 return Service.agentData[entity][agentType];
             }
 
-            public static void Destroy(IEntity entity)
+            public static void Hide(IEntity entity)
             {
                 if (helper == null) return;
                 if (Service.agentData.TryGetValue(entity, out var agentData))
@@ -64,7 +69,22 @@ namespace JFramework
                     foreach (var agent in agentData.Values)
                     {
                         agent.Dispose();
-                        Heap.Enqueue(agent, agent.GetType());
+                        Model.Enqueue(agent, agent.GetType());
+                    }
+
+                    agentData.Clear();
+                    Service.agentData.Remove(entity);
+                }
+            }
+
+            private static void Destroy(IEntity entity)
+            {
+                if (helper == null) return;
+                if (Service.agentData.TryGetValue(entity, out var agentData))
+                {
+                    foreach (var agent in agentData.Values)
+                    {
+                        Object.Destroy((ScriptableObject)agent);
                     }
 
                     agentData.Clear();

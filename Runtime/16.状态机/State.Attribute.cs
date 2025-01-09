@@ -9,6 +9,7 @@
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
 
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -78,7 +79,7 @@ namespace JFramework
             attributes[key] = value;
         }
 
-        protected override void Dispose()
+        public override void Dispose()
         {
             attributes.Clear();
         }
