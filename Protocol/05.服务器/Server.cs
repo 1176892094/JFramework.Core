@@ -62,13 +62,13 @@ namespace JFramework.Udp
                     Log.Warn($"服务器不能设置成双模式！\n{e}");
                 }
 
-                // if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                // {
-                //     const uint IOC_IN = 0x80000000U;
-                //     const uint IOC_VENDOR = 0x18000000U;
-                //     const int SIO_UDP_RESET = unchecked((int)(IOC_IN | IOC_VENDOR | 12));
-                //     socket.IOControl(SIO_UDP_RESET, new byte[] { 0x00 }, null);
-                // }
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    const uint IOC_IN = 0x80000000U;
+                    const uint IOC_VENDOR = 0x18000000U;
+                    const int SIO_UDP_RESET = unchecked((int)(IOC_IN | IOC_VENDOR | 12));
+                    socket.IOControl(SIO_UDP_RESET, new byte[] { 0x00 }, null);
+                }
 
                 socket.Bind(new IPEndPoint(IPAddress.IPv6Any, port));
             }
@@ -129,14 +129,14 @@ namespace JFramework.Udp
             void OnConnect(Client client)
             {
                 clients.Add(clientId, client);
-                Log.Info($"客户端 {clientId} 连接到服务器。");
+                Log.Info($"[{DateTime.Now:MM-dd HH:mm:ss}] 客户端 {clientId} 连接到服务器。");
                 this.OnConnect?.Invoke(clientId);
             }
 
             void OnDisconnect()
             {
                 copies.Add(clientId);
-                Log.Info($"客户端 {clientId} 从服务器断开。");
+                Log.Info($"[{DateTime.Now:MM-dd HH:mm:ss}] 客户端 {clientId} 从服务器断开。");
                 this.OnDisconnect?.Invoke(clientId);
             }
 
@@ -156,7 +156,7 @@ namespace JFramework.Udp
                 {
                     if (!clients.TryGetValue(clientId, out var client))
                     {
-                        Log.Warn($"服务器向无效的客户端发送信息。客户端：{clientId}");
+                        // Log.Warn($"服务器向无效的客户端发送信息。客户端：{clientId}");
                         return;
                     }
 
@@ -271,7 +271,7 @@ namespace JFramework.Udp
                 {
                     if (newCookie != cookie)
                     {
-                        Log.Info($"从 {endPoint} 删除无效cookie: {newCookie}预期:{cookie}。");
+                        Log.Info($"[{DateTime.Now:MM-dd HH:mm:ss}] 从 {endPoint} 删除无效cookie: {newCookie}预期:{cookie}。");
                         return;
                     }
                 }

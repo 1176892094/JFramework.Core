@@ -3,19 +3,17 @@
 // # Unity: 6000.3.5f1
 // # Author: 云谷千羽
 // # Version: 1.0.0
-// # History: 2024-11-29 13:11:20
-// # Recently: 2024-12-22 20:12:20
+// # History: 2025-01-09 13:01:50
+// # Recently: 2025-01-09 13:01:50
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
 
 using System;
-using JFramework.Udp;
-using UnityEngine;
 
-namespace JFramework.Net
+namespace JFramework.Udp
 {
-    public sealed class KcpTransport : MonoBehaviour, Transport
+    internal sealed class LobbyTransport : Transport
     {
         public string address = "localhost";
         public ushort port = 20974;
@@ -29,7 +27,7 @@ namespace JFramework.Net
 
         private Client client;
         private Server server;
-        
+
         string IAddress.address
         {
             get => address;
@@ -51,11 +49,8 @@ namespace JFramework.Net
         public Action<int, int, string> OnServerError { get; set; }
         public Action<int, ArraySegment<byte>, int> OnServerReceive { get; set; }
 
-        private void Awake()
+        public void Awake()
         {
-            Udp.Log.Info = Log.Info;
-            Udp.Log.Warn = Log.Warn;
-            Udp.Log.Error = Log.Error;
             var setting = new Setting(maxUnit, timeout, interval, deadLink, fastResend, sendWindow, receiveWindow);
             client = new Client(setting, ClientConnect, ClientDisconnect, ClientError, ClientReceive);
             server = new Server(setting, ServerConnect, ServerDisconnect, ServerError, ServerReceive);
@@ -100,6 +95,12 @@ namespace JFramework.Net
             {
                 OnServerReceive.Invoke(clientId, message, channel);
             }
+        }
+        
+        public void Update()
+        {
+            server.EarlyUpdate();
+            server.AfterUpdate();
         }
 
         public int MessageSize(int channel)

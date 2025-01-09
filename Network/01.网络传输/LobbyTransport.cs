@@ -19,8 +19,6 @@ namespace JFramework.Net
 {
     public sealed class LobbyTransport : MonoBehaviour, Transport
     {
-        public string address = "localhost";
-        public ushort port = 20974;
         public Transport transport;
         public bool isPublic = true;
         public string roomName;
@@ -37,14 +35,14 @@ namespace JFramework.Net
 
         string IAddress.address
         {
-            get => address;
-            set => address = value;
+            get => transport.address;
+            set => transport.address = value;
         }
 
         ushort IAddress.port
         {
-            get => port;
-            set => port = value;
+            get => transport.port;
+            set => transport.port = value;
         }
 
         public Action OnClientConnect { get; set; }
@@ -100,9 +98,7 @@ namespace JFramework.Net
                 Log.Warn("大厅服务器已经连接！");
                 return;
             }
-
-            transport.port = port;
-            transport.address = address;
+            
             transport.StartClient();
         }
 
@@ -129,12 +125,12 @@ namespace JFramework.Net
                 return;
             }
 
-            var uri = Service.Text.Format("http://{0}:{1}/api/compressed/servers", address, port);
+            var uri = Service.Text.Format("http://{0}:{1}/api/compressed/servers", transport.address, transport.port);
             using var request = UnityWebRequest.Get(uri);
             await request.SendWebRequest();
             if (request.result != UnityWebRequest.Result.Success)
             {
-                Log.Warn(Service.Text.Format("无法获取服务器列表: {0}:{1}", address, port));
+                Log.Warn(Service.Text.Format("无法获取服务器列表: {0}:{1}", transport.address, transport.port));
                 return;
             }
 
@@ -336,7 +332,7 @@ namespace JFramework.Net
         {
             if (uri != null)
             {
-                address = uri.Host;
+                transport.address = uri.Host;
             }
 
             StartClient();
