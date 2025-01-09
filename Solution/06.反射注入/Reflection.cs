@@ -19,7 +19,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using Object = UnityEngine.Object;
 
-namespace JFramework.Editor
+namespace JFramework
 {
     internal static class Reflection
     {

@@ -12,7 +12,7 @@
 using System;
 using UnityEditor;
 
-namespace JFramework.Editor
+namespace JFramework
 {
     [InitializeOnLoad]
     internal static class EditorManager

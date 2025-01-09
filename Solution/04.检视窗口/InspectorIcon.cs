@@ -16,7 +16,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using Object = UnityEngine.Object;
 
-namespace JFramework.Editor
+namespace JFramework
 {
     using Editor = UnityEditor.Editor;
 

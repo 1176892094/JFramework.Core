@@ -13,7 +13,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace JFramework.Editor
+namespace JFramework
 {
     internal abstract class Inspector
     {

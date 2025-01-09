@@ -13,7 +13,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace JFramework.Editor
+namespace JFramework
 {
     internal static class ProjectIcon
     {
@@ -230,7 +230,7 @@ namespace JFramework.Editor
         }
     }
 
-    public enum Icon
+    internal enum Icon
     {
         Animations,
         Audios,
@@ -256,7 +256,7 @@ namespace JFramework.Editor
         Windows,
     }
 
-    public enum Tree
+    internal enum Tree
     {
         Normal,
         Bottom,

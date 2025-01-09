@@ -15,7 +15,7 @@ using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace JFramework.Editor
+namespace JFramework
 {
     internal sealed class Project
     {

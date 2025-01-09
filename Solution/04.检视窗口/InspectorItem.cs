@@ -14,7 +14,7 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace JFramework.Editor
+namespace JFramework
 {
     internal sealed class InspectorItem : Inspector
     {

@@ -19,9 +19,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
-namespace JFramework.Editor
+namespace JFramework
 {
-    public class Toolbar
+    internal class Toolbar
     {
         private static Toolbar instance;
         private static List<string> scenes;
