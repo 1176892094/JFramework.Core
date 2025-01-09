@@ -1,8 +1,0 @@
-/Users/jinyijie/Files/GitHub/JFramework/Refactor/obj/Release/Refactor.csproj.AssemblyReference.cache
-/Users/jinyijie/Files/GitHub/JFramework/Refactor/obj/Release/Refactor.csproj.CoreCompileInputs.cache
-/Users/jinyijie/Files/GitHub/JFramework/Refactor/bin/Release/JFramework.Net.dll
-/Users/jinyijie/Files/GitHub/JFramework/Refactor/bin/Release/JFramework.Udp.dll
-/Users/jinyijie/Files/GitHub/JFramework/Refactor/bin/Release/JFramework.dll
-/Users/jinyijie/Files/GitHub/JFramework/Refactor/obj/Release/Refactor.csproj.CopyComplete
-/Users/jinyijie/Files/GitHub/JFramework/Refactor/bin/Release/JFramework.Editor.dll
-/Users/jinyijie/Files/GitHub/JFramework/Refactor/obj/Release/JFramework.Editor.dll
