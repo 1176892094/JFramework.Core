@@ -25,9 +25,13 @@ namespace JFramework
     public static partial class Service
     {
         private static Helper helper;
+        
         private static Canvas canvas;
-        private static GameObject poolManager;
+        
+        private static GameObject manager;
+        
         private static AudioSource musicSource;
+        
         private static AssetBundleManifest manifest;
 
         private static readonly AudioSetting setting = new AudioSetting();
@@ -73,8 +77,5 @@ namespace JFramework
         private static readonly Dictionary<string, HashSet<IPanel>> panelGroup = new Dictionary<string, HashSet<IPanel>>();
         
         private static readonly Dictionary<IPanel, HashSet<string>> groupPanel = new Dictionary<IPanel, HashSet<string>>();
-        
-        private static IFormHelper formHelper => (IFormHelper)helper;
-        private static IAssetHelper assetHelper => (IAssetHelper)helper;
     }
 }

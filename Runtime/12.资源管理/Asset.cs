@@ -22,7 +22,7 @@ namespace JFramework
         {
             public static async void LoadAssetData()
             {
-                var platform = await LoadAssetPack(assetHelper.assetPlatform);
+                var platform = await LoadAssetPack(helper.assetPlatform);
                 manifest ??= platform.LoadAsset<AssetBundleManifest>(nameof(AssetBundleManifest));
                 Event.Invoke(new AssetAwakeEvent(manifest.GetAllAssetBundles()));
 
@@ -79,18 +79,18 @@ namespace JFramework
 
             private static async Task<Object> LoadAsset(string assetPath, Type assetType)
             {
-                if (assetHelper.assetPackMode)
+                if (helper.assetPackMode)
                 {
                     var assetPair = await LoadAssetPair(assetPath);
                     var assetPack = await LoadAssetPack(assetPair.Key);
-                    var assetData = assetHelper.LoadByAssetPack(assetPair.Value, assetType, assetPack);
-                    assetData ??= assetHelper.LoadByResources(assetPath, assetType);
+                    var assetData = helper.LoadByAssetPack(assetPair.Value, assetType, assetPack);
+                    assetData ??= helper.LoadByResources(assetPath, assetType);
                     return assetData;
                 }
                 else
                 {
-                    var assetData = assetHelper.LoadBySimulates(assetPath, assetType);
-                    assetData ??= assetHelper.LoadByResources(assetPath, assetType);
+                    var assetData = helper.LoadBySimulates(assetPath, assetType);
+                    assetData ??= helper.LoadByResources(assetPath, assetType);
                     return assetData;
                 }
             }
@@ -113,7 +113,7 @@ namespace JFramework
                     Service.assetData.Add(assetPath, assetData);
                 }
 
-                var platform = await LoadAssetPack(assetHelper.assetPlatform);
+                var platform = await LoadAssetPack(helper.assetPlatform);
                 manifest ??= platform.LoadAsset<AssetBundleManifest>(nameof(AssetBundleManifest));
 
                 var assetPacks = manifest.GetAllDependencies(assetData.Key);

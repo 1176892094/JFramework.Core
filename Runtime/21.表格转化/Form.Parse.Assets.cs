@@ -14,7 +14,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace JFramework
 {
@@ -56,7 +55,7 @@ namespace JFramework
                     foreach (var data in dataTables)
                     {
                         await WriteAssets(data.Key, data.Value);
-                        formHelper.CreateProgress(data.Key, ++progress / dataTables.Count);
+                        helper.CreateProgress(data.Key, ++progress / dataTables.Count);
                     }
                 }
                 catch (Exception e)
@@ -134,19 +133,19 @@ namespace JFramework
 
             private static async Task WriteAssets(string sheetName, List<string[]> scriptTexts)
             {
-                var filePath = Text.Format(formHelper.Path("Table", FileAccess.Write), sheetName);
+                var filePath = Text.Format(tablePath, sheetName);
                 if (!File.Exists(filePath))
                 {
                     return;
                 }
 
-                filePath = Path.GetDirectoryName(formHelper.Path("Data", FileAccess.Write));
+                filePath = Path.GetDirectoryName(assetPath);
                 if (!string.IsNullOrEmpty(filePath) && !Directory.Exists(filePath))
                 {
                     Directory.CreateDirectory(filePath);
                 }
 
-                filePath = Text.Format(formHelper.Path("Data", FileAccess.Write), sheetName);
+                filePath = Text.Format(assetPath, sheetName);
                 if (File.Exists(filePath))
                 {
                     File.Delete(filePath);
@@ -155,7 +154,7 @@ namespace JFramework
                 var fileName = Text.Format("JFramework.Table.{0}DataTable", sheetName);
                 var fileData = (IDataTable)ScriptableObject.CreateInstance(fileName);
                 if (fileData == null) return;
-                var itemData = Text.Format("JFramework.Table.{0}Data,{1}", sheetName, dataAssembly);
+                var itemData = Text.Format("JFramework.Table.{0}Data,{1}", sheetName, assemblyName);
                 await Task.Run(() =>
                 {
                     var instance = (IData)Activator.CreateInstance(Depend.GetType(itemData));
@@ -169,7 +168,7 @@ namespace JFramework
                     }
                 });
 
-                formHelper.CreateAsset((Object)fileData, filePath);
+                helper.CreateAsset((ScriptableObject)fileData, filePath);
             }
         }
     }

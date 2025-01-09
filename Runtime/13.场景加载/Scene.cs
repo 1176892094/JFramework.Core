@@ -52,7 +52,7 @@ namespace JFramework
 
             private static async Task<string> LoadSceneAsset(string assetPath)
             {
-                if (assetHelper.assetPackMode)
+                if (helper.assetPackMode)
                 {
                     var assetPair = await LoadAssetPair(assetPath);
                     var assetPack = await LoadAssetPack(assetPair.Key);

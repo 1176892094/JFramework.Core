@@ -45,7 +45,7 @@ namespace JFramework
                 if (!poolGroup.TryGetValue(assetPath, out var parent))
                 {
                     parent = new GameObject(Text.Format("Pool - {0}", assetPath));
-                    parent.transform.SetParent(poolManager.transform);
+                    parent.transform.SetParent(manager.transform);
                     poolGroup.Add(assetPath, parent);
                 }
 

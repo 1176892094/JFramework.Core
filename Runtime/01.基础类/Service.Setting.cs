@@ -16,15 +16,33 @@ namespace JFramework
 {
     public partial class Service
     {
+        private static string assemblyName => Path.GetFileNameWithoutExtension(assemblyPath);
+
+        private static string assetPath => helper.assetDataPath + "/{0}DataTable.asset";
+
+        private static string assemblyPath => Text.Format("{0}/{1}.asmdef", helper.scriptDataPath, helper.assemblyName);
+
+        private static string enumPath => helper.scriptDataPath + "/01.枚举类/{0}.cs";
+
+        private static string structPath => helper.scriptDataPath + "/02.结构体/{0}.cs";
+
+        private static string tablePath => helper.scriptDataPath + "/03.数据表/{0}.cs";
+
+        private static string assemblyData => Resources.LoadAll<TextAsset>("GlobalSetting")[0].text;
+
+        private static string enumData => Resources.LoadAll<TextAsset>("GlobalSetting")[1].text;
+
+        private static string structData => Resources.LoadAll<TextAsset>("GlobalSetting")[2].text;
+
+        private static string tableData => Resources.LoadAll<TextAsset>("GlobalSetting")[3].text;
+
         private static string persistentDataPath => Application.persistentDataPath;
 
         private static string streamingAssetsPath => Application.streamingAssetsPath;
 
-        private static string assetPackData => Text.Format("{0}.json", assetHelper.assetPackName);
+        private static string assetPackData => Text.Format("{0}.json", helper.assetPackName);
 
-        private static string assetPackPath => Text.Format("{0}/{1}", persistentDataPath, assetHelper.assetPackPath);
-
-        private static string dataAssembly => Path.GetFileNameWithoutExtension(formHelper.Path("Assembly", FileAccess.Write));
+        private static string assetPackPath => Text.Format("{0}/{1}", persistentDataPath, helper.assetPackPath);
 
         private static string GetScenePath(string assetName) => Text.Format("Scenes/{0}", assetName);
 
@@ -34,11 +52,11 @@ namespace JFramework
 
         private static string GetPacketPath(string fileName) => Path.Combine(assetPackPath, fileName);
 
-        private static string GetServerPath(string fileName) => Path.Combine(assetHelper.assetRemotePath, GetPlatform(fileName));
+        private static string GetServerPath(string fileName) => Path.Combine(helper.assetRemotePath, GetPlatform(fileName));
 
         private static string GetClientPath(string fileName) => Path.Combine(streamingAssetsPath, GetPlatform(fileName));
 
-        private static string GetPlatform(string fileName) => Path.Combine(assetHelper.assetPlatform, fileName);
+        private static string GetPlatform(string fileName) => Path.Combine(helper.assetPlatform, fileName);
 
         private static string GetJsonPath(string fileName)
         {

@@ -49,14 +49,12 @@ namespace JFramework
                     }
 
                     var writeAssets = false;
-                    var filePath = formHelper.Path("Assembly", FileAccess.Write);
-                    var fileText = formHelper.Path("Assembly", FileAccess.Read).Replace("Template", dataAssembly);
-                    dataTables.Add(filePath, fileText);
+                    dataTables.Add(assemblyPath, assemblyData.Replace("Template", assemblyName));
                     var progress = 0f;
                     foreach (var data in dataTables)
                     {
                         var result = await Task.Run(() => WriteScripts(data.Key, data.Value));
-                        formHelper.CreateProgress(data.Key, ++progress / dataTables.Count);
+                        helper.CreateProgress(data.Key, ++progress / dataTables.Count);
                         if (result)
                         {
                             writeAssets = true;
@@ -141,7 +139,7 @@ namespace JFramework
             private static KeyValuePair<string, string> WriteTable(string className, Dictionary<string, string> fields)
             {
                 var builder = Heap.Dequeue<StringBuilder>();
-                var scriptText = formHelper.Path("Table", FileAccess.Read).Replace("Template", className);
+                var scriptText = tableData.Replace("Template", className);
 
                 foreach (var field in fields)
                 {
@@ -177,13 +175,13 @@ namespace JFramework
                 scriptText = scriptText.Replace("//TODO:2", builder.ToString());
                 builder.Length = 0;
                 Heap.Enqueue(builder);
-                return new KeyValuePair<string, string>(Text.Format(formHelper.Path("Table", FileAccess.Write), className), scriptText);
+                return new KeyValuePair<string, string>(Text.Format(tablePath, className), scriptText);
             }
 
             private static KeyValuePair<string, string> WriteStruct(string className, string classType)
             {
                 var builder = Heap.Dequeue<StringBuilder>();
-                var scriptText = formHelper.Path("Struct", FileAccess.Read).Replace("Template", className);
+                var scriptText = structData.Replace("Template", className);
 
                 var members = classType.Substring(1, classType.IndexOf('}') - 1).Split(',');
                 foreach (var member in members)
@@ -200,13 +198,13 @@ namespace JFramework
                 scriptText = scriptText.Replace("//TODO:1", builder.ToString());
                 builder.Length = 0;
                 Heap.Enqueue(builder);
-                return new KeyValuePair<string, string>(Text.Format(formHelper.Path("Struct", FileAccess.Write), className), scriptText);
+                return new KeyValuePair<string, string>(Text.Format(structPath, className), scriptText);
             }
 
             private static KeyValuePair<string, string> WriteEnum(string className, IEnumerable<string> members)
             {
                 var builder = Heap.Dequeue<StringBuilder>();
-                var scriptText = formHelper.Path("Enum", FileAccess.Read).Replace("Template", className);
+                var scriptText = enumData.Replace("Template", className);
 
                 foreach (var member in members)
                 {
@@ -226,7 +224,7 @@ namespace JFramework
                 scriptText = scriptText.Replace("//TODO:1", builder.ToString());
                 builder.Length = 0;
                 Heap.Enqueue(builder);
-                return new KeyValuePair<string, string>(Text.Format(formHelper.Path("Enum", FileAccess.Write), className), scriptText);
+                return new KeyValuePair<string, string>(Text.Format(enumPath, className), scriptText);
             }
 
             private static bool WriteScripts(string filePath, string fileData)

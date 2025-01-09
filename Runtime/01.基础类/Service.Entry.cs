@@ -21,9 +21,9 @@ namespace JFramework
             {
                 Service.helper = helper;
                 Json.Load(setting, nameof(AudioSetting));
-                poolManager = new GameObject("PoolManager");
-                musicSource = poolManager.AddComponent<AudioSource>();
-                Object.DontDestroyOnLoad(poolManager);
+                manager = new GameObject("PoolManager");
+                musicSource = manager.AddComponent<AudioSource>();
+                Object.DontDestroyOnLoad(manager);
             }
 
             public static void Update()

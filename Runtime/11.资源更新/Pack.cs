@@ -24,13 +24,13 @@ namespace JFramework
             public static async void LoadAssetData()
             {
                 if (helper == null) return;
-                if (!assetHelper.assetPackMode)
+                if (!helper.assetPackMode)
                 {
                     Event.Invoke(new PackCompleteEvent(false, "启动本地资源加载。"));
                     return;
                 }
 
-                if (assetHelper.assetPackMode && !Directory.Exists(assetPackPath))
+                if (helper.assetPackMode && !Directory.Exists(assetPackPath))
                 {
                     Directory.CreateDirectory(assetPackPath);
                 }
@@ -199,7 +199,7 @@ namespace JFramework
 
             private static async Task<string> LoadClientRequest(string persistentData, string streamingAssets)
             {
-                var packData = await assetHelper.LoadRequest(persistentData, streamingAssets);
+                var packData = await helper.LoadRequest(persistentData, streamingAssets);
                 string result = default;
                 if (packData.Key == 1)
                 {
@@ -220,7 +220,7 @@ namespace JFramework
 
             internal static async Task<AssetBundle> LoadAssetRequest(string persistentData, string streamingAssets)
             {
-                var packData = await assetHelper.LoadRequest(persistentData, streamingAssets);
+                var packData = await helper.LoadRequest(persistentData, streamingAssets);
                 byte[] result = default;
                 if (packData.Key == 1)
                 {
