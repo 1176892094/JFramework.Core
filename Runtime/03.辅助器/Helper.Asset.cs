@@ -10,6 +10,7 @@
 // *********************************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -23,10 +24,7 @@ namespace JFramework
         string assetPackPath { get; }
         string assetPackName { get; }
         string assetRemotePath { get; }
-        Task<string> LoadServerRequest(string packName, string packUri);
-        Task<byte[]> LoadPacketRequest(string packName, string packUri);
-        Task<string> LoadClientRequest(string persistentData, string streamingAssets);
-        Task<AssetBundle> LoadAssetRequest(string persistentData, string streamingAssets);
+        Task<KeyValuePair<int, string>> LoadRequest(string persistentData, string streamingAssets);
         Object LoadByAssetPack(string assetPath, Type assetType, AssetBundle assetPack);
         Object LoadByResources(string assetPath, Type assetType);
         Object LoadBySimulates(string assetPath, Type assetType);

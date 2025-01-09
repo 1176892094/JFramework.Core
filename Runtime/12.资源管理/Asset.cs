@@ -144,7 +144,7 @@ namespace JFramework
 
                 var persistentData = GetPacketPath(assetPath);
                 var streamingAssets = GetClientPath(assetPath);
-                assetTask = assetHelper.LoadAssetRequest(persistentData, streamingAssets);
+                assetTask = Pack.LoadAssetRequest(persistentData, streamingAssets);
                 Service.assetTask.Add(assetPath, assetTask);
                 try
                 {

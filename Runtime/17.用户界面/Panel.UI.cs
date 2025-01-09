@@ -3,8 +3,8 @@
 // # Unity: 6000.3.5f1
 // # Author: 云谷千羽
 // # Version: 1.0.0
-// # History: 2025-01-08 19:01:48
-// # Recently: 2025-01-08 19:01:49
+// # History: 2025-01-09 16:01:50
+// # Recently: 2025-01-09 20:01:18
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
@@ -17,7 +17,7 @@ namespace JFramework
     {
         protected virtual void Awake()
         {
-            //this.Inject();
+            this.Inject();
         }
 
         protected virtual void OnDestroy()
