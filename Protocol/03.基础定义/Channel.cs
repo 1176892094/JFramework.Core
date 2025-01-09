@@ -11,7 +11,7 @@
 
 namespace JFramework.Udp
 {
-    internal static class Channel
+    public static class Channel
     {
         public const byte Reliable = 1 << 0;
         public const byte Unreliable = 1 << 1;

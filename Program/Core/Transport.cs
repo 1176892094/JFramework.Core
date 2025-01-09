@@ -10,10 +10,11 @@
 // *********************************************************************************
 
 using System;
+using JFramework.Udp;
 
-namespace JFramework.Udp
+namespace JFramework.Net
 {
-    internal sealed class LobbyTransport : Transport
+    internal sealed class Transport : Udp.Transport
     {
         public string address = "localhost";
         public ushort port = 20974;
@@ -49,9 +50,9 @@ namespace JFramework.Udp
         public Action<int, int, string> OnServerError { get; set; }
         public Action<int, ArraySegment<byte>, int> OnServerReceive { get; set; }
 
-        public void Awake()
+        public Transport()
         {
-            var setting = new Setting(maxUnit, timeout, interval, deadLink, fastResend, sendWindow, receiveWindow);
+            var setting = new Udp.Setting(maxUnit, timeout, interval, deadLink, fastResend, sendWindow, receiveWindow);
             client = new Client(setting, ClientConnect, ClientDisconnect, ClientError, ClientReceive);
             server = new Server(setting, ServerConnect, ServerDisconnect, ServerError, ServerReceive);
             return;

@@ -79,3 +79,5 @@ Runtime/bin*
 /packages
 /Protocol/obj
 /Network/obj
+/Program/bin
+/Program/obj
