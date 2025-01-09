@@ -29,7 +29,7 @@ namespace JFramework.Net
 
         public async Task MainAsync()
         {
-            Transport transport = null;
+            var transport = new Transport();
             try
             {
                 Debug.Log("运行服务器...");
@@ -47,19 +47,7 @@ namespace JFramework.Net
                 Setting = JsonConvert.DeserializeObject<Setting>(await File.ReadAllTextAsync("setting.json"));
 
                 Debug.Log("加载程序集...");
-                var assembly = Assembly.LoadFile(Path.GetFullPath(Setting.Assembly));
-
-                Debug.Log("加载传输类...");
-                transport = assembly.CreateInstance(Setting.Transport) as Transport;
-                if (transport == null)
-                {
-                    Debug.LogError("没有找到传输类!");
-                    Console.ReadKey();
-                    Environment.Exit(0);
-                    return;
-                }
-
-                transport.Awake();
+                Debug.Log("初始化传输类...");
                 Process = new Process(transport);
                 transport.OnServerError = Process.ServerError;
                 transport.OnServerConnect = Process.ServerConnect;
