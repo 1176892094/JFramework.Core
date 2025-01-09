@@ -24,7 +24,8 @@ namespace JFramework
 {
     public static partial class Service
     {
-        private static IHelper helper;
+        private static Helper helper;
+        private static Canvas canvas;
         private static GameObject poolManager;
         private static AudioSource musicSource;
 
@@ -37,14 +38,14 @@ namespace JFramework
         private static readonly Dictionary<Type, IPool> heapData = new Dictionary<Type, IPool>();
 
         private static readonly Dictionary<Type, IPool> eventData = new Dictionary<Type, IPool>();
+        
+        private static readonly Dictionary<Type, IPanel> panelData = new Dictionary<Type, IPanel>();
 
         private static readonly Dictionary<Type, ItemTable> itemTable = new Dictionary<Type, ItemTable>();
 
         private static readonly Dictionary<Type, NameTable> nameTable = new Dictionary<Type, NameTable>();
 
         private static readonly Dictionary<Type, EnumTable> enumTable = new Dictionary<Type, EnumTable>();
-        
-        private static readonly Dictionary<Type, IPanel> panelData = new Dictionary<Type, IPanel>();
         
         private static readonly Dictionary<IEntity, AgentData> agentData = new Dictionary<IEntity, AgentData>();
 
@@ -58,13 +59,15 @@ namespace JFramework
 
         private static readonly Dictionary<string, Task<AssetBundle>> assetTask = new Dictionary<string, Task<AssetBundle>>();
         
-        private static readonly Dictionary<string, IPool> poolData = new Dictionary<string, IPool>();
-
-        private static readonly Dictionary<string, GameObject> poolGroup = new Dictionary<string, GameObject>();
-
         private static readonly Dictionary<string, Type> cachedType = new Dictionary<string, Type>();
 
         private static readonly Dictionary<string, Assembly> assemblies = new Dictionary<string, Assembly>();
+        
+        private static readonly Dictionary<string, IPool> poolData = new Dictionary<string, IPool>();
+
+        private static readonly Dictionary<string, GameObject> poolGroup = new Dictionary<string, GameObject>();
+        
+        private static readonly Dictionary<int, RectTransform> panelLayer = new Dictionary<int, RectTransform>();
 
         private static readonly Dictionary<string, HashSet<IPanel>> panelGroup = new Dictionary<string, HashSet<IPanel>>();
         
@@ -73,7 +76,6 @@ namespace JFramework
         private static IPathHelper pathHelper => (IPathHelper)helper;
         private static IFormHelper formHelper => (IFormHelper)helper;
         private static IPackHelper packHelper => (IPackHelper)helper;
-        private static IPanelHelper panelHelper => (IPanelHelper)helper;
         private static IAssetHelper assetHelper => (IAssetHelper)helper;
     }
 }

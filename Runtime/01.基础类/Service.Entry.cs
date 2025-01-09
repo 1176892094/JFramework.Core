@@ -17,7 +17,7 @@ namespace JFramework
     {
         public static class Entry
         {
-            public static void Register(IHelper helper)
+            public static void Register(Helper helper)
             {
                 Service.helper = helper;
                 Json.Load(setting, nameof(AudioSetting));
@@ -38,6 +38,7 @@ namespace JFramework
                 Pack.Dispose();
                 Data.Dispose();
                 Pool.Dispose();
+                Audio.Dispose();
                 Group.Dispose();
                 Event.Dispose();
                 Asset.Dispose();

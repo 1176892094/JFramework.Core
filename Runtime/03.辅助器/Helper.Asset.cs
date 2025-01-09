@@ -15,7 +15,7 @@ using Object = UnityEngine.Object;
 
 namespace JFramework
 {
-    public interface IAssetHelper : IHelper
+    public interface IAssetHelper : Helper
     {
         string[] GetAllDependency(AssetBundle assetPack, string assetPath);
         string[] GetAllAssetPacks(AssetBundle assetPack);

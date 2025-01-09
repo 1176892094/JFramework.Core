@@ -21,9 +21,6 @@ namespace JFramework
     {
         public static class Panel
         {
-            private static readonly Dictionary<int, RectTransform> panelLayers = new Dictionary<int, RectTransform>();
-            private static Canvas canvas;
-
             private static async Task<IPanel> Load(string assetPath, Type assetType)
             {
                 var obj = await Asset.Load<GameObject>(assetPath);
@@ -168,7 +165,7 @@ namespace JFramework
                     // scaler.matchWidthOrHeight = 0.5f;
                 }
 
-                if (!panelLayers.TryGetValue(layer, out var parent))
+                if (!panelLayer.TryGetValue(layer, out var parent))
                 {
                     var name = Text.Format("Layer-{0}", layer);
                     var child = new GameObject(name);
@@ -182,7 +179,7 @@ namespace JFramework
                     parent.offsetMin = Vector2.zero;
                     parent.offsetMax = Vector2.zero;
                     parent.localScale = Vector3.one;
-                    panelLayers.Add(layer, parent);
+                    panelLayer.Add(layer, parent);
                     parent.SetSiblingIndex(layer);
                 }
 
@@ -217,6 +214,7 @@ namespace JFramework
             internal static void Dispose()
             {
                 panelData.Clear();
+                panelLayer.Clear();
             }
         }
     }

@@ -94,6 +94,7 @@ namespace JFramework
                 }
 
                 poolData.Clear();
+                poolGroup.Clear();
             }
         }
     }

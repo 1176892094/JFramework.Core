@@ -11,7 +11,7 @@
 
 namespace JFramework
 {
-    public interface IPathHelper : IHelper
+    public interface IPathHelper : Helper
     {
         bool assetPackMode { get; }
         string assetPlatform { get; }

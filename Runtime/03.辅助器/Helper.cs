@@ -11,7 +11,7 @@
 
 namespace JFramework
 {
-    public interface IHelper
+    public interface Helper
     {
     }
 }

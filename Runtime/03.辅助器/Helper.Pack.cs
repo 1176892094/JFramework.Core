@@ -14,7 +14,7 @@ using UnityEngine;
 
 namespace JFramework
 {
-    public interface IPackHelper : IHelper
+    public interface IPackHelper : Helper
     {
         Task<string> LoadServerRequest(string packName, string packUri);
         Task<byte[]> LoadPacketRequest(string packName, string packUri);

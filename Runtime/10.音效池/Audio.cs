@@ -118,6 +118,11 @@ namespace JFramework
                 Service.poolData.Add(assetPath, poolData);
                 return (IHeap<AudioSource>)poolData;
             }
+
+            internal static void Dispose()
+            {
+                audioData.Clear();
+            }
         }
     }
 }

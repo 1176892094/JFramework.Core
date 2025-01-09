@@ -14,7 +14,7 @@ using UnityEngine;
 
 namespace JFramework
 {
-    public interface IFormHelper : IHelper
+    public interface IFormHelper : Helper
     {
         void CreateAsset(Object assetData, string assetPath);
 
