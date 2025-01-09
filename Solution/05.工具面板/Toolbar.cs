@@ -284,7 +284,7 @@ namespace JFramework
                     }
                     catch (Exception e)
                     {
-                        Debug.LogError("打开 " + scenes[index] + " 场景失败!\n" + e);
+                        Log.Error("打开 " + scenes[index] + " 场景失败!\n" + e);
                     }
                 }
             }
