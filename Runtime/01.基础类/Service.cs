@@ -26,9 +26,9 @@ namespace JFramework
     {
         private static Helper helper;
         
-        private static Canvas canvas;
+        public static Canvas canvas;
         
-        private static GameObject manager;
+        public static GameObject manager;
         
         private static AudioSource musicSource;
         
@@ -43,7 +43,7 @@ namespace JFramework
         private static readonly Dictionary<Type, IPool> heapData = new Dictionary<Type, IPool>();
 
         private static readonly Dictionary<Type, IPool> eventData = new Dictionary<Type, IPool>();
-        
+
         private static readonly Dictionary<Type, IPanel> panelData = new Dictionary<Type, IPanel>();
 
         private static readonly Dictionary<Type, ItemTable> itemTable = new Dictionary<Type, ItemTable>();
@@ -51,7 +51,7 @@ namespace JFramework
         private static readonly Dictionary<Type, NameTable> nameTable = new Dictionary<Type, NameTable>();
 
         private static readonly Dictionary<Type, EnumTable> enumTable = new Dictionary<Type, EnumTable>();
-        
+
         private static readonly Dictionary<IEntity, AgentData> agentData = new Dictionary<IEntity, AgentData>();
 
         private static readonly Dictionary<string, PackData> clientPacks = new Dictionary<string, PackData>();
@@ -59,23 +59,23 @@ namespace JFramework
         private static readonly Dictionary<string, PackData> serverPacks = new Dictionary<string, PackData>();
 
         private static readonly Dictionary<string, AssetData> assetData = new Dictionary<string, AssetData>();
-        
+
         private static readonly Dictionary<string, AssetBundle> assetPack = new Dictionary<string, AssetBundle>();
 
         private static readonly Dictionary<string, Task<AssetBundle>> assetTask = new Dictionary<string, Task<AssetBundle>>();
-        
+
         private static readonly Dictionary<string, Type> cachedType = new Dictionary<string, Type>();
 
         private static readonly Dictionary<string, Assembly> assemblies = new Dictionary<string, Assembly>();
-        
+
         private static readonly Dictionary<string, IPool> poolData = new Dictionary<string, IPool>();
 
         private static readonly Dictionary<string, GameObject> poolGroup = new Dictionary<string, GameObject>();
-        
+
         private static readonly Dictionary<int, RectTransform> panelLayer = new Dictionary<int, RectTransform>();
 
         private static readonly Dictionary<string, HashSet<IPanel>> panelGroup = new Dictionary<string, HashSet<IPanel>>();
-        
+
         private static readonly Dictionary<IPanel, HashSet<string>> groupPanel = new Dictionary<IPanel, HashSet<string>>();
     }
 }
