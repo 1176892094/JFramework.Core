@@ -16,12 +16,12 @@ namespace JFramework
 {
     public static partial class Service
     {
-        public static class Depend
+        public static class Find
         {
             public const BindingFlags Static = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
             public const BindingFlags Instance = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
-            public static Assembly GetAssembly(string name)
+            public static Assembly Assembly(string name)
             {
                 if (Service.assemblies.TryGetValue(name, out var assembly))
                 {
@@ -46,7 +46,7 @@ namespace JFramework
                 return assembly;
             }
 
-            public static Type GetType(string name)
+            public static Type Type(string name)
             {
                 if (Service.cachedType.TryGetValue(name, out var cachedType))
                 {
@@ -56,10 +56,10 @@ namespace JFramework
                 var index = name.LastIndexOf(',');
                 if (index < 0)
                 {
-                    return Type.GetType(name);
+                    return System.Type.GetType(name);
                 }
 
-                var assembly = GetAssembly(name.Substring(index + 1).Trim());
+                var assembly = Assembly(name.Substring(index + 1).Trim());
                 cachedType = assembly.GetType(name.Substring(0, index));
                 Service.cachedType.Add(name, cachedType);
                 return cachedType;

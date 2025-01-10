@@ -49,8 +49,8 @@ namespace JFramework.Net
 
         private void OnValidate()
         {
-            var assetType = Service.Depend.GetType("JFramework.NetworkSetting, Unity.JFramework.CodeGen");
-            var assetData = assetType.GetMethod("Validate", Service.Depend.Static);
+            var assetType = Service.Find.Type("JFramework.NetworkSetting, Unity.JFramework.CodeGen");
+            var assetData = assetType.GetMethod("Validate", Service.Find.Static);
             if (assetData != null)
             {
                 var assetPair = (KeyValuePair<string, ulong>)assetData.Invoke(null, new object[] { assetId, sceneId, gameObject });

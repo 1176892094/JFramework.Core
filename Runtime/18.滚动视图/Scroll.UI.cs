@@ -20,19 +20,16 @@ namespace JFramework
     {
         [SerializeField, Inject] protected Scroll<UIScroll<TItem, TGrid>, TItem, TGrid> scroll;
         [SerializeField, Inject] protected RectTransform content;
-        [SerializeField] protected Rect assetRect;
         [SerializeField] protected string assetPath;
+        [SerializeField] protected Rect assetRect;
 
         private void Update()
         {
             scroll.Update();
         }
 
+        Rect IScroll.rect => assetRect;
         string IScroll.prefab => assetPath;
-        int IScroll.row => (int)assetRect.x;
-        int IScroll.column => (int)assetRect.y;
-        float IScroll.width => assetRect.width;
-        float IScroll.height => assetRect.height;
         RectTransform IScroll.content => content;
 
         public void Spawn(List<TItem> items)

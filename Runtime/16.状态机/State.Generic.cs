@@ -14,8 +14,14 @@ using System;
 namespace JFramework
 {
     [Serializable]
-    public abstract class State<T> : Agent<T>, IState where T : IEntity
+    public abstract class State<T> : IState where T : IEntity
     {
+        protected T owner { get; private set; }
+        
+        void IDisposable.Dispose() => owner = default;
+
+        void IAgent.OnAwake(IEntity owner) => this.owner = (T)owner;
+        
         void IState.OnEnter() => OnEnter();
 
         void IState.OnUpdate() => OnUpdate();

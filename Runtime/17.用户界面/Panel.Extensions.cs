@@ -19,7 +19,7 @@ namespace JFramework
     {
         public static void Inject(this IEntity entity)
         {
-            var fields = entity.GetType().GetFields(Service.Depend.Instance);
+            var fields = entity.GetType().GetFields(Service.Find.Instance);
             foreach (var field in fields)
             {
                 if (field.GetCustomAttribute<InjectAttribute>(true) == null)
@@ -71,16 +71,16 @@ namespace JFramework
 
             field.SetValue(inject, component);
 
-            var method = inject.GetType().GetMethod(name, Service.Depend.Instance);
+            var method = inject.GetType().GetMethod(name, Service.Find.Instance);
             if (method == null)
             {
                 return;
             }
 
-            var injectType = Service.Depend.GetType("UnityEngine.UI.Button,UnityEngine.UI");
+            var injectType = Service.Find.Type("UnityEngine.UI.Button,UnityEngine.UI");
             if (component.TryGetComponent(injectType, out var button))
             {
-                var property = injectType.GetProperty("onClick", Service.Depend.Instance);
+                var property = injectType.GetProperty("onClick", Service.Find.Instance);
                 if (property != null)
                 {
                     inject.transform.SetButton(name, (UnityEvent)property.GetValue(button));
@@ -89,10 +89,10 @@ namespace JFramework
                 return;
             }
 
-            injectType = Service.Depend.GetType("UnityEngine.UI.Toggle,UnityEngine.UI");
+            injectType = Service.Find.Type("UnityEngine.UI.Toggle,UnityEngine.UI");
             if (component.TryGetComponent(injectType, out var toggle))
             {
-                var property = injectType.GetProperty("onValueChanged", Service.Depend.Instance);
+                var property = injectType.GetProperty("onValueChanged", Service.Find.Instance);
                 if (property != null)
                 {
                     inject.transform.SetToggle(name, (UnityEvent<bool>)property.GetValue(toggle));

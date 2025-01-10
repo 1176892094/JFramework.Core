@@ -54,7 +54,7 @@ namespace JFramework
                     if (assembly.GetName().Name == "JFramework.Net")
                     {
                         var manager = assembly.GetType("JFramework.Net.NetworkManager");
-                        var windowMethod = manager.GetMethod("Window", Service.Depend.Static);
+                        var windowMethod = manager.GetMethod("Window", Service.Find.Static);
                         if (windowMethod != null)
                         {
                             OnWindow = (Action<GUILayoutOption>)Delegate.CreateDelegate(typeof(Action<GUILayoutOption>), windowMethod);

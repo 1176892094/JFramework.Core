@@ -23,7 +23,7 @@ namespace JFramework
             public static async void LoadDataTable()
             {
                 if (helper == null) return;
-                var assembly = Depend.GetAssembly(assemblyName);
+                var assembly = Find.Assembly(assemblyName);
                 if (assembly == null) return;
                 var assetTypes = new List<Type>();
                 foreach (var assetType in assembly.GetTypes())
@@ -53,7 +53,7 @@ namespace JFramework
                         if (string.IsNullOrEmpty(assetType.FullName)) continue;
                         var dataTable = (IDataTable)await Asset.Load<ScriptableObject>(GetTablePath(assetType.Name));
                         var children = assembly.GetType(assetType.FullName.Substring(0, assetType.FullName.Length - 5));
-                        var properties = children.GetProperties(Depend.Instance);
+                        var properties = children.GetProperties(Find.Instance);
                         foreach (var property in properties)
                         {
                             if (property.GetCustomAttribute(typeof(PrimaryAttribute)) == null)

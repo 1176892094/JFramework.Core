@@ -15,10 +15,7 @@ namespace JFramework
 {
     public interface IScroll
     {
-        int row { get; }
-        int column { get; }
-        float width { get; }
-        float height { get; }
+        Rect rect { get; }
         string prefab { get; }
         RectTransform content { get; }
     }

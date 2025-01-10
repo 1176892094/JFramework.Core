@@ -157,7 +157,7 @@ namespace JFramework
                 var itemData = Text.Format("JFramework.Table.{0}Data,{1}", sheetName, assemblyName);
                 await Task.Run(() =>
                 {
-                    var instance = (IData)Activator.CreateInstance(Depend.GetType(itemData));
+                    var instance = (IData)Activator.CreateInstance(Find.Type(itemData));
                     foreach (var scriptText in scriptTexts)
                     {
                         if (!string.IsNullOrEmpty(scriptText[0]))

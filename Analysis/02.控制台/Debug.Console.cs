@@ -93,7 +93,7 @@ namespace JFramework
                 var setting = Resources.Load<ScriptableObject>("GlobalSetting");
                 if (setting != null)
                 {
-                    var message = setting.GetType().GetMethod("SendMail", Service.Depend.Instance);
+                    var message = setting.GetType().GetMethod("SendMail", Service.Find.Instance);
                     if (message != null)
                     {
                         Service.Mail.Send((Service.Mail.MailData)message.Invoke(setting, new object[] { mailBody }));

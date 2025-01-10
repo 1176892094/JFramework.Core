@@ -15,7 +15,7 @@ namespace JFramework
 {
     public abstract class Agent<T> : ScriptableObject, IAgent where T : IEntity
     {
-        private T instance;
+        [SerializeField] private T instance;
 
         public T owner => instance ??= (T)Service.entity;
 

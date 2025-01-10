@@ -22,12 +22,12 @@ namespace JFramework
         private List<TItem> items;
         private int oldMaxIndex = -1;
         private int oldMinIndex = -1;
-        private int row => owner.row;
-        private int column => owner.column;
-        private float width => owner.width;
-        private float height => owner.height;
+        private int row => (int)owner.rect.y;
+        private int column => (int)owner.rect.x;
+        private float width => owner.rect.width;
+        private float height => owner.rect.height;
         private string prefab => owner.prefab;
-        
+
         private void Awake()
         {
             owner.content.pivot = Vector2.up;
