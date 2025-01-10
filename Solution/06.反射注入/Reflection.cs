@@ -23,9 +23,6 @@ namespace JFramework
 {
     internal static class Reflection
     {
-        private const BindingFlags Instance = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public;
-        private const BindingFlags Static = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static;
-        
         private static readonly Assembly editor;
 
         public static readonly Type toolbarType;
@@ -73,33 +70,33 @@ namespace JFramework
             inspectorType = GetEditorType("InspectorWindow");
             hierarchyType = GetEditorType("SceneHierarchyWindow");
 
-            toolbarRoot = toolbarType.GetField("m_Root", Instance);
-            activeHierarchy = hierarchyType.GetField("m_SceneHierarchy", Instance);
-            selectHierarchy = hierarchyType.GetField("s_LastInteractedHierarchy", Static);
-            inspectorTracker = inspectorType.GetProperty("tracker", Instance);
+            toolbarRoot = toolbarType.GetField("m_Root", Service.Find.Instance);
+            activeHierarchy = hierarchyType.GetField("m_SceneHierarchy", Service.Find.Instance);
+            selectHierarchy = hierarchyType.GetField("s_LastInteractedHierarchy", Service.Find.Static);
+            inspectorTracker = inspectorType.GetProperty("tracker", Service.Find.Instance);
 
-            var editorType = GetEditorAssembly("UIElements.EditorElement", "UnityEditor.CoreModule");
-            editorElements = editorType.GetProperty("m_Editors", Instance);
+            var editorType = Service.Find.Assembly("UnityEditor.CoreModule").GetType("UnityEditor.UIElements.EditorElement");
+            editorElements = editorType.GetProperty("m_Editors", Service.Find.Instance);
             editorType = GetEditorType("SceneHierarchy");
-            hierarchyTree = editorType.GetField("m_TreeView", Instance);
+            hierarchyTree = editorType.GetField("m_TreeView", Service.Find.Instance);
             editorType = GetEditorType("IMGUI.Controls.TreeViewGUI");
-            iconWidth = editorType.GetField("k_IconWidth", Instance);
-            iconLabel = editorType.GetField("k_SpaceBetweenIconAndText", Instance);
+            iconWidth = editorType.GetField("k_IconWidth", Service.Find.Instance);
+            iconLabel = editorType.GetField("k_SpaceBetweenIconAndText", Service.Find.Instance);
             editorType = GetEditorType("ProjectBrowser");
-            selectProject = editorType.GetField("s_LastInteractedProjectBrowser", Static);
-            itemTreeViewA = editorType.GetField("m_AssetTree", Instance);
-            itemTreeViewB = editorType.GetField("m_FolderTree", Instance);
+            selectProject = editorType.GetField("s_LastInteractedProjectBrowser", Service.Find.Static);
+            itemTreeViewA = editorType.GetField("m_AssetTree", Service.Find.Instance);
+            itemTreeViewB = editorType.GetField("m_FolderTree", Service.Find.Instance);
             editorType = GetEditorType("IMGUI.Controls.TreeViewController");
-            itemTreeViewC = editorType.GetProperty("gui", Instance);
-            itemTreeViewD = editorType.GetProperty("data", Instance);
+            itemTreeViewC = editorType.GetProperty("gui", Service.Find.Instance);
+            itemTreeViewD = editorType.GetProperty("data", Service.Find.Instance);
             editorType = GetEditorType("ProjectBrowserColumnOneTreeViewDataSource");
-            itemTreeViewE = editorType.GetMethod("GetRows", Instance);
+            itemTreeViewE = editorType.GetMethod("GetRows", Service.Find.Instance);
             editorType = GetEditorType("AssetsTreeViewDataSource");
-            itemTreeViewF = editorType.GetMethod("GetRows", Instance);
-            editorType = GetAssembly("JFramework.Unity")?.GetType("JFramework.EditorSetting");
-            showEditorWindow = editorType?.GetMethod("ShowWindow", Static);
+            itemTreeViewF = editorType.GetMethod("GetRows", Service.Find.Instance);
+            editorType = Service.Find.Assembly("JFramework.Unity")?.GetType("JFramework.EditorSetting");
+            showEditorWindow = editorType?.GetMethod("ShowWindow", Service.Find.Static);
             var types = new[] { typeof(Rect), typeof(Object), typeof(int) };
-            contextMenuMethod = GetMethod(typeof(EditorUtility), Static, "DisplayObjectContextMenu", types);
+            contextMenuMethod = GetMethod(typeof(EditorUtility), Service.Find.Static, "DisplayObjectContextMenu", types);
 
             unityIcon = EditorGUIUtility.IconContent("UnityLogo");
             prefabIcon = EditorGUIUtility.IconContent("Prefab Icon");
@@ -110,23 +107,9 @@ namespace JFramework
             windowIcon = EditorGUIUtility.IconContent("UnityEditor.AnimationWindow");
             customIcon = EditorGUIUtility.IconContent("CustomTool");
             settingIcon = EditorGUIUtility.IconContent("SettingsIcon");
-
-            var collapseIcon = EditorGUIUtility.IconContent("Download-Available");
-            collapse = new GUIContent(collapseIcon.image, "Expand Components");
-            var expansionIcon = EditorGUIUtility.IconContent("Toolbar Plus More");
-            expansion = new GUIContent(expansionIcon.image, "Collapse Components");
-        }
-
-        private static Assembly GetAssembly(string name)
-        {
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            return assemblies.FirstOrDefault(assembly => assembly.GetName().Name == name);
-        }
-
-        private static Type GetEditorAssembly(string name, string assemblyName)
-        {
-            var editorAssembly = GetAssembly(assemblyName);
-            return editorAssembly != null ? editorAssembly.GetType("UnityEditor." + name) : null;
+            
+            collapse = EditorGUIUtility.IconContent("Download-Available");
+            expansion = EditorGUIUtility.IconContent("Toolbar Plus More");
         }
 
         private static Type GetEditorType(string name)
@@ -149,9 +132,9 @@ namespace JFramework
             return (ActiveEditorTracker)inspectorTracker.GetValue(obj);
         }
 
-        public static UnityEditor.Editor[] GetEditors(object instance)
+        public static Editor[] GetEditors(object instance)
         {
-            return editorElements.GetValue(instance) as UnityEditor.Editor[];
+            return editorElements.GetValue(instance) as Editor[];
         }
 
         public static EditorWindow GetHierarchy()
@@ -198,7 +181,7 @@ namespace JFramework
 
             return items != null && items.Where(item => item.id == assetId).Any(item => item.hasChildren);
         }
-        
+
         public static void ShowEditorWindow()
         {
             showEditorWindow?.Invoke(null, null);
