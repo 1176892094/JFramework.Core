@@ -91,3 +91,5 @@ global.json
 /Analysis/obj
 /Settings/bin
 /Settings/obj
+/Manager/bin
+/Manager/obj

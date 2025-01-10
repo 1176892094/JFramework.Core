@@ -13,6 +13,8 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Text;
 
+// ReSharper disable All
+
 namespace JFramework.Net
 {
     public static class Writer<T>
@@ -35,7 +37,12 @@ namespace JFramework.Net
         public unsafe void Write<T>(T value) where T : unmanaged
         {
             AddCapacity(position + sizeof(T));
-            Utility.Unsafe.Write(buffer, value, ref position);
+            fixed (byte* ptr = &buffer[position])
+            {
+                *(T*)ptr = value;
+            }
+
+            position += sizeof(T);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

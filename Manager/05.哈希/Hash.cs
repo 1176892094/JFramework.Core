@@ -9,6 +9,8 @@
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
 
+using System;
+
 namespace JFramework
 {
     public static partial class Utility
@@ -25,7 +27,7 @@ namespace JFramework
             public static uint Id()
             {
                 Random.NextBytes(buffer);
-                return Unsafe.Read<uint>(buffer);
+                return BitConverter.ToUInt32(buffer, 0);
             }
 
             public static uint Id(string name)

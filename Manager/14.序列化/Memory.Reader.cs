@@ -13,6 +13,8 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Text;
 
+// ReSharper disable All
+
 namespace JFramework.Net
 {
     public static class Reader<T>
@@ -34,9 +36,16 @@ namespace JFramework.Net
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public T Read<T>() where T : unmanaged
+        public unsafe T Read<T>() where T : unmanaged
         {
-            return Utility.Unsafe.Read<T>(buffer.Array, buffer.Offset, ref position);
+            T value;
+            fixed (byte* ptr = &buffer.Array[buffer.Offset + position])
+            {
+                value = *(T*)ptr;
+            }
+
+            position += sizeof(T);
+            return value;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
