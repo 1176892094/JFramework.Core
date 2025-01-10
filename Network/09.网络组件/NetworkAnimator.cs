@@ -6,7 +6,7 @@ namespace JFramework.Net
 {
     public class NetworkAnimator : NetworkBehaviour
     {
-        [SerializeField] private Animator animator;
+        public Animator animator;
 
         private AnimatorControllerParameter[] animatorParams;
 

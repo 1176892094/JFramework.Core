@@ -89,3 +89,5 @@ global.json
 /Solution/bin
 /Analysis/bin
 /Analysis/obj
+/Settings/bin
+/Settings/obj
