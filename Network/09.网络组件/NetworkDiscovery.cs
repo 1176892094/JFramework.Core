@@ -37,7 +37,7 @@ namespace JFramework.Net
                         EnableBroadcast = true,
                         MulticastLoopback = false
                     };
-                    GlobalSetting.Runtime.MulticastLock(true);
+                    GlobalSetting.Instance.MulticastLock(true);
                     ServerReceive();
                     break;
                 case EntryMode.Client:
@@ -54,7 +54,7 @@ namespace JFramework.Net
 
         public void StopDiscovery()
         {
-            GlobalSetting.Runtime.MulticastLock(false);
+            GlobalSetting.Instance.MulticastLock(false);
             udpServer?.Close();
             udpClient?.Close();
             udpServer = null;

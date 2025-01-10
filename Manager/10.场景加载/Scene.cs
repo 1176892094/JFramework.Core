@@ -23,7 +23,7 @@ namespace JFramework
         {
             try
             {
-                if (!GlobalSetting.Runtime) return;
+                if (!GlobalManager.Instance) return;
                 var assetData = await LoadSceneAsset(GlobalSetting.GetScenePath(assetPath));
                 if (assetData != null)
                 {
@@ -31,7 +31,7 @@ namespace JFramework
                     var request = SceneManager.LoadSceneAsync(assetPath, LoadSceneMode.Single);
                     if (request != null)
                     {
-                        while (!request.isDone && GlobalSetting.Runtime != null)
+                        while (!request.isDone && GlobalSetting.Instance != null)
                         {
                             Service.Event.Invoke(new SceneUpdateEvent(request.progress));
                             await Task.Yield();

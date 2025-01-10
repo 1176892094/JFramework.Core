@@ -13,7 +13,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using JFramework.Common;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -21,7 +20,8 @@ namespace JFramework
 {
     public abstract class GlobalSetting : ScriptableObject
     {
-        public static GlobalSetting Runtime;
+        protected static GlobalSetting instance;
+        public static GlobalSetting Instance => instance ??= Resources.Load<GlobalSetting>(nameof(GlobalSetting));
 
         [SerializeField] protected AssetPlatform assetPlatform = AssetPlatform.StandaloneWindows;
 
@@ -51,21 +51,21 @@ namespace JFramework
 
         protected abstract string assetDataPath { get; }
 
-        internal static string platformPath => Runtime.assetPlatform.ToString();
+        internal static string platformPath => Instance.assetPlatform.ToString();
 
-        internal static bool assetLoadMode => Runtime.assetPackMode == AssetMode.Authentic;
+        internal static bool assetLoadMode => Instance.assetPackMode == AssetMode.Authentic;
 
-        internal static string assetPath => Runtime.assetDataPath + "/{0}DataTable.asset";
+        internal static string assetPath => Instance.assetDataPath + "/{0}DataTable.asset";
 
         internal static string assemblyName => Path.GetFileNameWithoutExtension(assemblyPath);
 
-        internal static string assemblyPath => Service.Text.Format("{0}/{1}.asmdef", Runtime.scriptDataPath, Runtime.assetAssembly);
+        internal static string assemblyPath => Service.Text.Format("{0}/{1}.asmdef", Instance.scriptDataPath, Instance.assetAssembly);
 
-        internal static string enumPath => Runtime.scriptDataPath + "/01.枚举类/{0}.cs";
+        internal static string enumPath => Instance.scriptDataPath + "/01.枚举类/{0}.cs";
 
-        internal static string structPath => Runtime.scriptDataPath + "/02.结构体/{0}.cs";
+        internal static string structPath => Instance.scriptDataPath + "/02.结构体/{0}.cs";
 
-        internal static string tablePath => Runtime.scriptDataPath + "/03.数据表/{0}.cs";
+        internal static string tablePath => Instance.scriptDataPath + "/03.数据表/{0}.cs";
 
         internal static string assemblyData => Resources.LoadAll<TextAsset>(nameof(GlobalSetting))[0].text;
 
@@ -75,9 +75,9 @@ namespace JFramework
 
         internal static string tableData => Resources.LoadAll<TextAsset>(nameof(GlobalSetting))[3].text;
 
-        internal static string assetPackData => Service.Text.Format("{0}.json", Runtime.assetPackName);
+        internal static string assetPackData => Service.Text.Format("{0}.json", Instance.assetPackName);
 
-        internal static string assetPackPath => Service.Text.Format("{0}/{1}", Application.persistentDataPath, Runtime.assetBuildPath);
+        internal static string assetPackPath => Service.Text.Format("{0}/{1}", Application.persistentDataPath, Instance.assetBuildPath);
 
         internal static string GetScenePath(string assetName) => Service.Text.Format("Scenes/{0}", assetName);
 
@@ -87,9 +87,9 @@ namespace JFramework
 
         internal static string GetPlatform(string fileName) => Path.Combine(platformPath, fileName);
 
-        internal static string GetPacketPath(string fileName) => Path.Combine(Runtime.assetBuildPath, fileName);
+        internal static string GetPacketPath(string fileName) => Path.Combine(Instance.assetBuildPath, fileName);
 
-        internal static string GetServerPath(string fileName) => Path.Combine(Runtime.assetRemotePath, GetPlatform(fileName));
+        internal static string GetServerPath(string fileName) => Path.Combine(Instance.assetRemotePath, GetPlatform(fileName));
 
         internal static string GetClientPath(string fileName) => Path.Combine(Application.streamingAssetsPath, GetPlatform(fileName));
 

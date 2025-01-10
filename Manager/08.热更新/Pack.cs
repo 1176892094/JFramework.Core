@@ -22,7 +22,7 @@ namespace JFramework
     {
         public static async void LoadAssetData()
         {
-            if (!GlobalSetting.Runtime) return;
+            if (!GlobalManager.Instance) return;
             if (!GlobalSetting.assetLoadMode)
             {
                 Service.Event.Invoke(new PackCompleteEvent(false, "启动本地资源加载。"));
@@ -179,7 +179,7 @@ namespace JFramework
             using (var request = UnityWebRequest.Get(packUri))
             {
                 var result = request.SendWebRequest();
-                while (!result.isDone && GlobalSetting.Runtime != null)
+                while (!result.isDone && GlobalSetting.Instance != null)
                 {
                     Service.Event.Invoke(new PackUpdateEvent(packName, request.downloadProgress));
                     await Task.Yield();
@@ -198,7 +198,7 @@ namespace JFramework
 
         private static async Task<string> LoadClientRequest(string persistentData, string streamingAssets)
         {
-            var packData = await GlobalSetting.Runtime.LoadRequest(persistentData, streamingAssets);
+            var packData = await GlobalSetting.Instance.LoadRequest(persistentData, streamingAssets);
             string result = default;
             if (packData.Key == 1)
             {
@@ -219,7 +219,7 @@ namespace JFramework
 
         internal static async Task<AssetBundle> LoadAssetRequest(string persistentData, string streamingAssets)
         {
-            var packData = await GlobalSetting.Runtime.LoadRequest(persistentData, streamingAssets);
+            var packData = await GlobalSetting.Instance.LoadRequest(persistentData, streamingAssets);
             byte[] result = default;
             if (packData.Key == 1)
             {
@@ -235,7 +235,7 @@ namespace JFramework
                 }
             }
 
-            return GlobalSetting.Runtime != null ? AssetBundle.LoadFromMemory(result) : null;
+            return GlobalSetting.Instance != null ? AssetBundle.LoadFromMemory(result) : null;
         }
 
         internal static void Dispose()

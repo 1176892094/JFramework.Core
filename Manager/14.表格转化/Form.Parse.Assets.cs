@@ -54,7 +54,7 @@ namespace JFramework
                 foreach (var data in dataTables)
                 {
                     await WriteAssets(data.Key, data.Value);
-                    GlobalSetting.Runtime.CreateProgress(data.Key, ++progress / dataTables.Count);
+                    GlobalSetting.Instance.CreateProgress(data.Key, ++progress / dataTables.Count);
                 }
             }
             catch (Exception e)
@@ -167,7 +167,7 @@ namespace JFramework
                 }
             });
 
-            GlobalSetting.Runtime.CreateAsset((ScriptableObject)fileData, filePath);
+            GlobalSetting.Instance.CreateAsset((ScriptableObject)fileData, filePath);
         }
     }
 }

@@ -90,7 +90,7 @@ namespace JFramework
                     mailBody.Append(debugData + "\n\n" + debugData.stackTrace + "\n\n");
                 }
 
-                Service.Mail.Send(GlobalSetting.Runtime.SendMail(mailBody.ToString()));
+                Service.Mail.Send(GlobalSetting.Instance.SendMail(mailBody.ToString()));
             }
 
             GUILayout.EndHorizontal();

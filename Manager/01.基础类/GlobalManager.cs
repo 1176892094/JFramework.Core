@@ -24,11 +24,11 @@ namespace JFramework
 {
     public class GlobalManager : MonoBehaviour
     {
+        internal static GlobalManager Instance;
+        
         internal static Canvas canvas;
 
         internal static GameObject entity;
-
-        internal static GameObject manager;
 
         internal static AudioSource musicSource;
 
@@ -72,15 +72,10 @@ namespace JFramework
 
         private void Awake()
         {
-            manager = gameObject;
+            Instance = this;
             DontDestroyOnLoad(gameObject);
             musicSource = gameObject.AddComponent<AudioSource>();
             JsonManager.Load(setting, nameof(AudioSetting));
-        }
-
-        private void OnEnable()
-        {
-            GlobalSetting.Runtime = Resources.Load<GlobalSetting>(nameof(GlobalSetting));
         }
 
         private void Start()
@@ -93,13 +88,9 @@ namespace JFramework
             TimerManager.Update(Time.time, Time.unscaledTime);
         }
 
-        private void OnDisable()
-        {
-            GlobalSetting.Runtime = null;
-        }
-
         private void OnDestroy()
         {
+            Instance = null;
             UIManager.Dispose();
             PoolManager.Dispose();
             PackManager.Dispose();

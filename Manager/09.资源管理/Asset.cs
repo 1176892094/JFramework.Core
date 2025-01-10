@@ -40,7 +40,7 @@ namespace JFramework
         {
             try
             {
-                if (!GlobalSetting.Runtime) return default;
+                if (!GlobalManager.Instance) return default;
                 var assetData = await LoadAsset(assetPath, typeof(T));
                 if (assetData != null)
                 {
@@ -61,7 +61,7 @@ namespace JFramework
         {
             try
             {
-                if (!GlobalSetting.Runtime) return;
+                if (!GlobalManager.Instance) return;
                 var assetData = await LoadAsset(assetPath, typeof(T));
                 if (assetData != null)
                 {
@@ -83,14 +83,14 @@ namespace JFramework
             {
                 var assetPair = await LoadAssetPair(assetPath);
                 var assetPack = await LoadAssetPack(assetPair.Key);
-                var assetData = GlobalSetting.Runtime.LoadByAssetPack(assetPair.Value, assetType, assetPack);
-                assetData ??= GlobalSetting.Runtime.LoadByResources(assetPath, assetType);
+                var assetData = GlobalSetting.Instance.LoadByAssetPack(assetPair.Value, assetType, assetPack);
+                assetData ??= GlobalSetting.Instance.LoadByResources(assetPath, assetType);
                 return assetData;
             }
             else
             {
-                var assetData = GlobalSetting.Runtime.LoadBySimulates(assetPath, assetType);
-                assetData ??= GlobalSetting.Runtime.LoadByResources(assetPath, assetType);
+                var assetData = GlobalSetting.Instance.LoadBySimulates(assetPath, assetType);
+                assetData ??= GlobalSetting.Instance.LoadByResources(assetPath, assetType);
                 return assetData;
             }
         }

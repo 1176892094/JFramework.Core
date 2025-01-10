@@ -53,7 +53,7 @@ namespace JFramework
                 foreach (var data in dataTables)
                 {
                     var result = await Task.Run(() => WriteScripts(data.Key, data.Value));
-                    GlobalSetting.Runtime.CreateProgress(data.Key, ++progress / dataTables.Count);
+                    GlobalSetting.Instance.CreateProgress(data.Key, ++progress / dataTables.Count);
                     if (result)
                     {
                         writeAssets = true;

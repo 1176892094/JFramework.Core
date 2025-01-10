@@ -36,7 +36,7 @@ namespace JFramework
 
         public static async void Show<T>(Action<T> assetAction = null) where T : UIPanel
         {
-            if (!GlobalSetting.Runtime) return;
+            if (!GlobalManager.Instance) return;
             var assetPath = GlobalSetting.GetPanelPath(typeof(T).Name);
             if (!GlobalManager.panelData.TryGetValue(typeof(T), out var panel))
             {
@@ -53,7 +53,7 @@ namespace JFramework
 
         public static void Hide<T>() where T : UIPanel
         {
-            if (!GlobalSetting.Runtime) return;
+            if (!GlobalManager.Instance) return;
             if (GlobalManager.panelData.TryGetValue(typeof(T), out var panel))
             {
                 if (panel.gameObject.activeInHierarchy)
@@ -65,7 +65,7 @@ namespace JFramework
 
         public static T Find<T>() where T : UIPanel
         {
-            if (!GlobalSetting.Runtime) return default;
+            if (!GlobalManager.Instance) return default;
             if (GlobalManager.panelData.TryGetValue(typeof(T), out var panel))
             {
                 return (T)panel;
@@ -76,7 +76,7 @@ namespace JFramework
 
         public static void Destroy<T>()
         {
-            if (!GlobalSetting.Runtime) return;
+            if (!GlobalManager.Instance) return;
             if (GlobalManager.panelData.TryGetValue(typeof(T), out var panel))
             {
                 Destroy(panel, typeof(T));
@@ -85,7 +85,7 @@ namespace JFramework
 
         public static async void Show(Type assetType, Action<UIPanel> assetAction = null)
         {
-            if (!GlobalSetting.Runtime) return;
+            if (!GlobalManager.Instance) return;
             var assetPath = GlobalSetting.GetPanelPath(assetType.Name);
             if (!GlobalManager.panelData.TryGetValue(assetType, out var panel))
             {
@@ -102,7 +102,7 @@ namespace JFramework
 
         public static void Hide(Type assetType)
         {
-            if (!GlobalSetting.Runtime) return;
+            if (!GlobalManager.Instance) return;
             if (GlobalManager.panelData.TryGetValue(assetType, out var panel))
             {
                 if (panel.gameObject.activeInHierarchy)
@@ -114,7 +114,7 @@ namespace JFramework
 
         public static UIPanel Find(Type assetType)
         {
-            if (!GlobalSetting.Runtime) return default;
+            if (!GlobalManager.Instance) return default;
             if (GlobalManager.panelData.TryGetValue(assetType, out var panel))
             {
                 return panel;
@@ -125,7 +125,7 @@ namespace JFramework
 
         public static void Destroy(Type assetType)
         {
-            if (!GlobalSetting.Runtime) return;
+            if (!GlobalManager.Instance) return;
             if (GlobalManager.panelData.TryGetValue(assetType, out var panel))
             {
                 Destroy(panel, assetType);
@@ -149,7 +149,7 @@ namespace JFramework
 
         public static void Surface(UIPanel panel, int layer = 1)
         {
-            if (!GlobalSetting.Runtime) return;
+            if (!GlobalManager.Instance) return;
             if (GlobalManager.canvas == null)
             {
                 GlobalManager.canvas = new GameObject("UIManager").AddComponent<Canvas>();
@@ -192,7 +192,7 @@ namespace JFramework
 
         private static void Destroy(UIPanel panel, Type assetType)
         {
-            if (!GlobalSetting.Runtime) return;
+            if (!GlobalManager.Instance) return;
             if (GlobalManager.groupPanel.TryGetValue(panel, out var groupPanel))
             {
                 foreach (var group in groupPanel)

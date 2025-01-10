@@ -21,7 +21,7 @@ namespace JFramework
     {
         public static async void LoadDataTable()
         {
-            if (!GlobalSetting.Runtime) return;
+            if (!GlobalManager.Instance) return;
             var assembly = Service.Find.Assembly(GlobalSetting.assemblyName);
             if (assembly == null) return;
             var assetTypes = new List<Type>();
@@ -108,7 +108,7 @@ namespace JFramework
 
         public static T Get<T>(int key) where T : IData
         {
-            if (!GlobalSetting.Runtime) return default;
+            if (!GlobalManager.Instance) return default;
             if (!GlobalManager.itemTable.TryGetValue(typeof(T), out var dataTable))
             {
                 return default;
@@ -124,7 +124,7 @@ namespace JFramework
 
         public static T Get<T>(string key) where T : IData
         {
-            if (!GlobalSetting.Runtime) return default;
+            if (!GlobalManager.Instance) return default;
             if (!GlobalManager.nameTable.TryGetValue(typeof(T), out var dataTable))
             {
                 return default;
@@ -140,7 +140,7 @@ namespace JFramework
 
         public static T Get<T>(Enum key) where T : IData
         {
-            if (!GlobalSetting.Runtime) return default;
+            if (!GlobalManager.Instance) return default;
             if (!GlobalManager.enumTable.TryGetValue(typeof(T), out var dataTable))
             {
                 return default;
@@ -156,7 +156,7 @@ namespace JFramework
 
         public static List<T> GetTable<T>() where T : IData
         {
-            if (!GlobalSetting.Runtime) return default;
+            if (!GlobalManager.Instance) return default;
             if (GlobalManager.itemTable.TryGetValue(typeof(T), out var itemTable))
             {
                 var caches = new List<T>();
