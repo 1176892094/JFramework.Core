@@ -48,11 +48,11 @@ namespace JFramework
                         }
                     }
 
-                    return "127.0.0.1";
+                    return IPAddress.Loopback.ToString();
                 }
                 catch
                 {
-                    return "127.0.0.1";
+                    return IPAddress.Loopback.ToString();
                 }
             }
         }

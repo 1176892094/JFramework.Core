@@ -4,14 +4,20 @@
 // # Author: 云谷千羽
 // # Version: 1.0.0
 // # History: 2024-12-23 18:12:21
-// # Recently: 2025-01-08 17:01:29
+// # Recently: 2025-01-08 17:01:35
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
 
 namespace JFramework
 {
-    public struct VariableUpdateEvent : IEvent
+    public static partial class Utility
     {
+        private interface IHeap<T> : IPool
+        {
+            T Dequeue();
+
+            void Enqueue(T assetData);
+        }
     }
 }

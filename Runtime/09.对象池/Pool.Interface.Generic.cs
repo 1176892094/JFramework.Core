@@ -9,6 +9,7 @@
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
 
+using System;
 using System.Threading.Tasks;
 
 namespace JFramework
@@ -20,6 +21,23 @@ namespace JFramework
             Task<T> Dequeue();
 
             bool Enqueue(T assetData);
+        }
+        
+        private interface IHeap<T> : IPool
+        {
+            T Dequeue();
+
+            void Enqueue(T assetData);
+        }
+        
+        private interface IPool : IDisposable
+        {
+            public Type assetType { get; }
+            public string assetPath { get; }
+            public int cachedCount { get; }
+            public int unusedCount { get; }
+            public int dequeueCount { get; }
+            public int enqueueCount { get; }
         }
     }
 }

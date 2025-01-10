@@ -14,7 +14,7 @@ using System.Collections.Generic;
 
 namespace JFramework
 {
-    public static partial class Service
+    public static partial class Utility
     {
         [Serializable]
         private class Heap<T> : IHeap<T>
@@ -29,17 +29,17 @@ namespace JFramework
 
             public Type assetType { get; private set; }
             public string assetPath { get; private set; }
-            public int cachedCount => cached.Count;
-            public int unusedCount => unused.Count;
-            public int dequeueCount { get; private set; }
-            public int enqueueCount { get; private set; }
+            public int caches => cached.Count;
+            public int unuseds => unused.Count;
+            public int dequeue { get; private set; }
+            public int enqueue { get; private set; }
 
             public T Dequeue()
             {
                 T assetData;
                 lock (unused)
                 {
-                    dequeueCount++;
+                    dequeue++;
                     if (unused.Count > 0)
                     {
                         assetData = unused.Dequeue();
@@ -61,7 +61,7 @@ namespace JFramework
                 {
                     if (cached.Remove(assetData))
                     {
-                        enqueueCount++;
+                        enqueue++;
                         unused.Enqueue(assetData);
                     }
                 }

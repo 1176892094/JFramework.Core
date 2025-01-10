@@ -34,7 +34,6 @@ namespace JFramework
             public static void UnRegister()
             {
                 helper = null;
-                Heap.Dispose();
                 Pack.Dispose();
                 Data.Dispose();
                 Pool.Dispose();

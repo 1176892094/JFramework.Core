@@ -14,10 +14,12 @@ using System.Collections.Generic;
 
 namespace JFramework
 {
-    public static partial class Service
+    public static partial class Utility
     {
         public static class Heap
         {
+            private static readonly Dictionary<Type, IPool> poolData = new Dictionary<Type, IPool>();
+
             public static T Dequeue<T>()
             {
                 return LoadPool<T>(typeof(T)).Dequeue();
@@ -40,43 +42,28 @@ namespace JFramework
 
             private static IHeap<T> LoadPool<T>(Type heapType)
             {
-                if (Service.heapData.TryGetValue(heapType, out var heapData))
+                if (poolData.TryGetValue(heapType, out var pool))
                 {
-                    return (IHeap<T>)heapData;
+                    return (IHeap<T>)pool;
                 }
 
-                heapData = new Heap<T>(heapType);
-                Service.heapData.Add(heapType, heapData);
-                return (IHeap<T>)heapData;
+                pool = new Heap<T>(heapType);
+                poolData.Add(heapType, pool);
+                return (IHeap<T>)pool;
             }
 
             public static Reference[] Reference()
             {
                 var index = 0;
-                var results = new Reference[heapData.Count];
-                foreach (var heapData in heapData)
+                var results = new Reference[poolData.Count];
+                foreach (var pair in poolData)
                 {
-                    var key = heapData.Key;
-                    var value = heapData.Value;
-                    results[index++] = new Reference(key, value.cachedCount, value.unusedCount, value.dequeueCount, value.enqueueCount);
+                    var key = pair.Key;
+                    var value = pair.Value;
+                    results[index++] = new Reference(key, value.caches, value.unuseds, value.dequeue, value.enqueue);
                 }
 
                 return results;
-            }
-
-            internal static void Dispose()
-            {
-                var heapCaches = new List<Type>(heapData.Keys);
-                foreach (var cache in heapCaches)
-                {
-                    if (Service.heapData.TryGetValue(cache, out var heapData))
-                    {
-                        heapData.Dispose();
-                        Service.heapData.Remove(cache);
-                    }
-                }
-
-                heapData.Clear();
             }
         }
     }

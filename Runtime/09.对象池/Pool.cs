@@ -74,8 +74,7 @@ namespace JFramework
                 {
                     var type = value.assetType;
                     var path = value.assetPath;
-                    results[index++] = new Reference(type, path, value.cachedCount, value.unusedCount, value.dequeueCount,
-                        value.enqueueCount);
+                    results[index++] = new Reference(type, path, value.cachedCount, value.unusedCount, value.dequeueCount, value.enqueueCount);
                 }
 
                 return results;

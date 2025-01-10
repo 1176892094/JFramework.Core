@@ -28,7 +28,7 @@ namespace JFramework
             public static T Load<T>(GameObject entity, float duration) where T : class, ITimer
             {
                 if (helper == null) return default;
-                var timerData = Heap.Dequeue<T>();
+                var timerData = Utility.Heap.Dequeue<T>();
                 timerData.Start(entity, duration, OnComplete);
                 Service.timerData.Add(timerData);
                 return timerData;
@@ -37,7 +37,7 @@ namespace JFramework
                 {
                     Service.timerData.Remove(timerData);
                     timerData.Dispose();
-                    Heap.Enqueue(timerData, typeof(T));
+                    Utility.Heap.Enqueue(timerData, typeof(T));
                 }
             }
 

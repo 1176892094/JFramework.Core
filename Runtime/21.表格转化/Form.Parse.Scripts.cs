@@ -138,7 +138,7 @@ namespace JFramework
 
             private static KeyValuePair<string, string> WriteTable(string className, Dictionary<string, string> fields)
             {
-                var builder = Heap.Dequeue<StringBuilder>();
+                var builder = Utility.Heap.Dequeue<StringBuilder>();
                 var scriptText = tableData.Replace("Template", className);
 
                 foreach (var field in fields)
@@ -174,13 +174,13 @@ namespace JFramework
                 builder.Length -= 1;
                 scriptText = scriptText.Replace("//TODO:2", builder.ToString());
                 builder.Length = 0;
-                Heap.Enqueue(builder);
+                Utility.Heap.Enqueue(builder);
                 return new KeyValuePair<string, string>(Utility.Text.Format(tablePath, className), scriptText);
             }
 
             private static KeyValuePair<string, string> WriteStruct(string className, string classType)
             {
-                var builder = Heap.Dequeue<StringBuilder>();
+                var builder = Utility.Heap.Dequeue<StringBuilder>();
                 var scriptText = structData.Replace("Template", className);
 
                 var members = classType.Substring(1, classType.IndexOf('}') - 1).Split(',');
@@ -197,13 +197,13 @@ namespace JFramework
                 builder.Length -= 1;
                 scriptText = scriptText.Replace("//TODO:1", builder.ToString());
                 builder.Length = 0;
-                Heap.Enqueue(builder);
+                Utility.Heap.Enqueue(builder);
                 return new KeyValuePair<string, string>(Utility.Text.Format(structPath, className), scriptText);
             }
 
             private static KeyValuePair<string, string> WriteEnum(string className, IEnumerable<string> members)
             {
-                var builder = Heap.Dequeue<StringBuilder>();
+                var builder = Utility.Heap.Dequeue<StringBuilder>();
                 var scriptText = enumData.Replace("Template", className);
 
                 foreach (var member in members)
@@ -223,7 +223,7 @@ namespace JFramework
                 builder.Length -= 1;
                 scriptText = scriptText.Replace("//TODO:1", builder.ToString());
                 builder.Length = 0;
-                Heap.Enqueue(builder);
+                Utility.Heap.Enqueue(builder);
                 return new KeyValuePair<string, string>(Utility.Text.Format(enumPath, className), scriptText);
             }
 

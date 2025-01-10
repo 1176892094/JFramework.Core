@@ -26,7 +26,7 @@ namespace JFramework
             foreach (var stateData in copies)
             {
                 stateData.Dispose();
-                Service.Heap.Enqueue(stateData, stateData.GetType());
+                Utility.Heap.Enqueue(stateData, stateData.GetType());
             }
 
             states.Clear();
@@ -39,14 +39,14 @@ namespace JFramework
 
         public void AddState<T>() where T : IState, new()
         {
-            var stateData = Service.Heap.Dequeue<IState>(typeof(T));
+            var stateData = Utility.Heap.Dequeue<IState>(typeof(T));
             states[typeof(T)] = stateData;
             stateData.OnAwake(owner);
         }
 
         public void AddState<T>(Type stateType) where T : IState
         {
-            var stateData = Service.Heap.Dequeue<IState>(stateType);
+            var stateData = Utility.Heap.Dequeue<IState>(stateType);
             states[typeof(T)] = stateData;
             stateData.OnAwake(owner);
         }

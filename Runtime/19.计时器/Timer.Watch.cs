@@ -48,7 +48,7 @@ namespace JFramework
             this.OnFinish = OnFinish;
         }
 
-        void IUpdate.Update(float elapsedTime, float unscaleTime)
+        void ITimer.Update(float elapsedTime, float unscaleTime)
         {
             try
             {

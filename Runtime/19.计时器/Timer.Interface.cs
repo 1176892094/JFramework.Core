@@ -14,8 +14,10 @@ using UnityEngine;
 
 namespace JFramework
 {
-    internal interface ITimer : IUpdate
+    internal interface ITimer : IDisposable
     {
         void Start(GameObject owner, float duration, Action OnFinish);
+        
+        void Update(float elapsedTime, float unscaleTime);
     }
 }
