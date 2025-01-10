@@ -122,7 +122,7 @@ namespace JFramework
 
         private static void SetButton(this Transform inject, string name, UnityEvent button)
         {
-            if (!inject.TryGetComponent(out IPanel panel))
+            if (!inject.TryGetComponent(out UIPanel panel))
             {
                 button.AddListener(() => inject.SendMessage(name));
                 return;
@@ -139,7 +139,7 @@ namespace JFramework
 
         private static void SetToggle(this Transform inject, string name, UnityEvent<bool> toggle)
         {
-            if (!inject.TryGetComponent(out IPanel panel))
+            if (!inject.TryGetComponent(out UIPanel panel))
             {
                 toggle.AddListener(value => inject.SendMessage(name, value));
                 return;

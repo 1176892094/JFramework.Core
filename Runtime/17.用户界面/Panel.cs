@@ -21,7 +21,7 @@ namespace JFramework
     {
         public static class Panel
         {
-            private static async Task<IPanel> Load(string assetPath, Type assetType)
+            private static async Task<UIPanel> Load(string assetPath, Type assetType)
             {
                 var obj = await Asset.Load<GameObject>(assetPath);
                 var component = obj.GetComponent(assetType);
@@ -30,13 +30,13 @@ namespace JFramework
                     component = obj.AddComponent(assetType);
                 }
 
-                var panel = (IPanel)component;
+                var panel = (UIPanel)component;
                 panelData.Add(assetType, panel);
                 Surface(panel);
                 return panel;
             }
 
-            public static async void Show<T>(Action<T> assetAction = null) where T : IPanel
+            public static async void Show<T>(Action<T> assetAction = null) where T : UIPanel
             {
                 if (helper == null) return;
                 var assetPath = GetPanelPath(typeof(T).Name);
@@ -53,7 +53,7 @@ namespace JFramework
                 assetAction?.Invoke((T)panel);
             }
 
-            public static void Hide<T>() where T : IPanel
+            public static void Hide<T>() where T : UIPanel
             {
                 if (helper == null) return;
                 if (panelData.TryGetValue(typeof(T), out var panel))
@@ -65,7 +65,7 @@ namespace JFramework
                 }
             }
 
-            public static T Find<T>() where T : IPanel
+            public static T Find<T>() where T : UIPanel
             {
                 if (helper == null) return default;
                 if (panelData.TryGetValue(typeof(T), out var panel))
@@ -85,7 +85,7 @@ namespace JFramework
                 }
             }
 
-            public static async void Show(Type assetType, Action<IPanel> assetAction = null)
+            public static async void Show(Type assetType, Action<UIPanel> assetAction = null)
             {
                 if (helper == null) return;
                 var assetPath = GetPanelPath(assetType.Name);
@@ -114,7 +114,7 @@ namespace JFramework
                 }
             }
 
-            public static IPanel Find(Type assetType)
+            public static UIPanel Find(Type assetType)
             {
                 if (helper == null) return default;
                 if (panelData.TryGetValue(assetType, out var panel))
@@ -149,7 +149,7 @@ namespace JFramework
                 }
             }
 
-            public static void Surface(IPanel panel, int layer = 1)
+            public static void Surface(UIPanel panel, int layer = 1)
             {
                 if (helper == null) return;
                 if (canvas == null)
@@ -192,7 +192,7 @@ namespace JFramework
                 transform.localScale = Vector3.one;
             }
 
-            private static void Destroy(IPanel panel, Type assetType)
+            private static void Destroy(UIPanel panel, Type assetType)
             {
                 if (helper == null) return;
                 if (Service.groupPanel.TryGetValue(panel, out var groupPanel))

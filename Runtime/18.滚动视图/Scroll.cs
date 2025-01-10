@@ -16,7 +16,7 @@ using UnityEngine;
 namespace JFramework
 {
     [Serializable]
-    public sealed class Scroll<TPanel, TItem, TGrid> : Agent<TPanel> where TPanel : IPanel, IScroll where TGrid : Component, IGrid<TPanel, TItem>
+    public sealed class Scroll<TPanel, TItem, TGrid> : Agent<TPanel> where TPanel : UIPanel, IScroll where TGrid : Component, IGrid<TPanel, TItem>
     {
         private Dictionary<int, TGrid> grids = new Dictionary<int, TGrid>();
         private List<TItem> items;

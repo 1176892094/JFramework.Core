@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace JFramework
 {
-    public interface IGrid<out TPanel, TItem> : IGrid<TItem> where TPanel : IPanel
+    public interface IGrid<out TPanel, TItem> : IGrid<TItem> where TPanel : UIPanel
     {
         TPanel panel { get; }
         RectTransform content { get; }

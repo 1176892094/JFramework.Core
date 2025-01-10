@@ -46,7 +46,7 @@ namespace JFramework
 
         private static readonly Dictionary<Type, IPool> eventData = new Dictionary<Type, IPool>();
 
-        private static readonly Dictionary<Type, IPanel> panelData = new Dictionary<Type, IPanel>();
+        private static readonly Dictionary<Type, UIPanel> panelData = new Dictionary<Type, UIPanel>();
 
         private static readonly Dictionary<Type, ItemTable> itemTable = new Dictionary<Type, ItemTable>();
 
@@ -76,8 +76,8 @@ namespace JFramework
 
         private static readonly Dictionary<int, RectTransform> panelLayer = new Dictionary<int, RectTransform>();
 
-        private static readonly Dictionary<string, HashSet<IPanel>> panelGroup = new Dictionary<string, HashSet<IPanel>>();
+        private static readonly Dictionary<string, HashSet<UIPanel>> panelGroup = new Dictionary<string, HashSet<UIPanel>>();
 
-        private static readonly Dictionary<IPanel, HashSet<string>> groupPanel = new Dictionary<IPanel, HashSet<string>>();
+        private static readonly Dictionary<UIPanel, HashSet<string>> groupPanel = new Dictionary<UIPanel, HashSet<string>>();
     }
 }

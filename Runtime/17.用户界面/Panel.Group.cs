@@ -17,11 +17,11 @@ namespace JFramework
     {
         public static class Group
         {
-            public static void Listen(string group, IPanel panel)
+            public static void Listen(string group, UIPanel panel)
             {
                 if (!Service.panelGroup.TryGetValue(group, out var panelGroup))
                 {
-                    panelGroup = new HashSet<IPanel>();
+                    panelGroup = new HashSet<UIPanel>();
                     Service.panelGroup.Add(group, panelGroup);
                 }
 
@@ -37,11 +37,11 @@ namespace JFramework
                 }
             }
 
-            public static void Remove(string group, IPanel panel)
+            public static void Remove(string group, UIPanel panel)
             {
                 if (!Service.panelGroup.TryGetValue(group, out var panelGroup))
                 {
-                    panelGroup = new HashSet<IPanel>();
+                    panelGroup = new HashSet<UIPanel>();
                     Service.panelGroup.Add(group, panelGroup);
                 }
 
@@ -85,7 +85,7 @@ namespace JFramework
                 }
             }
 
-            internal static bool ShowInGroup(IPanel panel)
+            internal static bool ShowInGroup(UIPanel panel)
             {
                 if (!Service.groupPanel.TryGetValue(panel, out var groupPanel))
                 {
@@ -114,7 +114,7 @@ namespace JFramework
 
             internal static void Dispose()
             {
-                var groupPanel = new List<IPanel>(Service.groupPanel.Keys);
+                var groupPanel = new List<UIPanel>(Service.groupPanel.Keys);
                 foreach (var panel in groupPanel)
                 {
                     if (Service.groupPanel.TryGetValue(panel, out var group))

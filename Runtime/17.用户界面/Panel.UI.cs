@@ -13,7 +13,7 @@ using UnityEngine;
 
 namespace JFramework
 {
-    public abstract class UIPanel : MonoBehaviour, IPanel
+    public abstract class UIPanel : MonoBehaviour, IEntity
     {
         public UIState state { get; set; } = UIState.Common;
         
