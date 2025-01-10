@@ -32,13 +32,13 @@ namespace JFramework.Net
             var transport = new Transport();
             try
             {
-                Debug.Log("运行服务器...");
+                Log.Info("运行服务器...");
                 if (!File.Exists("setting.json"))
                 {
                     var contents = JsonConvert.SerializeObject(new Setting(), Formatting.Indented);
                     await File.WriteAllTextAsync("setting.json", contents);
 
-                    Debug.LogWarning("请将 setting.json 文件配置正确并重新运行。");
+                    Log.Warn("请将 setting.json 文件配置正确并重新运行。");
                     Console.ReadKey();
                     Environment.Exit(0);
                     return;
@@ -46,8 +46,8 @@ namespace JFramework.Net
 
                 Setting = JsonConvert.DeserializeObject<Setting>(await File.ReadAllTextAsync("setting.json"));
 
-                Debug.Log("加载程序集...");
-                Debug.Log("初始化传输类...");
+                Log.Info("加载程序集...");
+                Log.Info("初始化传输类...");
                 Process = new Process(transport);
                 transport.OnServerError = Process.ServerError;
                 transport.OnServerConnect = Process.ServerConnect;
@@ -56,19 +56,19 @@ namespace JFramework.Net
                 transport.port = Setting.RestPort;
                 transport.StartServer();
 
-                Debug.Log("开始进行传输...");
+                Log.Info("开始进行传输...");
                 if (Setting.UseEndPoint)
                 {
-                    Debug.Log("开启REST服务...");
+                    Log.Info("开启REST服务...");
                     if (!RestUtility.StartServer(Setting.RestPort))
                     {
-                        Debug.LogError("请以管理员身份运行或检查端口是否被占用。");
+                        Log.Error("请以管理员身份运行或检查端口是否被占用。");
                     }
                 }
             }
             catch (Exception e)
             {
-                Debug.LogError(e.ToString());
+                Log.Error(e.ToString());
                 Console.ReadKey();
                 Environment.Exit(0);
             }

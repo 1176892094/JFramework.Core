@@ -8,13 +8,13 @@ namespace JFramework.Net
 {
     public class NetworkDiscovery : MonoBehaviour
     {
-        [SerializeField] private string address = "";
+        public string address = "";
 
-        [SerializeField] private ushort port = 47777;
+        public ushort port = 47777;
 
-        [SerializeField] private int duration = 1;
+        public int duration = 1;
 
-        [SerializeField] private string version;
+        public string version;
 
         private UdpClient udpClient;
 

@@ -13,21 +13,21 @@ using System;
 
 namespace JFramework.Net
 {
-    internal static class Debug
+    internal static class Log
     {
-        public static void Log(string message)
+        public static void Info(string message)
         {
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine($"[{DateTime.Now:MM-dd HH:mm:ss}] " + message);
         }
 
-        public static void LogWarning(string message)
+        public static void Warn(string message)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine($"[{DateTime.Now:MM-dd HH:mm:ss}] " + message);
         }
 
-        public static void LogError(string message)
+        public static void Error(string message)
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"[{DateTime.Now:MM-dd HH:mm:ss}] " + message);

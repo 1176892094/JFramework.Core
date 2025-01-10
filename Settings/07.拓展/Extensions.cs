@@ -14,7 +14,7 @@ using System.Collections.Generic;
 
 namespace JFramework
 {
-    public static partial class Extensions
+    public static class Extensions
     {
         public static bool IsNullOrEmpty(this string result)
         {

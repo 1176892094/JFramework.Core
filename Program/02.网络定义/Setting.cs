@@ -17,16 +17,6 @@ namespace JFramework.Net
     internal class Setting
     {
         /// <summary>
-        /// 程序集
-        /// </summary>
-        public string Assembly = "Transport.dll";
-        
-        /// <summary>
-        /// 使用传输
-        /// </summary>
-        public string Transport = "JFramework.Net.KcpTransport";
-        
-        /// <summary>
         /// 服务器密钥
         /// </summary>
         public string ServerKey = "Secret Key";

@@ -35,33 +35,24 @@ namespace JFramework.Net
             string reason;
             switch (error)
             {
-                case 1:
-                    //        reason = "DnsResolve";
-                    break;
-                case 2:
-                    //        reason = "Timeout";
-                    break;
                 case 3:
                     reason = "Congestion";
-                    Debug.LogWarning($"客户端: {clientId} 错误代码: {reason}\n{message}");
                     break;
                 case 4:
                     reason = "InvalidReceive";
-                    Debug.LogWarning($"客户端: {clientId} 错误代码: {reason}\n{message}");
                     break;
                 case 5:
                     reason = "InvalidSend";
-                    Debug.LogWarning($"客户端: {clientId} 错误代码: {reason}\n{message}");
                     break;
                 case 6:
                     reason = "ConnectionClosed";
-                    Debug.LogWarning($"客户端: {clientId} 错误代码: {reason}\n{message}");
                     break;
                 default:
                     reason = "Unexpected";
-                    Debug.LogWarning($"客户端: {clientId} 错误代码: {reason}\n{message}");
                     break;
             }
+
+            Log.Warn($"客户端: {clientId} 错误代码: {reason}\n{message}");
         }
 
         public void ServerConnect(int clientId)
@@ -148,7 +139,7 @@ namespace JFramework.Net
 
                     rooms.Add(id, room);
                     clients.Add(clientId, room);
-                    Debug.Log($"客户端 {clientId} 创建游戏房间。房间名：{room.roomName} 房间数：{rooms.Count} 连接数：{clients.Count}");
+                    Log.Info($"客户端 {clientId} 创建游戏房间。房间名：{room.roomName} 房间数：{rooms.Count} 连接数：{clients.Count}");
 
                     using var writer = MemoryWriter.Pop();
                     writer.WriteByte((byte)OpCodes.CreateRoom);
@@ -163,7 +154,7 @@ namespace JFramework.Net
                     {
                         room.clients.Add(clientId);
                         clients.Add(clientId, room);
-                        Debug.Log($"客户端 {clientId} 加入游戏房间。房间名：{room.roomName} 房间数：{rooms.Count} 连接数：{clients.Count}");
+                        Log.Info($"客户端 {clientId} 加入游戏房间。房间名：{room.roomName} 房间数：{rooms.Count} 连接数：{clients.Count}");
 
                         using var writer = MemoryWriter.Pop();
                         writer.WriteByte((byte)OpCodes.JoinRoom);
@@ -200,7 +191,7 @@ namespace JFramework.Net
                     {
                         if (message.Count > transport.MessageSize(channel))
                         {
-                            Debug.Log($"接收消息大小过大！消息大小：{message.Count}");
+                            Log.Info($"接收消息大小过大！消息大小：{message.Count}");
                             ServerDisconnect(clientId);
                             return;
                         }
@@ -264,7 +255,7 @@ namespace JFramework.Net
             }
             catch (Exception e)
             {
-                Debug.LogError(e.ToString());
+                Log.Error(e.ToString());
                 transport.StopClient(clientId);
             }
         }
