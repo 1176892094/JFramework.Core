@@ -25,7 +25,7 @@ namespace JFramework.Net
 
         void IDisposable.Dispose()
         {
-            Utility.Heap.Enqueue(this);
+            Utility.Pool.Enqueue(this);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -56,7 +56,7 @@ namespace JFramework.Net
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MemoryReader Pop(ArraySegment<byte> segment)
         {
-            var reader = Utility.Heap.Dequeue<MemoryReader>();
+            var reader = Utility.Pool.Dequeue<MemoryReader>();
             reader.Reset(segment);
             return reader;
         }
@@ -64,7 +64,7 @@ namespace JFramework.Net
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Push(MemoryReader reader)
         {
-            Utility.Heap.Enqueue(reader);
+            Utility.Pool.Enqueue(reader);
         }
 
         public override string ToString()

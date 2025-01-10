@@ -180,7 +180,7 @@ namespace JFramework.Net
 
                     var endPoint = result.RemoteEndPoint;
                     var response = reader.Invoke<ResponseMessage>();
-                    Service.Event.Invoke(new ServerResponseEvent(new UriBuilder(response.uri)
+                    Utility.Event.Invoke(new ServerResponseEvent(new UriBuilder(response.uri)
                     {
                         Host = endPoint.Address.ToString()
                     }.Uri, endPoint));

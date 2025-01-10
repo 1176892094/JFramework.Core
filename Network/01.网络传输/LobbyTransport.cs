@@ -102,7 +102,7 @@ namespace JFramework.Net
                 players.Clear();
                 isServer = false;
                 isClient = false;
-                Service.Event.Invoke(new LobbyDisconnectEvent());
+                Utility.Event.Invoke(new LobbyDisconnectEvent());
                 transport.StopClient();
             }
         }
@@ -126,7 +126,7 @@ namespace JFramework.Net
 
             var rooms = Utility.Zip.Decompress(request.downloadHandler.text);
             var jsons = Service.Json.FromJson<Room[]>("{" + "\"value\":" + rooms + "}");
-            Service.Event.Invoke(new LobbyUpdateEvent(jsons));
+            Utility.Event.Invoke(new LobbyUpdateEvent(jsons));
             Log.Info("房间信息：" + rooms);
         }
 

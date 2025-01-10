@@ -39,7 +39,6 @@ namespace JFramework
                 Pool.Dispose();
                 Audio.Dispose();
                 Group.Dispose();
-                Event.Dispose();
                 Asset.Dispose();
                 Agent.Dispose();
                 Panel.Dispose();
