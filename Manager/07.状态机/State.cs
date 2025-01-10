@@ -9,9 +9,9 @@
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
 
-namespace JFramework
+namespace JFramework.Common
 {
-    public interface IState
+    internal interface IState
     {
         void OnEnter();
 

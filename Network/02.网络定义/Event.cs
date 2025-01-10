@@ -13,7 +13,7 @@ using System;
 using System.Net;
 using JFramework.Net;
 
-namespace JFramework.Events
+namespace JFramework.Common
 {
     public struct ServerConnectEvent : IEvent
     {

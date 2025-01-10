@@ -10,7 +10,7 @@
 // *********************************************************************************
 
 using System;
-using JFramework.Events;
+using JFramework.Common;
 using UnityEngine;
 
 namespace JFramework

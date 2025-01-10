@@ -12,11 +12,12 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using JFramework.Common;
 using UnityEngine;
 using AssetData = System.Collections.Generic.KeyValuePair<string, string>;
-using EnumTable = System.Collections.Generic.Dictionary<System.Enum, JFramework.IData>;
-using ItemTable = System.Collections.Generic.Dictionary<int, JFramework.IData>;
-using NameTable = System.Collections.Generic.Dictionary<string, JFramework.IData>;
+using EnumTable = System.Collections.Generic.Dictionary<System.Enum, JFramework.Common.IData>;
+using ItemTable = System.Collections.Generic.Dictionary<int, JFramework.Common.IData>;
+using NameTable = System.Collections.Generic.Dictionary<string, JFramework.Common.IData>;
 using AgentData = System.Collections.Generic.Dictionary<System.Type, UnityEngine.ScriptableObject>;
 
 namespace JFramework
@@ -71,7 +72,14 @@ namespace JFramework
 
         private void Awake()
         {
-            DontDestroyOnLoad(manager);
+            manager = gameObject;
+            DontDestroyOnLoad(gameObject);
+            musicSource = gameObject.AddComponent<AudioSource>();
+            JsonManager.Load(setting, nameof(AudioSetting));
+        }
+
+        private void OnEnable()
+        {
             GlobalSetting.Runtime = Resources.Load<GlobalSetting>(nameof(GlobalSetting));
         }
 
@@ -85,9 +93,13 @@ namespace JFramework
             TimerManager.Update(Time.time, Time.unscaledTime);
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
             GlobalSetting.Runtime = null;
+        }
+
+        private void OnDestroy()
+        {
             UIManager.Dispose();
             PoolManager.Dispose();
             PackManager.Dispose();
@@ -98,17 +110,7 @@ namespace JFramework
             TimerManager.Dispose();
             Service.Pool.Dispose();
             Service.Event.Dispose();
-            AssetBundle.UnloadAllAssetBundles(true);
             GC.Collect();
-        }
-
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-        private static void RuntimeInitializeOnLoad()
-        {
-            manager = new GameObject(nameof(GlobalManager));
-            manager.AddComponent<GlobalManager>();
-            musicSource = manager.AddComponent<AudioSource>();
-            JsonManager.Load(setting, nameof(AudioSetting));
         }
     }
 }

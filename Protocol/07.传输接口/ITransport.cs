@@ -10,10 +10,11 @@
 // *********************************************************************************
 
 using System;
+using JFramework.Udp;
 
-namespace JFramework.Udp
+namespace JFramework.Common
 {
-    public interface Transport : IAddress
+    public interface ITransport : IAddress
     {
         /// <summary>
         /// 客户端连接事件

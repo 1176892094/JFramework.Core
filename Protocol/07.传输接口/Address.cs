@@ -9,7 +9,7 @@
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
 
-namespace JFramework.Udp
+namespace JFramework.Common
 {
     public interface IAddress
     {

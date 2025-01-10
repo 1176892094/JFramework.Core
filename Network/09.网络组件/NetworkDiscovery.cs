@@ -1,7 +1,7 @@
 using System;
 using System.Net;
 using System.Net.Sockets;
-using JFramework.Events;
+using JFramework.Common;
 using UnityEngine;
 
 namespace JFramework.Net

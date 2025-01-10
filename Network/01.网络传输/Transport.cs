@@ -10,11 +10,12 @@
 // *********************************************************************************
 
 using System;
+using JFramework.Common;
 using UnityEngine;
 
 namespace JFramework.Net
 {
-    public abstract class Transport : MonoBehaviour, Udp.Transport
+    public abstract class Transport : MonoBehaviour, ITransport
     {
         public static Transport Instance;
         public abstract string address { get; set; }

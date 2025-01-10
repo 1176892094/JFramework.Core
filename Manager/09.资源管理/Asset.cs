@@ -12,7 +12,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using JFramework.Events;
+using JFramework.Common;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -164,6 +164,7 @@ namespace JFramework
             GlobalManager.assetData.Clear();
             GlobalManager.assetTask.Clear();
             GlobalManager.assetPack.Clear();
+            AssetBundle.UnloadAllAssetBundles(true);
         }
     }
 }

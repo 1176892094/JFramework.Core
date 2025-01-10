@@ -11,7 +11,7 @@
 
 using System;
 using System.Runtime.CompilerServices;
-using JFramework.Events;
+using JFramework.Common;
 using UnityEngine;
 
 namespace JFramework.Net

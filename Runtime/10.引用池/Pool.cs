@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using JFramework.Common;
 
 namespace JFramework
 {

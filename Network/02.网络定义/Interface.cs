@@ -9,7 +9,7 @@
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
 
-namespace JFramework.Net
+namespace JFramework.Common
 {
     public interface IStartClient
     {

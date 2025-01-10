@@ -12,6 +12,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using JFramework.Common;
 using UnityEngine;
 
 namespace JFramework.Net

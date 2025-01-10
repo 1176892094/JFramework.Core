@@ -9,7 +9,7 @@
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
 
-namespace JFramework.Events
+namespace JFramework.Common
 {
     public struct VariableEvent : IEvent
     {

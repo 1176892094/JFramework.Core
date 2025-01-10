@@ -11,7 +11,7 @@
 
 using System;
 
-namespace JFramework
+namespace JFramework.Common
 {
     public interface IPool : IDisposable
     {

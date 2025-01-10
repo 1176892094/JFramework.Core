@@ -11,7 +11,7 @@
 
 using System;
 using System.Collections.Generic;
-using JFramework.Events;
+using JFramework.Common;
 
 namespace JFramework
 {

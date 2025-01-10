@@ -12,7 +12,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using JFramework.Events;
+using JFramework.Common;
 using UnityEngine;
 
 namespace JFramework.Net

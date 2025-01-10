@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using JFramework.Common;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -106,9 +107,9 @@ namespace JFramework
 
         public abstract Task<KeyValuePair<int, string>> LoadRequest(string persistentData, string streamingAssets);
 
-        public Service.MailData SendMail(string mailBody)
+        public MailData SendMail(string mailBody)
         {
-            return new Service.MailData
+            return new MailData
             {
                 smtpServer = smtpServer,
                 smtpPort = smtpPort,

@@ -11,7 +11,7 @@
 
 using System;
 using System.Threading.Tasks;
-using JFramework.Events;
+using JFramework.Common;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 

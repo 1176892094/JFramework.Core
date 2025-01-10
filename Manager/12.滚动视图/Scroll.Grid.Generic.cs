@@ -11,7 +11,7 @@
 
 using UnityEngine;
 
-namespace JFramework
+namespace JFramework.Common
 {
     public interface IGrid<TItem> : IGrid
     {

@@ -11,6 +11,7 @@
 
 using System;
 using System.Reflection;
+using JFramework.Common;
 using UnityEngine;
 using UnityEngine.Events;
 

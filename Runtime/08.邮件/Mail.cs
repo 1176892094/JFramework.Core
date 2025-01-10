@@ -13,6 +13,7 @@ using System;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
+using JFramework.Common;
 
 namespace JFramework
 {
@@ -62,19 +63,6 @@ namespace JFramework
                     throw new SmtpException(e.ToString());
                 }
             }
-        }
-
-        [Serializable]
-        public struct MailData
-        {
-            public string smtpServer;
-            public int smtpPort;
-            public string senderName;
-            public string senderAddress;
-            public string senderPassword;
-            public string mailName;
-            public string mailBody;
-            public string targetAddress;
         }
     }
 }

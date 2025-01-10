@@ -12,7 +12,7 @@
 using System;
 using UnityEngine;
 
-namespace JFramework
+namespace JFramework.Common
 {
     internal interface IAgent : IDisposable
     {

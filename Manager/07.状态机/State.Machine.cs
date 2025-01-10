@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using JFramework.Common;
 using UnityEngine;
 
 namespace JFramework
@@ -18,7 +19,7 @@ namespace JFramework
     public abstract class StateMachine<TOwner> : Agent<TOwner> where TOwner : Component
     {
         private readonly Dictionary<Type, IState> states = new Dictionary<Type, IState>();
-        public IState state;
+        private IState state;
 
         public override void Dispose()
         {
@@ -31,17 +32,17 @@ namespace JFramework
             state.OnUpdate();
         }
 
-        public void AddState<T>() where T : IState, new()
+        public void AddState<T>() where T : State<TOwner>
         {
-            states[typeof(T)] = (IState)AgentManager.Show(owner.gameObject, typeof(T));
+            states[typeof(T)] = (State<TOwner>)AgentManager.Show(owner.gameObject, typeof(T));
         }
 
         public void AddState(Type stateType)
         {
-            states[stateType] = (IState)AgentManager.Show(owner.gameObject, stateType);
+            states[stateType] = (State<TOwner>)AgentManager.Show(owner.gameObject, stateType);
         }
 
-        public void ChangeState<T>() where T : IState
+        public void ChangeState<T>() where T : State<TOwner>
         {
             state.OnExit();
             state = states[typeof(T)];
@@ -55,7 +56,7 @@ namespace JFramework
             state.OnEnter();
         }
 
-        public void RemoveState<T>() where T : IState, new()
+        public void RemoveState<T>() where T : State<TOwner>
         {
             states.Remove(typeof(T));
         }
