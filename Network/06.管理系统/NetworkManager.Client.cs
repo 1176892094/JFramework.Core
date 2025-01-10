@@ -345,7 +345,7 @@ namespace JFramework.Net
 
                 if (@object.assetId.Equals(@object.name, StringComparison.OrdinalIgnoreCase))
                 {
-                    Service.Pool.Hide(@object.gameObject);
+                    Service.Entity.Hide(@object.gameObject);
                     @object.Reset();
                     return;
                 }
@@ -449,7 +449,7 @@ namespace JFramework.Net
                     GameObject prefab;
                     if (message.isPool)
                     {
-                        prefab = await Service.Pool.Show(message.assetId);
+                        prefab = await Service.Entity.Show(message.assetId);
                     }
                     else
                     {

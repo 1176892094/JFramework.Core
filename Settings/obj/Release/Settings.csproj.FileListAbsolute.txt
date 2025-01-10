@@ -1,0 +1,6 @@
+/Users/jinyijie/Files/GitHub/JFramework/Settings/obj/Release/Settings.csproj.AssemblyReference.cache
+/Users/jinyijie/Files/GitHub/JFramework/Settings/obj/Release/Settings.csproj.CoreCompileInputs.cache
+/Users/jinyijie/Files/GitHub/JFramework/Settings/bin/Release/JFramework.Ray.dll
+/Users/jinyijie/Files/GitHub/JFramework/Settings/bin/Release/JFramework.Ray.pdb
+/Users/jinyijie/Files/GitHub/JFramework/Settings/obj/Release/JFramework.Ray.dll
+/Users/jinyijie/Files/GitHub/JFramework/Settings/obj/Release/JFramework.Ray.pdb

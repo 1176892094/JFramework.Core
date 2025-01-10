@@ -3,8 +3,8 @@
 // # Unity: 6000.3.5f1
 // # Author: 云谷千羽
 // # Version: 1.0.0
-// # History: 2025-01-09 16:01:17
-// # Recently: 2025-01-09 17:01:45
+// # History: 2024-12-23 18:12:21
+// # Recently: 2025-01-08 17:01:29
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
@@ -15,7 +15,12 @@ using System.Text;
 
 namespace JFramework.Net
 {
-    internal class MemoryReader : IDisposable
+    public static class Reader<T>
+    {
+        public static Func<MemoryReader, T> read;
+    }
+
+    public class MemoryReader : IDisposable
     {
         public readonly UTF8Encoding encoding = new UTF8Encoding(false, true);
         public ArraySegment<byte> buffer;
@@ -25,20 +30,13 @@ namespace JFramework.Net
 
         void IDisposable.Dispose()
         {
-            Pool<MemoryReader>.Enqueue(this);
+            Utility.Pool.Enqueue(this);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public unsafe T Read<T>() where T : unmanaged
+        public T Read<T>() where T : unmanaged
         {
-            T value;
-            fixed (byte* ptr = &buffer.Array[buffer.Offset + position])
-            {
-                value = *(T*)ptr;
-            }
-
-            position += sizeof(T);
-            return value;
+            return Utility.Unsafe.Read<T>(buffer.Array, buffer.Offset, ref position);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -46,7 +44,7 @@ namespace JFramework.Net
         {
             return Read<byte>() != 0 ? Read<T>() : default(T?);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T Invoke<T>()
         {
@@ -63,7 +61,7 @@ namespace JFramework.Net
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MemoryReader Pop(ArraySegment<byte> segment)
         {
-            var reader = Pool<MemoryReader>.Dequeue();
+            var reader = Utility.Pool.Dequeue<MemoryReader>();
             reader.Reset(segment);
             return reader;
         }
@@ -71,7 +69,7 @@ namespace JFramework.Net
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Push(MemoryReader reader)
         {
-            Pool<MemoryReader>.Enqueue(reader);
+            Utility.Pool.Enqueue(reader);
         }
 
         public override string ToString()

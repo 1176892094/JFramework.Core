@@ -3,8 +3,8 @@
 // # Unity: 6000.3.5f1
 // # Author: 云谷千羽
 // # Version: 1.0.0
-// # History: 2024-12-23 18:12:21
-// # Recently: 2025-01-08 19:01:13
+// # History: 2025-01-09 16:01:50
+// # Recently: 2025-01-10 20:01:59
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
@@ -52,7 +52,7 @@ namespace JFramework
                     if (grid != null)
                     {
                         grid.Dispose();
-                        Service.Pool.Hide(grid.gameObject);
+                        Service.Entity.Hide(grid.gameObject);
                     }
                 }
             }
@@ -79,7 +79,7 @@ namespace JFramework
                         if (grid != null)
                         {
                             grid.Dispose();
-                            Service.Pool.Hide(grid.gameObject);
+                            Service.Entity.Hide(grid.gameObject);
                         }
 
                         grids.Remove(i);
@@ -93,7 +93,7 @@ namespace JFramework
                         if (grid != null)
                         {
                             grid.Dispose();
-                            Service.Pool.Hide(grid.gameObject);
+                            Service.Entity.Hide(grid.gameObject);
                         }
 
                         grids.Remove(i);
@@ -111,7 +111,7 @@ namespace JFramework
                     grids[index] = default;
                     var posX = index % column * width + width / 2;
                     var posY = -(index / column) * height - height / 2;
-                    Service.Pool.Show(prefab, obj =>
+                    Service.Entity.Show(prefab, obj =>
                     {
                         var grid = obj.GetComponent<TGrid>();
                         if (grid == null)
@@ -128,7 +128,7 @@ namespace JFramework
                         if (!grids.ContainsKey(index))
                         {
                             grid.Dispose();
-                            Service.Pool.Hide(grid.gameObject);
+                            Service.Entity.Hide(grid.gameObject);
                             return;
                         }
 

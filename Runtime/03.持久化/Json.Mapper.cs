@@ -17,19 +17,19 @@ namespace JFramework
 {
     public static partial class Service
     {
+        [Serializable]
+        private class JsonMapper<T>
+        {
+            public T value;
+
+            public JsonMapper(T value)
+            {
+                this.value = value;
+            }
+        }
+
         public static partial class Json
         {
-            [Serializable]
-            private class JsonMapper<T>
-            {
-                public T value;
-
-                public JsonMapper(T value)
-                {
-                    this.value = value;
-                }
-            }
-
             public static string ToJson<T>(T data)
             {
                 if (typeof(T).IsSubclassOf(typeof(Object)))

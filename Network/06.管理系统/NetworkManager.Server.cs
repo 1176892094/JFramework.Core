@@ -462,7 +462,7 @@ namespace JFramework.Net
                 @object.OnStopServer();
                 if (@object.assetId.Equals(@object.name, StringComparison.OrdinalIgnoreCase))
                 {
-                    Service.Pool.Hide(@object.gameObject);
+                    Service.Entity.Hide(@object.gameObject);
                     @object.Reset();
                     return;
                 }

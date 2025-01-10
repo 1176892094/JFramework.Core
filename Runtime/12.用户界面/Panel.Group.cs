@@ -4,7 +4,7 @@
 // # Author: 云谷千羽
 // # Version: 1.0.0
 // # History: 2025-01-09 16:01:50
-// # Recently: 2025-01-09 20:01:18
+// # Recently: 2025-01-10 20:01:58
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
@@ -104,7 +104,7 @@ namespace JFramework
                     {
                         if (panel != other && other.gameObject.activeInHierarchy)
                         {
-                            Pool.Hide(other.gameObject);
+                            Entity.Hide(other.gameObject);
                         }
                     }
                 }

@@ -1,10 +1,10 @@
 // *********************************************************************************
-// # Project: JFramework.Lobby
+// # Project: JFramework
 // # Unity: 6000.3.5f1
 // # Author: 云谷千羽
 // # Version: 1.0.0
-// # History: 2024-08-28 20:08:49
-// # Recently: 2024-12-23 00:12:04
+// # History: 2024-12-23 18:12:21
+// # Recently: 2025-01-08 17:01:42
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
@@ -15,7 +15,12 @@ using System.Text;
 
 namespace JFramework.Net
 {
-    internal class MemoryWriter : IDisposable
+    public static class Writer<T>
+    {
+        public static Action<MemoryWriter, T> write;
+    }
+
+    public class MemoryWriter : IDisposable
     {
         public readonly UTF8Encoding encoding = new UTF8Encoding(false, true);
         public byte[] buffer = new byte[1500];
@@ -23,21 +28,16 @@ namespace JFramework.Net
 
         void IDisposable.Dispose()
         {
-            Pool<MemoryWriter>.Enqueue(this);
+            Utility.Pool.Enqueue(this);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public unsafe void Write<T>(T value) where T : unmanaged
         {
             AddCapacity(position + sizeof(T));
-            fixed (byte* ptr = &buffer[position])
-            {
-                *(T*)ptr = value;
-            }
-
-            position += sizeof(T);
+            Utility.Unsafe.Write(buffer, value, ref position);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void WriteNullable<T>(T? value) where T : unmanaged
         {
@@ -50,7 +50,7 @@ namespace JFramework.Net
             Write((byte)1);
             Write(value.Value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Invoke<T>(T value)
         {
@@ -66,7 +66,7 @@ namespace JFramework.Net
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MemoryWriter Pop()
         {
-            var writer = Pool<MemoryWriter>.Dequeue();
+            var writer = Utility.Pool.Dequeue<MemoryWriter>();
             writer.Reset();
             return writer;
         }
@@ -74,7 +74,7 @@ namespace JFramework.Net
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Push(MemoryWriter writer)
         {
-            Pool<MemoryWriter>.Enqueue(writer);
+            Utility.Pool.Enqueue(writer);
         }
 
         public override string ToString()
@@ -90,7 +90,7 @@ namespace JFramework.Net
                 Array.Resize(ref buffer, Math.Max(length, buffer.Length * 2));
             }
         }
-        
+
         public void WriteBytes(byte[] segment, int offset, int count)
         {
             AddCapacity(position + count);

@@ -11,7 +11,7 @@
 
 namespace JFramework.Net
 {
-    public static class NetworkCompress
+    internal static class NetworkCompress
     {
         public static int GetLength(ulong length)
         {

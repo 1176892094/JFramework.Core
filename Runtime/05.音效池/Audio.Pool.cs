@@ -4,14 +4,13 @@
 // # Author: 云谷千羽
 // # Version: 1.0.0
 // # History: 2024-12-23 18:12:21
-// # Recently: 2025-01-08 17:01:39
+// # Recently: 2025-01-08 17:01:28
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
 
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -19,12 +18,12 @@ namespace JFramework
 {
     public static partial class Service
     {
-        private class EntityPool : IPool<GameObject>
+        private class AudioPool : IPool
         {
-            private readonly HashSet<GameObject> cached = new HashSet<GameObject>();
-            private readonly Queue<GameObject> unused = new Queue<GameObject>();
+            private readonly HashSet<AudioSource> cached = new HashSet<AudioSource>();
+            private readonly Queue<AudioSource> unused = new Queue<AudioSource>();
 
-            public EntityPool(string assetPath, Type assetType)
+            public AudioPool(string assetPath, Type assetType)
             {
                 this.assetPath = assetPath;
                 this.assetType = assetType;
@@ -37,10 +36,10 @@ namespace JFramework
             public int dequeue { get; private set; }
             public int enqueue { get; private set; }
 
-            public async Task<GameObject> Dequeue()
+            public AudioSource Dequeue()
             {
                 dequeue++;
-                GameObject assetData;
+                AudioSource assetData;
                 if (unused.Count > 0)
                 {
                     assetData = unused.Dequeue();
@@ -54,23 +53,19 @@ namespace JFramework
                     cached.Remove(assetData);
                 }
 
-                assetData = await Asset.Load<GameObject>(assetPath);
-                assetData.name = Utility.Text.Format("{0}", assetPath);
-                Object.DontDestroyOnLoad(assetData);
+                assetData = new GameObject(assetPath).AddComponent<AudioSource>();
+                Object.DontDestroyOnLoad(assetData.gameObject);
                 cached.Add(assetData);
                 return assetData;
             }
 
-            public bool Enqueue(GameObject assetData)
+            public void Enqueue(AudioSource assetData)
             {
                 if (cached.Remove(assetData))
                 {
                     enqueue++;
                     unused.Enqueue(assetData);
-                    return true;
                 }
-
-                return false;
             }
 
             void IDisposable.Dispose()

@@ -11,7 +11,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Threading.Tasks;
 using UnityEngine;
 using AssetData = System.Collections.Generic.KeyValuePair<string, string>;
@@ -62,7 +61,7 @@ namespace JFramework
 
         private static readonly Dictionary<string, Task<AssetBundle>> assetTask = new Dictionary<string, Task<AssetBundle>>();
 
-        private static readonly Dictionary<string, IReference> poolData = new Dictionary<string, IReference>();
+        private static readonly Dictionary<string, IPool> poolData = new Dictionary<string, IPool>();
 
         private static readonly Dictionary<string, GameObject> poolGroup = new Dictionary<string, GameObject>();
 

@@ -36,13 +36,15 @@ namespace JFramework
                 helper = null;
                 Pack.Dispose();
                 Data.Dispose();
-                Pool.Dispose();
                 Audio.Dispose();
                 Group.Dispose();
                 Asset.Dispose();
                 Agent.Dispose();
                 Panel.Dispose();
                 Timer.Dispose();
+                Entity.Dispose();
+                Utility.Pool.Dispose();
+                Utility.Event.Dispose();
             }
         }
     }

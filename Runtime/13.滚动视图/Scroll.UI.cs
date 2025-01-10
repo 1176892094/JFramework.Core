@@ -3,8 +3,8 @@
 // # Unity: 6000.3.5f1
 // # Author: 云谷千羽
 // # Version: 1.0.0
-// # History: 2025-01-09 16:01:50
-// # Recently: 2025-01-09 20:01:17
+// # History: 2025-01-09 23:01:06
+// # Recently: 2025-01-10 20:01:00
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
@@ -32,7 +32,7 @@ namespace JFramework
         string IScroll.prefab => assetPath;
         RectTransform IScroll.content => content;
 
-        public void Spawn(List<TItem> items)
+        public void SetItem(List<TItem> items)
         {
             scroll.SetItem(items);
         }

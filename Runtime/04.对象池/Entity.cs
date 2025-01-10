@@ -18,7 +18,7 @@ namespace JFramework
 {
     public static partial class Service
     {
-        public static class Pool
+        public static class Entity
         {
             public static async Task<GameObject> Show(string assetPath)
             {
@@ -54,16 +54,16 @@ namespace JFramework
                 return LoadPool(assetData.name).Enqueue(assetData);
             }
 
-            private static IPool<GameObject> LoadPool(string assetPath)
+            private static EntityPool LoadPool(string assetPath)
             {
                 if (Service.poolData.TryGetValue(assetPath, out var poolData))
                 {
-                    return (IPool<GameObject>)poolData;
+                    return (EntityPool)poolData;
                 }
 
                 poolData = new EntityPool(assetPath, typeof(GameObject));
                 Service.poolData.Add(assetPath, poolData);
-                return (IPool<GameObject>)poolData;
+                return (EntityPool)poolData;
             }
 
             public static Reference[] Reference()

@@ -3,27 +3,30 @@
 // # Unity: 6000.3.5f1
 // # Author: 云谷千羽
 // # Version: 1.0.0
-// # History: 2025-01-10 02:01:43
-// # Recently: 2025-01-10 02:01:44
+// # History: 2024-12-23 18:12:21
+// # Recently: 2025-01-08 17:01:39
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace JFramework
 {
     public static partial class Service
     {
-        private class AgentPool : IHeap<ScriptableObject>
+        private class EntityPool : IPool
         {
-            private readonly HashSet<ScriptableObject> cached = new HashSet<ScriptableObject>();
-            private readonly Queue<ScriptableObject> unused = new Queue<ScriptableObject>();
+            private readonly HashSet<GameObject> cached = new HashSet<GameObject>();
+            private readonly Queue<GameObject> unused = new Queue<GameObject>();
 
-            public AgentPool(Type assetType)
+            public EntityPool(string assetPath, Type assetType)
             {
+                this.assetPath = assetPath;
                 this.assetType = assetType;
             }
 
@@ -34,10 +37,10 @@ namespace JFramework
             public int dequeue { get; private set; }
             public int enqueue { get; private set; }
 
-            public ScriptableObject Dequeue()
+            public async Task<GameObject> Dequeue()
             {
                 dequeue++;
-                ScriptableObject assetData;
+                GameObject assetData;
                 if (unused.Count > 0)
                 {
                     assetData = unused.Dequeue();
@@ -51,18 +54,23 @@ namespace JFramework
                     cached.Remove(assetData);
                 }
 
-                assetData = ScriptableObject.CreateInstance(assetType);
+                assetData = await Asset.Load<GameObject>(assetPath);
+                Object.DontDestroyOnLoad(assetData);
+                assetData.name = assetPath;
                 cached.Add(assetData);
                 return assetData;
             }
 
-            public void Enqueue(ScriptableObject assetData)
+            public bool Enqueue(GameObject assetData)
             {
                 if (cached.Remove(assetData))
                 {
                     enqueue++;
                     unused.Enqueue(assetData);
+                    return true;
                 }
+
+                return false;
             }
 
             void IDisposable.Dispose()

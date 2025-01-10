@@ -17,7 +17,7 @@ namespace JFramework
     public static partial class Utility
     {
         [Serializable]
-        private class Event<T> : IReference where T : struct, IEvent
+        private class Event<T> : IPool where T : struct, IEvent
         {
             private readonly HashSet<IEvent<T>> cached = new HashSet<IEvent<T>>();
 

@@ -18,7 +18,7 @@ namespace JFramework
     {
         public static class Event
         {
-            private static readonly Dictionary<Type, IReference> poolData = new Dictionary<Type, IReference>();
+            private static readonly Dictionary<Type, IPool> poolData = new Dictionary<Type, IPool>();
 
             public static void Listen<T>(IEvent<T> objectData) where T : struct, IEvent
             {
@@ -59,6 +59,21 @@ namespace JFramework
                 }
 
                 return results;
+            }
+
+            public static void Dispose()
+            {
+                var poolCaches = new List<Type>(poolData.Keys);
+                foreach (var cache in poolCaches)
+                {
+                    if (poolData.TryGetValue(cache, out var pool))
+                    {
+                        pool.Dispose();
+                        poolData.Remove(cache);
+                    }
+                }
+
+                poolData.Clear();
             }
         }
     }

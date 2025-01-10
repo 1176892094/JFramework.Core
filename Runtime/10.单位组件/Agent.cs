@@ -76,17 +76,17 @@ namespace JFramework
                 }
             }
 
-            private static IHeap<ScriptableObject> LoadPool(Type heapType)
+            private static AgentPool LoadPool(Type heapType)
             {
                 var assetName = heapType.Name;
                 if (Service.poolData.TryGetValue(assetName, out var poolData))
                 {
-                    return (IHeap<ScriptableObject>)poolData;
+                    return (AgentPool)poolData;
                 }
 
                 poolData = new AgentPool(heapType);
                 Service.poolData.Add(assetName, poolData);
-                return (IHeap<ScriptableObject>)poolData;
+                return (AgentPool)poolData;
             }
 
             internal static void Dispose()

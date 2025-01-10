@@ -107,16 +107,16 @@ namespace JFramework
                 LoadPool(assetData.name).Enqueue(assetData);
             }
 
-            private static IHeap<AudioSource> LoadPool(string assetPath)
+            private static AudioPool LoadPool(string assetPath)
             {
                 if (Service.poolData.TryGetValue(assetPath, out var poolData))
                 {
-                    return (IHeap<AudioSource>)poolData;
+                    return (AudioPool)poolData;
                 }
 
                 poolData = new AudioPool(assetPath, typeof(AudioSource));
                 Service.poolData.Add(assetPath, poolData);
-                return (IHeap<AudioSource>)poolData;
+                return (AudioPool)poolData;
             }
 
             internal static void Dispose()

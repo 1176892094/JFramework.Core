@@ -3,8 +3,8 @@
 // # Unity: 6000.3.5f1
 // # Author: 云谷千羽
 // # Version: 1.0.0
-// # History: 2024-12-23 18:12:21
-// # Recently: 2025-01-08 17:01:36
+// # History: 2025-01-10 18:01:34
+// # Recently: 2025-01-10 18:01:35
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
@@ -17,7 +17,7 @@ namespace JFramework
     public static partial class Utility
     {
         [Serializable]
-        private class Pool<T> : IPool<T>
+        private class Pool<T> : IPool
         {
             private readonly HashSet<T> cached = new HashSet<T>();
             private readonly Queue<T> unused = new Queue<T>();

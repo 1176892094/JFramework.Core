@@ -15,7 +15,7 @@ using System.IO;
 
 namespace JFramework.Net
 {
-    internal static partial class Extensions
+    public static partial class Extensions
     {
         public static byte ReadByte(this MemoryReader reader)
         {
