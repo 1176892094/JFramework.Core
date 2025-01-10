@@ -13,11 +13,11 @@ namespace JFramework
 {
     public struct SceneAwakeEvent : IEvent
     {
+        public string name { get; private set; }
+        
         public SceneAwakeEvent(string name)
         {
             this.name = name;
         }
-
-        public string name { get; private set; }
     }
 }

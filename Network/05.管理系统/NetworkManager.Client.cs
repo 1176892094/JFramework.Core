@@ -61,7 +61,7 @@ namespace JFramework.Net
                 Register(EntryMode.Client);
                 state = StateMode.Connect;
                 connection = new NetworkServer();
-                Transport.StartClient();
+                Transport.Instance.StartClient();
             }
 
             internal static void Start(Uri uri)
@@ -69,7 +69,7 @@ namespace JFramework.Net
                 Register(EntryMode.Client);
                 state = StateMode.Connect;
                 connection = new NetworkServer();
-                Transport.StartClient(uri);
+                Transport.Instance.StartClient(uri);
             }
 
             internal static void Stop()
@@ -91,9 +91,9 @@ namespace JFramework.Net
                 }
 
                 state = StateMode.Disconnect;
-                if (Transport != null)
+                if (Transport.Instance != null)
                 {
-                    Transport.StopClient();
+                    Transport.Instance.StopClient();
                 }
 
                 sendTime = 0;
@@ -144,7 +144,7 @@ namespace JFramework.Net
                     return;
                 }
 
-                if (isLoadScene && NetworkManager.sceneName == sceneName)
+                if (isLoadScene && Instance.sceneName == sceneName)
                 {
                     Log.Error(Utility.Text.Format("客户端正在加载 {0} 场景", sceneName));
                     return;
@@ -153,7 +153,7 @@ namespace JFramework.Net
                 Utility.Event.Invoke(new ClientLoadSceneEvent(sceneName));
                 if (Server.isActive) return;
                 isLoadScene = true;
-                NetworkManager.sceneName = sceneName;
+                Instance.sceneName = sceneName;
 
                 Service.Asset.LoadScene(sceneName);
             }
@@ -176,14 +176,14 @@ namespace JFramework.Net
             {
                 if (mode == EntryMode.Client)
                 {
-                    Transport.OnClientConnect -= OnClientConnect;
-                    Transport.OnClientDisconnect -= OnClientDisconnect;
-                    Transport.OnClientError -= OnClientError;
-                    Transport.OnClientReceive -= OnClientReceive;
-                    Transport.OnClientConnect += OnClientConnect;
-                    Transport.OnClientDisconnect += OnClientDisconnect;
-                    Transport.OnClientError += OnClientError;
-                    Transport.OnClientReceive += OnClientReceive;
+                    Transport.Instance.OnClientConnect -= OnClientConnect;
+                    Transport.Instance.OnClientDisconnect -= OnClientDisconnect;
+                    Transport.Instance.OnClientError -= OnClientError;
+                    Transport.Instance.OnClientReceive -= OnClientReceive;
+                    Transport.Instance.OnClientConnect += OnClientConnect;
+                    Transport.Instance.OnClientDisconnect += OnClientDisconnect;
+                    Transport.Instance.OnClientError += OnClientError;
+                    Transport.Instance.OnClientReceive += OnClientReceive;
                 }
 
                 Register<PingMessage>(PingMessage);
@@ -527,9 +527,9 @@ namespace JFramework.Net
         {
             internal static void EarlyUpdate()
             {
-                if (Transport != null)
+                if (Transport.Instance!= null)
                 {
-                    Transport.ClientEarlyUpdate();
+                    Transport.Instance.ClientEarlyUpdate();
                 }
             }
 
@@ -559,9 +559,9 @@ namespace JFramework.Net
                     }
                 }
 
-                if (Transport != null)
+                if (Transport.Instance!= null)
                 {
-                    Transport.ClientAfterUpdate();
+                    Transport.Instance.ClientAfterUpdate();
                 }
             }
 

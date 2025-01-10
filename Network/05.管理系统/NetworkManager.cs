@@ -10,9 +10,6 @@
 // *********************************************************************************
 
 using System;
-using System.Net;
-using System.Net.NetworkInformation;
-using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
@@ -21,20 +18,14 @@ namespace JFramework.Net
     public partial class NetworkManager : MonoBehaviour, IEvent<SceneCompleteEvent>
     {
         public static NetworkManager Instance;
+        
+        public Transport transport;
 
-        [SerializeField] private Transport transport;
-
-        [SerializeField, Range(30, 120)] private int sendRate = 30;
+        public int sendRate = 30;
 
         public int connection = 100;
 
-        private static string sceneName { get; set; }
-
-        public static Transport Transport
-        {
-            get => Instance.transport;
-            set => Instance.transport = value;
-        }
+        private string sceneName;
 
         public static EntryMode Mode
         {
@@ -59,6 +50,7 @@ namespace JFramework.Net
             Instance = this;
             DontDestroyOnLoad(gameObject);
             Application.runInBackground = true;
+            Transport.Instance = transport;
         }
 
         private void OnEnable()
@@ -180,6 +172,19 @@ namespace JFramework.Net
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool Tick(ref double sendTime)
+        {
+            var duration = 1.0 / Instance.sendRate;
+            if (sendTime + duration <= Time.unscaledTimeAsDouble)
+            {
+                sendTime = (long)(Time.unscaledTimeAsDouble / duration) * duration;
+                return true;
+            }
+
+            return false;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NetworkObject GetNetworkObject(uint objectId)
         {
             if (Server.isActive)
@@ -198,20 +203,7 @@ namespace JFramework.Net
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool Tick(ref double sendTime)
-        {
-            var duration = 1.0 / Instance.sendRate;
-            if (sendTime + duration <= Time.unscaledTimeAsDouble)
-            {
-                sendTime = (long)(Time.unscaledTimeAsDouble / duration) * duration;
-                return true;
-            }
-
-            return false;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal static bool IsSceneObject(NetworkObject @object)
+        private static bool IsSceneObject(NetworkObject @object)
         {
             if (@object.sceneId == 0)
             {

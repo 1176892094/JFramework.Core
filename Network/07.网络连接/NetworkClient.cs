@@ -37,7 +37,7 @@ namespace JFramework.Net
                 using var writer = MemoryWriter.Pop();
                 while (batch.Value.GetBatch(writer))
                 {
-                    NetworkManager.Transport.SendToClient(clientId, writer, batch.Key);
+                    Transport.Instance.SendToClient(clientId, writer, batch.Key);
                     writer.Reset();
                 }
             }
@@ -50,7 +50,7 @@ namespace JFramework.Net
             writer.WriteUShort(Utility.Hash<T>.Id);
             writer.Invoke(message);
 
-            if (writer.position > NetworkManager.Transport.MessageSize(channel))
+            if (writer.position > Transport.Instance.MessageSize(channel))
             {
                 Log.Error(Utility.Text.Format("发送消息大小过大！消息大小: {0}", writer.position));
                 return;
@@ -64,7 +64,7 @@ namespace JFramework.Net
         {
             if (!batches.TryGetValue(channel, out var batch))
             {
-                batch = new WriterBatch(NetworkManager.Transport.MessageSize(channel));
+                batch = new WriterBatch(Transport.Instance.MessageSize(channel));
                 batches[channel] = batch;
             }
 
@@ -83,7 +83,7 @@ namespace JFramework.Net
         public void Disconnect()
         {
             isReady = false;
-            NetworkManager.Transport.StopClient(clientId);
+            Transport.Instance.StopClient(clientId);
         }
     }
 }

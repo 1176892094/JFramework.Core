@@ -153,7 +153,7 @@ namespace JFramework.Net
                 {
                     Scheme = "https",
                     Host = Dns.GetHostName(),
-                    Port = ((IAddress)NetworkManager.Transport).port
+                    Port = Transport.Instance.port
                 }.Uri));
                 ArraySegment<byte> segment = writer;
                 udpServer.Send(segment.Array, segment.Count, endPoint);

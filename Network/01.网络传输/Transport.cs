@@ -16,6 +16,7 @@ namespace JFramework.Net
 {
     public abstract class Transport : MonoBehaviour, Udp.Transport
     {
+        public static Transport Instance;
         public abstract string address { get; set; }
         public abstract ushort port { get; set; }
         public Action OnClientConnect { get; set; }
@@ -26,31 +27,18 @@ namespace JFramework.Net
         public Action<int> OnServerDisconnect { get; set; }
         public Action<int, int, string> OnServerError { get; set; }
         public Action<int, ArraySegment<byte>, int> OnServerReceive { get; set; }
-
         public abstract int MessageSize(int channel);
-
         public abstract void SendToClient(int clientId, ArraySegment<byte> segment, int channel = Channel.Reliable);
-
         public abstract void SendToServer(ArraySegment<byte> segment, int channel =  Channel.Reliable);
-
         public abstract void StartServer();
-
         public abstract void StopServer();
-
         public abstract void StopClient(int clientId);
-
         public abstract void StartClient();
-
         public abstract void StartClient(Uri uri);
-
         public abstract void StopClient();
-
         public abstract void ClientEarlyUpdate();
-
         public abstract void ClientAfterUpdate();
-
         public abstract void ServerEarlyUpdate();
-
         public abstract void ServerAfterUpdate();
     }
 }

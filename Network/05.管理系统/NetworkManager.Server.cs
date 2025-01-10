@@ -51,10 +51,10 @@ namespace JFramework.Net
                 switch (mode)
                 {
                     case EntryMode.Host:
-                        Transport.StartServer();
+                        Transport.Instance.StartServer();
                         break;
                     case EntryMode.Server:
-                        Transport.StartServer();
+                        Transport.Instance.StartServer();
                         break;
                 }
 
@@ -78,9 +78,9 @@ namespace JFramework.Net
                     }
                 }
 
-                if (Transport != null)
+                if (Transport.Instance!= null)
                 {
-                    Transport.StopServer();
+                    Transport.Instance.StopServer();
                 }
 
                 sendTime = 0;
@@ -108,7 +108,7 @@ namespace JFramework.Net
                     return;
                 }
 
-                if (isLoadScene && NetworkManager.sceneName == sceneName)
+                if (isLoadScene && Instance.sceneName == sceneName)
                 {
                     Log.Error(Utility.Text.Format("服务器正在加载 {0} 场景", sceneName));
                     return;
@@ -123,7 +123,7 @@ namespace JFramework.Net
                 Utility.Event.Invoke(new ServerLoadSceneEvent(sceneName));
                 if (!isActive) return;
                 isLoadScene = true;
-                NetworkManager.sceneName = sceneName;
+                Instance.sceneName = sceneName;
 
                 foreach (var client in clients.Values)
                 {
@@ -145,12 +145,12 @@ namespace JFramework.Net
         {
             private static void Register()
             {
-                Transport.OnServerConnect -= OnServerConnect;
-                Transport.OnServerDisconnect -= OnServerDisconnect;
-                Transport.OnServerReceive -= OnServerReceive;
-                Transport.OnServerConnect += OnServerConnect;
-                Transport.OnServerDisconnect += OnServerDisconnect;
-                Transport.OnServerReceive += OnServerReceive;
+                Transport.Instance.OnServerConnect -= OnServerConnect;
+                Transport.Instance.OnServerDisconnect -= OnServerDisconnect;
+                Transport.Instance.OnServerReceive -= OnServerReceive;
+                Transport.Instance.OnServerConnect += OnServerConnect;
+                Transport.Instance.OnServerDisconnect += OnServerDisconnect;
+                Transport.Instance.OnServerReceive += OnServerReceive;
                 Register<PongMessage>(PongMessage);
                 Register<ReadyMessage>(ReadyMessage);
                 Register<EntityMessage>(EntityMessage);
@@ -268,15 +268,15 @@ namespace JFramework.Net
                 if (clientId == 0)
                 {
                     Log.Warn(Utility.Text.Format("无法为客户端 {0} 建立通信连接。", clientId));
-                    Transport.StopClient(clientId);
+                    Transport.Instance.StopClient(clientId);
                 }
                 else if (clients.ContainsKey(clientId))
                 {
-                    Transport.StopClient(clientId);
+                    Transport.Instance.StopClient(clientId);
                 }
                 else if (clients.Count >= Instance.connection)
                 {
-                    Transport.StopClient(clientId);
+                    Transport.Instance.StopClient(clientId);
                 }
                 else
                 {
@@ -476,9 +476,9 @@ namespace JFramework.Net
         {
             internal static void EarlyUpdate()
             {
-                if (Transport != null)
+                if (Transport.Instance!= null)
                 {
-                    Transport.ServerEarlyUpdate();
+                    Transport.Instance.ServerEarlyUpdate();
                 }
             }
 
@@ -492,9 +492,9 @@ namespace JFramework.Net
                     }
                 }
 
-                if (Transport != null)
+                if (Transport.Instance!= null)
                 {
-                    Transport.ServerAfterUpdate();
+                    Transport.Instance.ServerAfterUpdate();
                 }
             }
 
