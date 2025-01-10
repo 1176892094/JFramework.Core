@@ -102,7 +102,7 @@ namespace JFramework.Net
                 players.Clear();
                 isServer = false;
                 isClient = false;
-                Utility.Event.Invoke(new LobbyDisconnectEvent());
+                Service.Event.Invoke(new LobbyDisconnectEvent());
                 transport.StopClient();
             }
         }
@@ -115,18 +115,18 @@ namespace JFramework.Net
                 return;
             }
 
-            var uri = Utility.Text.Format("http://{0}:{1}/api/compressed/servers", transport.address, transport.port);
+            var uri = Service.Text.Format("http://{0}:{1}/api/compressed/servers", transport.address, transport.port);
             using var request = UnityWebRequest.Get(uri);
             await request.SendWebRequest();
             if (request.result != UnityWebRequest.Result.Success)
             {
-                Log.Warn(Utility.Text.Format("无法获取服务器列表: {0}:{1}", transport.address, transport.port));
+                Log.Warn(Service.Text.Format("无法获取服务器列表: {0}:{1}", transport.address, transport.port));
                 return;
             }
 
-            var rooms = Utility.Zip.Decompress(request.downloadHandler.text);
+            var rooms = Service.Zip.Decompress(request.downloadHandler.text);
             var jsons = JsonManager.FromJson<Room[]>("{" + "\"value\":" + rooms + "}");
-            Utility.Event.Invoke(new LobbyUpdateEvent(jsons));
+            Service.Event.Invoke(new LobbyUpdateEvent(jsons));
             Log.Info("房间信息：" + rooms);
         }
 

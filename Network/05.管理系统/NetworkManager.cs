@@ -55,12 +55,12 @@ namespace JFramework.Net
 
         private void OnEnable()
         {
-            Utility.Event.Listen(this);
+            Service.Event.Listen(this);
         }
 
         private void OnDisable()
         {
-            Utility.Event.Remove(this);
+            Service.Event.Remove(this);
         }
 
         private void OnApplicationQuit()

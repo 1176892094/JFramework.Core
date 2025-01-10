@@ -91,8 +91,8 @@ namespace JFramework
             AssetManager.Dispose();
             AgentManager.Dispose();
             TimerManager.Dispose();
-            Utility.Pool.Dispose();
-            Utility.Event.Dispose();
+            Service.Pool.Dispose();
+            Service.Event.Dispose();
             AssetBundle.UnloadAllAssetBundles(true);
             GC.Collect();
         }

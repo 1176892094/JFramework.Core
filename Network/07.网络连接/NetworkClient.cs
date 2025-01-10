@@ -47,12 +47,12 @@ namespace JFramework.Net
         public void Send<T>(T message, int channel = Channel.Reliable) where T : struct, IMessage
         {
             using var writer = MemoryWriter.Pop();
-            writer.WriteUShort(Utility.Hash<T>.Id);
+            writer.WriteUShort(Service.Hash<T>.Id);
             writer.Invoke(message);
 
             if (writer.position > Transport.Instance.MessageSize(channel))
             {
-                Log.Error(Utility.Text.Format("发送消息大小过大！消息大小: {0}", writer.position));
+                Log.Error(Service.Text.Format("发送消息大小过大！消息大小: {0}", writer.position));
                 return;
             }
 

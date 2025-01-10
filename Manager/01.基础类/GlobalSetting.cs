@@ -22,7 +22,7 @@ namespace JFramework
     {
         public static GlobalSetting Runtime;
 
-        public AssetPlatform assetPlatform = AssetPlatform.StandaloneWindows;
+        [SerializeField] protected AssetPlatform assetPlatform = AssetPlatform.StandaloneWindows;
 
         [SerializeField] protected string smtpServer = "smtp.qq.com";
 
@@ -32,7 +32,7 @@ namespace JFramework
 
         [SerializeField] protected string smtpPassword;
 
-        public AssetMode assetPackMode = AssetMode.Simulate;
+        [SerializeField] protected AssetMode assetPackMode = AssetMode.Simulate;
 
         [SerializeField] protected string assetPackName = "AssetPacket";
 
@@ -54,7 +54,7 @@ namespace JFramework
 
         internal static string assemblyName => Path.GetFileNameWithoutExtension(assemblyPath);
 
-        internal static string assemblyPath => Utility.Text.Format("{0}/{1}.asmdef", Runtime.scriptDataPath, Runtime.assetAssembly);
+        internal static string assemblyPath => Service.Text.Format("{0}/{1}.asmdef", Runtime.scriptDataPath, Runtime.assetAssembly);
 
         internal static string enumPath => Runtime.scriptDataPath + "/01.枚举类/{0}.cs";
 
@@ -70,15 +70,15 @@ namespace JFramework
 
         internal static string tableData => Resources.LoadAll<TextAsset>(nameof(GlobalSetting))[3].text;
 
-        internal static string assetPackData => Utility.Text.Format("{0}.json", Runtime.assetPackName);
+        internal static string assetPackData => Service.Text.Format("{0}.json", Runtime.assetPackName);
 
-        internal static string assetPackPath => Utility.Text.Format("{0}/{1}", Application.persistentDataPath, Runtime.assetBuildPath);
+        internal static string assetPackPath => Service.Text.Format("{0}/{1}", Application.persistentDataPath, Runtime.assetBuildPath);
 
-        internal static string GetScenePath(string assetName) => Utility.Text.Format("Scenes/{0}", assetName);
+        internal static string GetScenePath(string assetName) => Service.Text.Format("Scenes/{0}", assetName);
 
-        internal static string GetPanelPath(string assetName) => Utility.Text.Format("Prefabs/{0}", assetName);
+        internal static string GetPanelPath(string assetName) => Service.Text.Format("Prefabs/{0}", assetName);
 
-        internal static string GetTablePath(string assetName) => Utility.Text.Format("DataTable/{0}", assetName);
+        internal static string GetTablePath(string assetName) => Service.Text.Format("DataTable/{0}", assetName);
 
         internal static string GetPlatform(string fileName) => Path.Combine(platformPath, fileName);
 
@@ -102,9 +102,9 @@ namespace JFramework
 
         public abstract Task<KeyValuePair<int, string>> LoadRequest(string persistentData, string streamingAssets);
 
-        public Utility.MailData SendMail(string mailBody)
+        public Service.MailData SendMail(string mailBody)
         {
-            return new Utility.MailData
+            return new Service.MailData
             {
                 smtpServer = smtpServer,
                 smtpPort = smtpPort,
@@ -117,13 +117,13 @@ namespace JFramework
             };
         }
 
-        public enum AssetMode : byte
+        protected enum AssetMode : byte
         {
             Simulate,
             Authentic
         }
 
-        public enum AssetPlatform : byte
+        protected enum AssetPlatform : byte
         {
             StandaloneOSX = 2,
             StandaloneWindows = 5,

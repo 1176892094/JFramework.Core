@@ -39,13 +39,13 @@ namespace JFramework
                     return origin;
                 }
 
-                Utility.Event.Invoke(new VariableEvent());
+                Service.Event.Invoke(new VariableEvent());
                 return default;
             }
             set
             {
                 origin = value ?? (T)(object)string.Empty;
-                offset = Utility.Random.Next(1, int.MaxValue);
+                offset = Service.Random.Next(1, int.MaxValue);
                 buffer = unchecked(origin.GetHashCode() + offset);
             }
         }
@@ -53,7 +53,7 @@ namespace JFramework
         public Variable(T value = default)
         {
             origin = value ?? (T)(object)string.Empty;
-            offset = Utility.Random.Next(1, int.MaxValue);
+            offset = Service.Random.Next(1, int.MaxValue);
             buffer = unchecked(origin.GetHashCode() + offset);
         }
 

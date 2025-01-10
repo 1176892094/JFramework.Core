@@ -117,7 +117,7 @@ namespace JFramework
 
             public override string ToString()
             {
-                return Utility.Text.Format("[{0}] [{1}] {2}", dateTime.ToString("HH:mm:ss"), logType, message);
+                return Service.Text.Format("[{0}] [{1}] {2}", dateTime.ToString("HH:mm:ss"), logType, message);
             }
         }
 
@@ -146,7 +146,7 @@ namespace JFramework
                     minValue = value;
                 }
 
-                return Utility.Text.Format("{0:F2} MB\t\t[ 最小值: {1:F2}]\t最大值: {2:F2}", value, minValue, maxValue);
+                return Service.Text.Format("{0:F2} MB\t\t[ 最小值: {1:F2}]\t最大值: {2:F2}", value, minValue, maxValue);
             }
         }
     }

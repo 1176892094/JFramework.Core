@@ -23,7 +23,7 @@ namespace JFramework
         {
             var platform = await LoadAssetPack(GlobalSetting.platformPath);
             GlobalManager.manifest ??= platform.LoadAsset<AssetBundleManifest>(nameof(AssetBundleManifest));
-            Utility.Event.Invoke(new AssetAwakeEvent(GlobalManager.manifest.GetAllAssetBundles()));
+            Service.Event.Invoke(new AssetAwakeEvent(GlobalManager.manifest.GetAllAssetBundles()));
 
             var assetPacks = GlobalManager.manifest.GetAllAssetBundles();
             foreach (var assetPack in assetPacks)
@@ -32,25 +32,25 @@ namespace JFramework
             }
 
             await Task.WhenAll(GlobalManager.assetTask.Values);
-            Utility.Event.Invoke(new AssetCompleteEvent());
+            Service.Event.Invoke(new AssetCompleteEvent());
         }
 
         public static async Task<T> Load<T>(string assetPath) where T : Object
         {
             try
             {
-                if (GlobalSetting.Runtime == null) return default;
+                if (!GlobalSetting.Runtime) return default;
                 var assetData = await LoadAsset(assetPath, typeof(T));
                 if (assetData != null)
                 {
                     return (T)assetData;
                 }
 
-                Log.Warn(Utility.Text.Format("加载资源 {0} 为空!", assetPath));
+                Log.Warn(Service.Text.Format("加载资源 {0} 为空!", assetPath));
             }
             catch (Exception e)
             {
-                Log.Warn(Utility.Text.Format("加载资源 {0} 失败!\n{1}", assetPath, e));
+                Log.Warn(Service.Text.Format("加载资源 {0} 失败!\n{1}", assetPath, e));
             }
 
             return default;
@@ -60,7 +60,7 @@ namespace JFramework
         {
             try
             {
-                if (GlobalSetting.Runtime == null) return;
+                if (!GlobalSetting.Runtime) return;
                 var assetData = await LoadAsset(assetPath, typeof(T));
                 if (assetData != null)
                 {
@@ -68,11 +68,11 @@ namespace JFramework
                     return;
                 }
 
-                Log.Warn(Utility.Text.Format("加载资源 {0} 为空!", assetPath));
+                Log.Warn(Service.Text.Format("加载资源 {0} 为空!", assetPath));
             }
             catch (Exception e)
             {
-                Log.Warn(Utility.Text.Format("加载资源 {0} 失败!\n{1}", assetPath, e));
+                Log.Warn(Service.Text.Format("加载资源 {0} 失败!\n{1}", assetPath, e));
             }
         }
 
@@ -149,7 +149,7 @@ namespace JFramework
             {
                 assetPack = await assetTask;
                 GlobalManager.assetPack.Add(assetPath, assetPack);
-                Utility.Event.Invoke(new AssetUpdateEvent(assetPath));
+                Service.Event.Invoke(new AssetUpdateEvent(assetPath));
                 return assetPack;
             }
             finally

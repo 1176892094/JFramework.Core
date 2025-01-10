@@ -40,9 +40,9 @@ namespace JFramework
         {
             var path = LoadPath(name);
             var json = ToJson(data);
-            json = Utility.Zip.Compress(json);
+            json = Service.Zip.Compress(json);
             var item = Encoding.UTF8.GetBytes(json);
-            item = Utility.Xor.Encrypt(item);
+            item = Service.Xor.Encrypt(item);
             File.WriteAllBytes(path, item);
         }
 
@@ -55,18 +55,18 @@ namespace JFramework
             }
 
             var item = File.ReadAllBytes(path);
-            item = Utility.Xor.Decrypt(item);
+            item = Service.Xor.Decrypt(item);
             var json = Encoding.UTF8.GetString(item);
-            json = Utility.Zip.Decompress(json);
+            json = Service.Zip.Decompress(json);
             FromJson(json, data);
         }
 
         private static string LoadPath(string fileName)
         {
-            var filePath = Path.Combine(Application.streamingAssetsPath, Utility.Text.Format("{0}.json", fileName));
+            var filePath = Path.Combine(Application.streamingAssetsPath, Service.Text.Format("{0}.json", fileName));
             if (!File.Exists(filePath))
             {
-                filePath = Path.Combine(Application.persistentDataPath, Utility.Text.Format("{0}.json", fileName));
+                filePath = Path.Combine(Application.persistentDataPath, Service.Text.Format("{0}.json", fileName));
             }
 
             return filePath;

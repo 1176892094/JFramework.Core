@@ -36,7 +36,7 @@ namespace JFramework
 
         public static async void Show<T>(Action<T> assetAction = null) where T : UIPanel
         {
-            if (GlobalSetting.Runtime == null) return;
+            if (!GlobalSetting.Runtime) return;
             var assetPath = GlobalSetting.GetPanelPath(typeof(T).Name);
             if (!GlobalManager.panelData.TryGetValue(typeof(T), out var panel))
             {
@@ -53,7 +53,7 @@ namespace JFramework
 
         public static void Hide<T>() where T : UIPanel
         {
-            if (GlobalSetting.Runtime == null) return;
+            if (!GlobalSetting.Runtime) return;
             if (GlobalManager.panelData.TryGetValue(typeof(T), out var panel))
             {
                 if (panel.gameObject.activeInHierarchy)
@@ -65,7 +65,7 @@ namespace JFramework
 
         public static T Find<T>() where T : UIPanel
         {
-            if (GlobalSetting.Runtime == null) return default;
+            if (!GlobalSetting.Runtime) return default;
             if (GlobalManager.panelData.TryGetValue(typeof(T), out var panel))
             {
                 return (T)panel;
@@ -76,7 +76,7 @@ namespace JFramework
 
         public static void Destroy<T>()
         {
-            if (GlobalSetting.Runtime == null) return;
+            if (!GlobalSetting.Runtime) return;
             if (GlobalManager.panelData.TryGetValue(typeof(T), out var panel))
             {
                 Destroy(panel, typeof(T));
@@ -85,7 +85,7 @@ namespace JFramework
 
         public static async void Show(Type assetType, Action<UIPanel> assetAction = null)
         {
-            if (GlobalSetting.Runtime == null) return;
+            if (!GlobalSetting.Runtime) return;
             var assetPath = GlobalSetting.GetPanelPath(assetType.Name);
             if (!GlobalManager.panelData.TryGetValue(assetType, out var panel))
             {
@@ -102,7 +102,7 @@ namespace JFramework
 
         public static void Hide(Type assetType)
         {
-            if (GlobalSetting.Runtime == null) return;
+            if (!GlobalSetting.Runtime) return;
             if (GlobalManager.panelData.TryGetValue(assetType, out var panel))
             {
                 if (panel.gameObject.activeInHierarchy)
@@ -114,7 +114,7 @@ namespace JFramework
 
         public static UIPanel Find(Type assetType)
         {
-            if (GlobalSetting.Runtime == null) return default;
+            if (!GlobalSetting.Runtime) return default;
             if (GlobalManager.panelData.TryGetValue(assetType, out var panel))
             {
                 return panel;
@@ -125,7 +125,7 @@ namespace JFramework
 
         public static void Destroy(Type assetType)
         {
-            if (GlobalSetting.Runtime == null) return;
+            if (!GlobalSetting.Runtime) return;
             if (GlobalManager.panelData.TryGetValue(assetType, out var panel))
             {
                 Destroy(panel, assetType);
@@ -149,7 +149,7 @@ namespace JFramework
 
         public static void Surface(UIPanel panel, int layer = 1)
         {
-            if (GlobalSetting.Runtime == null) return;
+            if (!GlobalSetting.Runtime) return;
             if (GlobalManager.canvas == null)
             {
                 GlobalManager.canvas = new GameObject("UIManager").AddComponent<Canvas>();
@@ -165,7 +165,7 @@ namespace JFramework
 
             if (!GlobalManager.panelLayer.TryGetValue(layer, out var parent))
             {
-                var name = Utility.Text.Format("Layer-{0}", layer);
+                var name = Service.Text.Format("Layer-{0}", layer);
                 var child = new GameObject(name);
                 child.transform.SetParent(GlobalManager.canvas.transform);
                 var renderer = child.AddComponent<Canvas>();
@@ -192,7 +192,7 @@ namespace JFramework
 
         private static void Destroy(UIPanel panel, Type assetType)
         {
-            if (GlobalSetting.Runtime == null) return;
+            if (!GlobalSetting.Runtime) return;
             if (GlobalManager.groupPanel.TryGetValue(panel, out var groupPanel))
             {
                 foreach (var group in groupPanel)

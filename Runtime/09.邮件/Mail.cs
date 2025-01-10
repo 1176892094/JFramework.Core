@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace JFramework
 {
-    public static partial class Utility
+    public static partial class Service
     {
         public static class Mail
         {

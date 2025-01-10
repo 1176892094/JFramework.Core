@@ -86,7 +86,7 @@ namespace JFramework
 
         public override string ToString()
         {
-            var builder = Utility.Pool.Dequeue<StringBuilder>();
+            var builder = Service.Pool.Dequeue<StringBuilder>();
             foreach (var attribute in attributes)
             {
                 builder.AppendFormat("{0} : {1}", attribute.Key, attribute.Value);
@@ -94,7 +94,7 @@ namespace JFramework
 
             var message = builder.ToString();
             builder.Length = 0;
-            Utility.Pool.Enqueue(builder);
+            Service.Pool.Enqueue(builder);
             return message;
         }
     }

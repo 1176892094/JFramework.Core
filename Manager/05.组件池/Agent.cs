@@ -20,7 +20,7 @@ namespace JFramework
     {
         public static T Show<T>(GameObject entity) where T : ScriptableObject
         {
-            if (GlobalSetting.Runtime == null) return default;
+            if (!GlobalSetting.Runtime) return default;
             if (!GlobalManager.agentData.TryGetValue(entity, out var agentData))
             {
                 agentData = new Dictionary<Type, ScriptableObject>();
@@ -40,7 +40,7 @@ namespace JFramework
 
         public static ScriptableObject Show(GameObject entity, Type agentType)
         {
-            if (GlobalSetting.Runtime == null) return default;
+            if (!GlobalSetting.Runtime) return default;
             if (!GlobalManager.agentData.TryGetValue(entity, out var agentData))
             {
                 agentData = new Dictionary<Type, ScriptableObject>();
@@ -60,7 +60,7 @@ namespace JFramework
 
         public static void Hide(GameObject entity)
         {
-            if (GlobalSetting.Runtime == null) return;
+            if (!GlobalSetting.Runtime) return;
             if (GlobalManager.agentData.TryGetValue(entity, out var agentData))
             {
                 foreach (var agent in agentData.Values)

@@ -49,10 +49,10 @@ namespace JFramework
             switch (pool)
             {
                 case Pool.Event:
-                    Draw(Utility.Event.Reference(), "事件池", "触发数\t事件数\t添加次数\t移除次数");
+                    Draw(Service.Event.Reference(), "事件池", "触发数\t事件数\t添加次数\t移除次数");
                     break;
                 case Pool.Heap:
-                    Draw(Utility.Pool.Reference(), "引用池", "未使用\t使用中\t使用次数\t释放次数");
+                    Draw(Service.Pool.Reference(), "引用池", "未使用\t使用中\t使用次数\t释放次数");
                     break;
                 case Pool.Pool:
                     Draw(PoolManager.Reference(), "对象池", "未激活\t激活中\t出队次数\t入队次数");
@@ -66,7 +66,7 @@ namespace JFramework
             poolDataInfos.Clear();
             foreach (var poolInfo in objectInfos)
             {
-                var assemblyName = Utility.Text.Format("{0} - {1}", poolInfo.assetType.Assembly.GetName().Name, message);
+                var assemblyName = Service.Text.Format("{0} - {1}", poolInfo.assetType.Assembly.GetName().Name, message);
                 if (!poolDataInfos.TryGetValue(assemblyName, out var results))
                 {
                     results = new List<Reference>();
@@ -87,11 +87,11 @@ namespace JFramework
                 {
                     if (string.IsNullOrEmpty(data.assetPath))
                     {
-                        GUILayout.Label(Utility.Text.Format("{0}", data.assetType.Name), Height20);
+                        GUILayout.Label(Service.Text.Format("{0}", data.assetType.Name), Height20);
                     }
                     else
                     {
-                        GUILayout.Label(Utility.Text.Format("{0} - {1}", data.assetType.Name, data.assetPath), Height20);
+                        GUILayout.Label(Service.Text.Format("{0} - {1}", data.assetType.Name, data.assetPath), Height20);
                     }
                 }
 

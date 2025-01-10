@@ -81,7 +81,7 @@ namespace JFramework
             catch (Exception e)
             {
                 OnFinish.Invoke();
-                Log.Info(Utility.Text.Format("缓动差值无法执行方法：\n{0}", e));
+                Log.Info(Service.Text.Format("缓动差值无法执行方法：\n{0}", e));
             }
         }
 

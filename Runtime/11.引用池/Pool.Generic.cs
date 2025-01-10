@@ -14,7 +14,7 @@ using System.Collections.Generic;
 
 namespace JFramework
 {
-    public static partial class Utility
+    public static partial class Service
     {
         [Serializable]
         private class Pool<T> : IPool

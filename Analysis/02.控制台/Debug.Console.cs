@@ -90,7 +90,7 @@ namespace JFramework
                     mailBody.Append(debugData + "\n\n" + debugData.stackTrace + "\n\n");
                 }
 
-                Utility.Mail.Send(GlobalSetting.Runtime.SendMail(mailBody.ToString()));
+                Service.Mail.Send(GlobalSetting.Runtime.SendMail(mailBody.ToString()));
             }
 
             GUILayout.EndHorizontal();
@@ -102,7 +102,7 @@ namespace JFramework
             foreach (var logInfo in logInfos.Values)
             {
                 GUI.contentColor = logInfo.status ? Color.white : Color.gray;
-                if (GUILayout.Button(Utility.Text.Format("{0} [{1}]", logInfo.logType, logInfo.count), Height30))
+                if (GUILayout.Button(Service.Text.Format("{0} [{1}]", logInfo.logType, logInfo.count), Height30))
                 {
                     logInfo.status = !logInfo.status;
                 }

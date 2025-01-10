@@ -131,7 +131,7 @@ namespace JFramework
 
         private static async Task WriteAssets(string sheetName, List<string[]> scriptTexts)
         {
-            var filePath = Utility.Text.Format(GlobalSetting.tablePath, sheetName);
+            var filePath = Service.Text.Format(GlobalSetting.tablePath, sheetName);
             if (!File.Exists(filePath))
             {
                 return;
@@ -143,19 +143,19 @@ namespace JFramework
                 Directory.CreateDirectory(filePath);
             }
 
-            filePath = Utility.Text.Format(GlobalSetting.assetPath, sheetName);
+            filePath = Service.Text.Format(GlobalSetting.assetPath, sheetName);
             if (File.Exists(filePath))
             {
                 File.Delete(filePath);
             }
 
-            var fileName = Utility.Text.Format("JFramework.Table.{0}DataTable", sheetName);
+            var fileName = Service.Text.Format("JFramework.Table.{0}DataTable", sheetName);
             var fileData = (IDataTable)ScriptableObject.CreateInstance(fileName);
             if (fileData == null) return;
-            var itemData = Utility.Text.Format("JFramework.Table.{0}Data,{1}", sheetName, GlobalSetting.assemblyName);
+            var itemData = Service.Text.Format("JFramework.Table.{0}Data,{1}", sheetName, GlobalSetting.assemblyName);
             await Task.Run(() =>
             {
-                var instance = (IData)Activator.CreateInstance(Utility.Find.Type(itemData));
+                var instance = (IData)Activator.CreateInstance(Service.Find.Type(itemData));
                 foreach (var scriptText in scriptTexts)
                 {
                     if (!string.IsNullOrEmpty(scriptText[0]))

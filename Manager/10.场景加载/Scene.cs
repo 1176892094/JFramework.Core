@@ -21,30 +21,30 @@ namespace JFramework
         {
             try
             {
-                if (GlobalSetting.Runtime == null) return;
+                if (!GlobalSetting.Runtime) return;
                 var assetData = await LoadSceneAsset(GlobalSetting.GetScenePath(assetPath));
                 if (assetData != null)
                 {
-                    Utility.Event.Invoke(new SceneAwakeEvent(assetPath));
+                    Service.Event.Invoke(new SceneAwakeEvent(assetPath));
                     var request = SceneManager.LoadSceneAsync(assetPath, LoadSceneMode.Single);
                     if (request != null)
                     {
                         while (!request.isDone && GlobalSetting.Runtime != null)
                         {
-                            Utility.Event.Invoke(new SceneUpdateEvent(request.progress));
+                            Service.Event.Invoke(new SceneUpdateEvent(request.progress));
                             await Task.Yield();
                         }
                     }
 
-                    Utility.Event.Invoke(new SceneCompleteEvent());
+                    Service.Event.Invoke(new SceneCompleteEvent());
                     return;
                 }
 
-                Log.Warn(Utility.Text.Format("加载资源 {0} 为空!", assetPath));
+                Log.Warn(Service.Text.Format("加载资源 {0} 为空!", assetPath));
             }
             catch (Exception e)
             {
-                Log.Warn(Utility.Text.Format("加载场景 {0} 失败!\n{1}", assetPath, e));
+                Log.Warn(Service.Text.Format("加载场景 {0} 失败!\n{1}", assetPath, e));
             }
         }
 

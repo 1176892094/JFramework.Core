@@ -20,8 +20,8 @@ namespace JFramework
     {
         public static async void LoadDataTable()
         {
-            if (GlobalSetting.Runtime == null) return;
-            var assembly = Utility.Find.Assembly(GlobalSetting.assemblyName);
+            if (!GlobalSetting.Runtime) return;
+            var assembly = Service.Find.Assembly(GlobalSetting.assemblyName);
             if (assembly == null) return;
             var assetTypes = new List<Type>();
             foreach (var assetType in assembly.GetTypes())
@@ -43,7 +43,7 @@ namespace JFramework
                 names[i] = assetTypes[i].Name;
             }
 
-            Utility.Event.Invoke(new DataAwakeEvent(names));
+            Service.Event.Invoke(new DataAwakeEvent(names));
             foreach (var assetType in assetTypes)
             {
                 try
@@ -51,7 +51,7 @@ namespace JFramework
                     if (string.IsNullOrEmpty(assetType.FullName)) continue;
                     var dataTable = (IDataTable)await AssetManager.Load<ScriptableObject>(GlobalSetting.GetTablePath(assetType.Name));
                     var children = assembly.GetType(assetType.FullName.Substring(0, assetType.FullName.Length - 5));
-                    var properties = children.GetProperties(Utility.Find.Instance);
+                    var properties = children.GetProperties(Service.Find.Instance);
                     foreach (var property in properties)
                     {
                         if (property.GetCustomAttribute(typeof(PrimaryAttribute)) == null)
@@ -87,27 +87,27 @@ namespace JFramework
                                     continue;
                                 }
 
-                                Log.Warn(Utility.Text.Format("加载数据 {0} 失败。键值重复: {1}", assetType.Name, item));
+                                Log.Warn(Service.Text.Format("加载数据 {0} 失败。键值重复: {1}", assetType.Name, item));
                             }
 
                             return items;
                         }
                     }
 
-                    Utility.Event.Invoke(new DataUpdateEvent(assetType.Name));
+                    Service.Event.Invoke(new DataUpdateEvent(assetType.Name));
                 }
                 catch (Exception e)
                 {
-                    Log.Error(Utility.Text.Format("加载 {0} 数据失败!\n{1}", assetType.Name, e));
+                    Log.Error(Service.Text.Format("加载 {0} 数据失败!\n{1}", assetType.Name, e));
                 }
             }
 
-            Utility.Event.Invoke(new DataCompleteEvent());
+            Service.Event.Invoke(new DataCompleteEvent());
         }
 
         public static T Get<T>(int key) where T : IData
         {
-            if (GlobalSetting.Runtime == null) return default;
+            if (!GlobalSetting.Runtime) return default;
             if (!GlobalManager.itemTable.TryGetValue(typeof(T), out var dataTable))
             {
                 return default;
@@ -123,7 +123,7 @@ namespace JFramework
 
         public static T Get<T>(string key) where T : IData
         {
-            if (GlobalSetting.Runtime == null) return default;
+            if (!GlobalSetting.Runtime) return default;
             if (!GlobalManager.nameTable.TryGetValue(typeof(T), out var dataTable))
             {
                 return default;
@@ -139,7 +139,7 @@ namespace JFramework
 
         public static T Get<T>(Enum key) where T : IData
         {
-            if (GlobalSetting.Runtime == null) return default;
+            if (!GlobalSetting.Runtime) return default;
             if (!GlobalManager.enumTable.TryGetValue(typeof(T), out var dataTable))
             {
                 return default;
@@ -155,7 +155,7 @@ namespace JFramework
 
         public static List<T> GetTable<T>() where T : IData
         {
-            if (GlobalSetting.Runtime == null) return default;
+            if (!GlobalSetting.Runtime) return default;
             if (GlobalManager.itemTable.TryGetValue(typeof(T), out var itemTable))
             {
                 var caches = new List<T>();
@@ -189,7 +189,7 @@ namespace JFramework
                 return caches;
             }
 
-            Log.Error(Utility.Text.Format("获取 {0} 失败!", typeof(T).Name));
+            Log.Error(Service.Text.Format("获取 {0} 失败!", typeof(T).Name));
             return default;
         }
 

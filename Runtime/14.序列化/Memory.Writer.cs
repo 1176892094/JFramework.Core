@@ -30,7 +30,7 @@ namespace JFramework.Net
 
         void IDisposable.Dispose()
         {
-            Utility.Pool.Enqueue(this);
+            Service.Pool.Enqueue(this);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -73,7 +73,7 @@ namespace JFramework.Net
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MemoryWriter Pop()
         {
-            var writer = Utility.Pool.Dequeue<MemoryWriter>();
+            var writer = Service.Pool.Dequeue<MemoryWriter>();
             writer.Reset();
             return writer;
         }
@@ -81,7 +81,7 @@ namespace JFramework.Net
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Push(MemoryWriter writer)
         {
-            Utility.Pool.Enqueue(writer);
+            Service.Pool.Enqueue(writer);
         }
 
         public override string ToString()

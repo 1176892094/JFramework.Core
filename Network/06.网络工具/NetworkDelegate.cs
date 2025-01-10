@@ -32,7 +32,7 @@ namespace JFramework.Net
 
         private static void RegisterInvoke(Type component, int channel, string name, InvokeMode mode, InvokeDelegate func)
         {
-            var id = (ushort)(Utility.Hash.Id(name) & 0xFFFF);
+            var id = (ushort)(Service.Hash.Id(name) & 0xFFFF);
             if (!messages.TryGetValue(id, out var message))
             {
                 message = new InvokeData
@@ -47,9 +47,9 @@ namespace JFramework.Net
 
             if (!message.Compare(component, mode, func))
             {
-                var target = Utility.Text.Format("[{0} {1}]", component, func.Method.Name);
-                var origin = Utility.Text.Format("[{0} {1}]", message.component, message.func.Method.Name);
-                Log.Error(Utility.Text.Format("远程调用 {0} 与 {1} 冲突。", origin, target));
+                var target = Service.Text.Format("[{0} {1}]", component, func.Method.Name);
+                var origin = Service.Text.Format("[{0} {1}]", message.component, message.func.Method.Name);
+                Log.Error(Service.Text.Format("远程调用 {0} 与 {1} 冲突。", origin, target));
             }
         }
 

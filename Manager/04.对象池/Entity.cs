@@ -20,7 +20,7 @@ namespace JFramework
     {
         public static async Task<GameObject> Show(string assetPath)
         {
-            if (GlobalSetting.Runtime == null) return default;
+            if (!GlobalSetting.Runtime) return default;
             var assetData = await LoadPool(assetPath).Dequeue();
             assetData.transform.SetParent(null);
             assetData.SetActive(true);
@@ -29,7 +29,7 @@ namespace JFramework
 
         public static async void Show(string assetPath, Action<GameObject> assetAction)
         {
-            if (GlobalSetting.Runtime == null) return;
+            if (!GlobalSetting.Runtime) return;
             var assetData = await LoadPool(assetPath).Dequeue();
             assetData.transform.SetParent(null);
             assetData.SetActive(true);
@@ -38,11 +38,11 @@ namespace JFramework
 
         public static bool Hide(GameObject assetData)
         {
-            if (GlobalSetting.Runtime == null) return false;
+            if (!GlobalSetting.Runtime) return false;
             var assetPath = assetData.name;
             if (!GlobalManager.poolGroup.TryGetValue(assetPath, out var parent))
             {
-                parent = new GameObject(Utility.Text.Format("Pool - {0}", assetPath));
+                parent = new GameObject(Service.Text.Format("Pool - {0}", assetPath));
                 parent.transform.SetParent(GlobalManager.manager.transform);
                 GlobalManager.poolGroup.Add(assetPath, parent);
             }

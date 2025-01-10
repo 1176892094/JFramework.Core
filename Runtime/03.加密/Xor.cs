@@ -14,7 +14,7 @@ using System.IO;
 
 namespace JFramework
 {
-    public static partial class Utility
+    public static partial class Service
     {
         public static class Xor
         {

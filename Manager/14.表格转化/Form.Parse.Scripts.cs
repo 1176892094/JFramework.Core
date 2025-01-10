@@ -136,7 +136,7 @@ namespace JFramework
 
         private static KeyValuePair<string, string> WriteTable(string className, Dictionary<string, string> fields)
         {
-            var builder = Utility.Pool.Dequeue<StringBuilder>();
+            var builder = Service.Pool.Dequeue<StringBuilder>();
             var scriptText = GlobalSetting.tableData.Replace("Template", className);
 
             foreach (var field in fields)
@@ -172,13 +172,13 @@ namespace JFramework
             builder.Length -= 1;
             scriptText = scriptText.Replace("//TODO:2", builder.ToString());
             builder.Length = 0;
-            Utility.Pool.Enqueue(builder);
-            return new KeyValuePair<string, string>(Utility.Text.Format(GlobalSetting.tablePath, className), scriptText);
+            Service.Pool.Enqueue(builder);
+            return new KeyValuePair<string, string>(Service.Text.Format(GlobalSetting.tablePath, className), scriptText);
         }
 
         private static KeyValuePair<string, string> WriteStruct(string className, string classType)
         {
-            var builder = Utility.Pool.Dequeue<StringBuilder>();
+            var builder = Service.Pool.Dequeue<StringBuilder>();
             var scriptText = GlobalSetting.structData.Replace("Template", className);
 
             var members = classType.Substring(1, classType.IndexOf('}') - 1).Split(',');
@@ -195,13 +195,13 @@ namespace JFramework
             builder.Length -= 1;
             scriptText = scriptText.Replace("//TODO:1", builder.ToString());
             builder.Length = 0;
-            Utility.Pool.Enqueue(builder);
-            return new KeyValuePair<string, string>(Utility.Text.Format(GlobalSetting.structPath, className), scriptText);
+            Service.Pool.Enqueue(builder);
+            return new KeyValuePair<string, string>(Service.Text.Format(GlobalSetting.structPath, className), scriptText);
         }
 
         private static KeyValuePair<string, string> WriteEnum(string className, IEnumerable<string> members)
         {
-            var builder = Utility.Pool.Dequeue<StringBuilder>();
+            var builder = Service.Pool.Dequeue<StringBuilder>();
             var scriptText = GlobalSetting.enumData.Replace("Template", className);
 
             foreach (var member in members)
@@ -221,8 +221,8 @@ namespace JFramework
             builder.Length -= 1;
             scriptText = scriptText.Replace("//TODO:1", builder.ToString());
             builder.Length = 0;
-            Utility.Pool.Enqueue(builder);
-            return new KeyValuePair<string, string>(Utility.Text.Format(GlobalSetting.enumPath, className), scriptText);
+            Service.Pool.Enqueue(builder);
+            return new KeyValuePair<string, string>(Service.Text.Format(GlobalSetting.enumPath, className), scriptText);
         }
 
         private static bool WriteScripts(string filePath, string fileData)
@@ -249,7 +249,7 @@ namespace JFramework
             }
 
             File.WriteAllText(filePath, fileData);
-            Log.Info(Utility.Text.Format("生成 CSharp 脚本: {0}", filePath.Color("00FF00")));
+            Log.Info(Service.Text.Format("生成 CSharp 脚本: {0}", filePath.Color("00FF00")));
             return true;
         }
     }
