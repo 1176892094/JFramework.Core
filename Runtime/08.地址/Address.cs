@@ -15,6 +15,16 @@ using System.Net.Sockets;
 
 namespace JFramework
 {
+    public struct PingUpdateEvent : IEvent
+    {
+        public double pingTime { get; private set; }
+
+        public PingUpdateEvent(double pingTime)
+        {
+            this.pingTime = pingTime;
+        }
+    }
+
     public static partial class Service
     {
         public static class Address

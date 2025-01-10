@@ -56,7 +56,6 @@ namespace JFramework
                     break;
                 case Pool.Pool:
                     Draw(PoolManager.Reference(), "对象池", "未激活\t激活中\t出队次数\t入队次数");
-
                     break;
             }
         }
