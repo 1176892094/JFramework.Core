@@ -1,10 +1,10 @@
 ﻿// *********************************************************************************
-// # Project: JFramework.Lobby
+// # Project: JFramework
 // # Unity: 6000.3.5f1
 // # Author: 云谷千羽
 // # Version: 1.0.0
-// # History: 2024-08-28 20:08:49
-// # Recently: 2024-12-23 00:12:22
+// # History: 2025-01-09 16:01:17
+// # Recently: 2025-01-10 21:01:32
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
@@ -21,11 +21,6 @@ namespace JFramework.Net
         /// 房间拥有者
         /// </summary>
         public int clientId;
-
-        /// <summary>
-        /// 客户端数量
-        /// </summary>
-        public HashSet<int> clients;
 
         /// <summary>
         /// 是否显示
@@ -51,5 +46,10 @@ namespace JFramework.Net
         /// 房间名称
         /// </summary>
         public string roomName;
+
+        /// <summary>
+        /// 客户端数量
+        /// </summary>
+        public HashSet<int> clients;
     }
 }
