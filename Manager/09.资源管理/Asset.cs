@@ -12,6 +12,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using JFramework.Events;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -46,11 +47,11 @@ namespace JFramework
                     return (T)assetData;
                 }
 
-                Log.Warn(Service.Text.Format("加载资源 {0} 为空!", assetPath));
+                Debug.LogWarning(Service.Text.Format("加载资源 {0} 为空!", assetPath));
             }
             catch (Exception e)
             {
-                Log.Warn(Service.Text.Format("加载资源 {0} 失败!\n{1}", assetPath, e));
+                Debug.LogWarning(Service.Text.Format("加载资源 {0} 失败!\n{1}", assetPath, e));
             }
 
             return default;
@@ -68,11 +69,11 @@ namespace JFramework
                     return;
                 }
 
-                Log.Warn(Service.Text.Format("加载资源 {0} 为空!", assetPath));
+                Debug.LogWarning(Service.Text.Format("加载资源 {0} 为空!", assetPath));
             }
             catch (Exception e)
             {
-                Log.Warn(Service.Text.Format("加载资源 {0} 失败!\n{1}", assetPath, e));
+                Debug.LogWarning(Service.Text.Format("加载资源 {0} 失败!\n{1}", assetPath, e));
             }
         }
 

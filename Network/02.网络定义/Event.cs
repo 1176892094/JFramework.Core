@@ -11,8 +11,9 @@
 
 using System;
 using System.Net;
+using JFramework.Net;
 
-namespace JFramework.Net
+namespace JFramework.Events
 {
     public struct ServerConnectEvent : IEvent
     {

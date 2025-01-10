@@ -81,7 +81,7 @@ namespace JFramework
             var component = child.GetComponent(field.FieldType);
             if (component == null)
             {
-                Log.Info(Service.Text.Format("没有找到依赖注入的组件: {0} {1} != {2}", field.FieldType, field.FieldType.Name, name));
+                Debug.Log(Service.Text.Format("没有找到依赖注入的组件: {0} {1} != {2}", field.FieldType, field.FieldType.Name, name));
                 return;
             }
 

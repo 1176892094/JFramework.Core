@@ -14,7 +14,7 @@ using UnityEngine;
 
 namespace JFramework
 {
-    public interface IAgent : IDisposable
+    internal interface IAgent : IDisposable
     {
         void OnAwake(GameObject owner);
     }

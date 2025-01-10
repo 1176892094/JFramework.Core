@@ -14,7 +14,7 @@ using System.Collections.Generic;
 
 namespace JFramework.Net
 {
-    public class ReaderBatch
+    internal class ReaderBatch
     {
         private readonly MemoryReader reader = new MemoryReader();
         private readonly Queue<MemoryWriter> writers = new Queue<MemoryWriter>();

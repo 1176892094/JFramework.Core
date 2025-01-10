@@ -58,7 +58,7 @@ namespace JFramework
             }
             catch (Exception e)
             {
-                Log.Error(e.ToString());
+                Debug.LogError(e.ToString());
             }
         }
 

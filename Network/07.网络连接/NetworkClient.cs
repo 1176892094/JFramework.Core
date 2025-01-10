@@ -52,7 +52,7 @@ namespace JFramework.Net
 
             if (writer.position > Transport.Instance.MessageSize(channel))
             {
-                Log.Error(Service.Text.Format("发送消息大小过大！消息大小: {0}", writer.position));
+                Debug.LogError(Service.Text.Format("发送消息大小过大！消息大小: {0}", writer.position));
                 return;
             }
 

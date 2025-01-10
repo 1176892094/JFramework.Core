@@ -119,7 +119,7 @@ namespace JFramework.Net
 
             if (value.objectId == 0)
             {
-                Log.Warn("NetworkObject的对象索引为0。\n");
+                Debug.LogWarning("NetworkObject的对象索引为0。\n");
                 writer.WriteUInt(0);
                 return;
             }

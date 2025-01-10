@@ -15,7 +15,7 @@ using System.Text;
 
 // ReSharper disable All
 
-namespace JFramework.Net
+namespace JFramework
 {
     public static class Writer<T>
     {

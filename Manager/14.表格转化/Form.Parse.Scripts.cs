@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace JFramework
 {
@@ -68,7 +69,7 @@ namespace JFramework
             }
             catch (Exception e)
             {
-                Log.Error(e.ToString());
+                Debug.LogError(e.ToString());
                 return false;
             }
         }
@@ -249,7 +250,7 @@ namespace JFramework
             }
 
             File.WriteAllText(filePath, fileData);
-            Log.Info(Service.Text.Format("生成 CSharp 脚本: {0}", filePath.Color("00FF00")));
+            Debug.Log(Service.Text.Format("生成 CSharp 脚本: {0}", filePath.Color("00FF00")));
             return true;
         }
     }

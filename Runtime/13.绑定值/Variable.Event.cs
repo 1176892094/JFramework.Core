@@ -3,21 +3,25 @@
 // # Unity: 6000.3.5f1
 // # Author: 云谷千羽
 // # Version: 1.0.0
-// # History: 2024-12-23 18:12:21
-// # Recently: 2025-01-08 17:01:42
+// # History: 2025-01-11 03:01:58
+// # Recently: 2025-01-11 03:01:59
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
 
-namespace JFramework
+namespace JFramework.Events
 {
-    public struct AssetUpdateEvent : IEvent
+    public struct VariableEvent : IEvent
     {
-        public string name { get; private set; }
+    }
+    
+    public struct PingUpdateEvent : IEvent
+    {
+        public double pingTime { get; private set; }
 
-        public AssetUpdateEvent(string name)
+        public PingUpdateEvent(double pingTime)
         {
-            this.name = name;
+            this.pingTime = pingTime;
         }
     }
 }

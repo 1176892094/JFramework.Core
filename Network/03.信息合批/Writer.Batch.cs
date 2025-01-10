@@ -14,7 +14,7 @@ using System.Collections.Generic;
 
 namespace JFramework.Net
 {
-    public class WriterBatch
+    internal class WriterBatch
     {
         private readonly int maxCount;
         private readonly Queue<MemoryWriter> writers = new Queue<MemoryWriter>();

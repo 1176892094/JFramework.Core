@@ -11,7 +11,7 @@
 
 namespace JFramework
 {
-    public interface IState : IAgent
+    public interface IState
     {
         void OnEnter();
 

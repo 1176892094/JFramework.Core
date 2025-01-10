@@ -75,6 +75,11 @@ namespace JFramework
             GlobalSetting.Runtime = Resources.Load<GlobalSetting>(nameof(GlobalSetting));
         }
 
+        private void Start()
+        {
+            PackManager.LoadAssetData();
+        }
+
         private void Update()
         {
             TimerManager.Update(Time.time, Time.unscaledTime);

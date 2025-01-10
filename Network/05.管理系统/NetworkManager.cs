@@ -11,6 +11,7 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using JFramework.Events;
 using UnityEngine;
 
 namespace JFramework.Net
@@ -97,7 +98,7 @@ namespace JFramework.Net
         {
             if (Server.isActive)
             {
-                Log.Warn("服务器已经连接！");
+                Debug.LogWarning("服务器已经连接！");
                 return;
             }
 
@@ -108,7 +109,7 @@ namespace JFramework.Net
         {
             if (!Server.isActive)
             {
-                Log.Warn("服务器已经停止！");
+                Debug.LogWarning("服务器已经停止！");
                 return;
             }
 
@@ -119,7 +120,7 @@ namespace JFramework.Net
         {
             if (Client.isActive)
             {
-                Log.Warn("客户端已经连接！");
+                Debug.LogWarning("客户端已经连接！");
                 return;
             }
 
@@ -130,7 +131,7 @@ namespace JFramework.Net
         {
             if (Client.isActive)
             {
-                Log.Warn("客户端已经连接！");
+                Debug.LogWarning("客户端已经连接！");
                 return;
             }
 
@@ -141,7 +142,7 @@ namespace JFramework.Net
         {
             if (!Client.isActive)
             {
-                Log.Warn("客户端已经停止！");
+                Debug.LogWarning("客户端已经停止！");
                 return;
             }
 
@@ -157,7 +158,7 @@ namespace JFramework.Net
         {
             if (Server.isActive || Client.isActive)
             {
-                Log.Warn("客户端或服务器已经连接！");
+                Debug.LogWarning("客户端或服务器已经连接！");
                 return;
             }
 

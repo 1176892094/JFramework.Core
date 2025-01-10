@@ -42,6 +42,10 @@ namespace JFramework
 
         [SerializeField] protected string assetAssembly = "HotUpdate.Data";
 
+        [SerializeField] protected string assetCachePath = "Assets/Template";
+
+        [SerializeField] protected DebugWindow debugWindow = DebugWindow.Disable;
+
         protected abstract string scriptDataPath { get; }
 
         protected abstract string assetDataPath { get; }
@@ -117,12 +121,6 @@ namespace JFramework
             };
         }
 
-        protected enum AssetMode : byte
-        {
-            Simulate,
-            Authentic
-        }
-
         protected enum AssetPlatform : byte
         {
             StandaloneOSX = 2,
@@ -130,6 +128,18 @@ namespace JFramework
             IOS = 9,
             Android = 13,
             WebGL = 20
+        }
+
+        protected enum AssetMode : byte
+        {
+            Simulate,
+            Authentic
+        }
+
+        protected enum DebugWindow : byte
+        {
+            Enable,
+            Disable,
         }
     }
 }

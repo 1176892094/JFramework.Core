@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using JFramework.Events;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -71,7 +72,7 @@ namespace JFramework.Net
                 }
                 catch (Exception e)
                 {
-                    Log.Warn(e.ToString());
+                    Debug.LogWarning(e.ToString());
                 }
             }
         }
@@ -85,7 +86,7 @@ namespace JFramework.Net
         {
             if (state != StateMode.Disconnect)
             {
-                Log.Warn("大厅服务器已经连接！");
+                Debug.LogWarning("大厅服务器已经连接！");
                 return;
             }
 
@@ -96,7 +97,7 @@ namespace JFramework.Net
         {
             if (state != StateMode.Disconnect)
             {
-                Log.Info("停止大厅服务器。");
+                Debug.Log("停止大厅服务器。");
                 state = StateMode.Disconnect;
                 clients.Clear();
                 players.Clear();
@@ -111,7 +112,7 @@ namespace JFramework.Net
         {
             if (state != StateMode.Connected)
             {
-                Log.Info("您必须连接到大厅以请求房间列表!");
+                Debug.Log("您必须连接到大厅以请求房间列表!");
                 return;
             }
 
@@ -120,14 +121,14 @@ namespace JFramework.Net
             await request.SendWebRequest();
             if (request.result != UnityWebRequest.Result.Success)
             {
-                Log.Warn(Service.Text.Format("无法获取服务器列表: {0}:{1}", transport.address, transport.port));
+                Debug.LogWarning(Service.Text.Format("无法获取服务器列表: {0}:{1}", transport.address, transport.port));
                 return;
             }
 
             var rooms = Service.Zip.Decompress(request.downloadHandler.text);
             var jsons = JsonManager.FromJson<Room[]>("{" + "\"value\":" + rooms + "}");
             Service.Event.Invoke(new LobbyUpdateEvent(jsons));
-            Log.Info("房间信息：" + rooms);
+            Debug.Log("房间信息：" + rooms);
         }
 
         public void UpdateRoom()
@@ -250,13 +251,13 @@ namespace JFramework.Net
         {
             if (state != StateMode.Connected)
             {
-                Log.Info("没有连接到大厅!");
+                Debug.Log("没有连接到大厅!");
                 return;
             }
 
             if (isClient || isServer)
             {
-                Log.Info("客户端或服务器已经连接!");
+                Debug.Log("客户端或服务器已经连接!");
                 return;
             }
 
@@ -300,14 +301,14 @@ namespace JFramework.Net
         {
             if (state != StateMode.Connected)
             {
-                Log.Info("没有连接到大厅！");
+                Debug.Log("没有连接到大厅！");
                 OnClientDisconnect?.Invoke();
                 return;
             }
 
             if (isClient || isServer)
             {
-                Log.Info("客户端或服务器已经连接!");
+                Debug.Log("客户端或服务器已经连接!");
                 return;
             }
 

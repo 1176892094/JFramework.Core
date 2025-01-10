@@ -52,7 +52,7 @@ namespace JFramework
             }
             else if (instance != this)
             {
-                Log.Warn(typeof(T) + "单例重复！");
+                Debug.LogWarning(typeof(T) + "单例重复！");
                 Destroy(this);
             }
 

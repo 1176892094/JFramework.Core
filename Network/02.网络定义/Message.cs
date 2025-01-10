@@ -91,11 +91,11 @@ namespace JFramework.Net
         }
     }
 
-    public struct RequestMessage : IMessage
+    internal struct RequestMessage : IMessage
     {
     }
 
-    public struct ResponseMessage : IMessage
+    internal struct ResponseMessage : IMessage
     {
         public Uri uri;
         public ResponseMessage(Uri uri) => this.uri = uri;

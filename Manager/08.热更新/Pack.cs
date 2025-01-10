@@ -12,12 +12,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using JFramework.Events;
 using UnityEngine;
 using UnityEngine.Networking;
 
 namespace JFramework
 {
-    public static class PackManager
+    internal static class PackManager
     {
         public static async void LoadAssetData()
         {
@@ -151,7 +152,7 @@ namespace JFramework
                     await request.SendWebRequest();
                     if (request.result != UnityWebRequest.Result.Success)
                     {
-                        Log.Info(Service.Text.Format("请求服务器下载 {0} 失败!\n", packName));
+                        Debug.Log(Service.Text.Format("请求服务器下载 {0} 失败!\n", packName));
                         continue;
                     }
 
@@ -170,7 +171,7 @@ namespace JFramework
                 await request.SendWebRequest();
                 if (request.result != UnityWebRequest.Result.Success)
                 {
-                    Log.Info(Service.Text.Format("请求服务器校验 {0} 失败!\n", packName));
+                    Debug.Log(Service.Text.Format("请求服务器校验 {0} 失败!\n", packName));
                     return null;
                 }
             }
@@ -187,7 +188,7 @@ namespace JFramework
                 Service.Event.Invoke(new PackUpdateEvent(packName, 1));
                 if (request.result != UnityWebRequest.Result.Success)
                 {
-                    Log.Info(Service.Text.Format("请求服务器下载 {0} 失败!\n", packName));
+                    Debug.Log(Service.Text.Format("请求服务器下载 {0} 失败!\n", packName));
                     return null;
                 }
 

@@ -11,13 +11,10 @@
 
 using System;
 using System.Collections.Generic;
+using JFramework.Events;
 
 namespace JFramework
 {
-    public struct VariableEvent : IEvent
-    {
-    }
-
     [Serializable]
     public struct Variable<T> : IEquatable<Variable<T>>
     {
