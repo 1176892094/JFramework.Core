@@ -21,15 +21,15 @@ namespace JFramework
         {
             try
             {
-                if (GlobalManager.helper == null) return;
-                var assetData = await LoadSceneAsset(GlobalManager.GetScenePath(assetPath));
+                if (GlobalSetting.Runtime == null) return;
+                var assetData = await LoadSceneAsset(GlobalSetting.GetScenePath(assetPath));
                 if (assetData != null)
                 {
                     Utility.Event.Invoke(new SceneAwakeEvent(assetPath));
                     var request = SceneManager.LoadSceneAsync(assetPath, LoadSceneMode.Single);
                     if (request != null)
                     {
-                        while (!request.isDone && GlobalManager.helper != null)
+                        while (!request.isDone && GlobalSetting.Runtime != null)
                         {
                             Utility.Event.Invoke(new SceneUpdateEvent(request.progress));
                             await Task.Yield();
@@ -50,7 +50,7 @@ namespace JFramework
 
         private static async Task<string> LoadSceneAsset(string assetPath)
         {
-            if (GlobalManager.helper.assetPackMode)
+            if (GlobalSetting.assetLoadMode)
             {
                 var assetPair = await LoadAssetPair(assetPath);
                 var assetPack = await LoadAssetPack(assetPair.Key);

@@ -90,15 +90,7 @@ namespace JFramework
                     mailBody.Append(debugData + "\n\n" + debugData.stackTrace + "\n\n");
                 }
 
-                var setting = Resources.Load<ScriptableObject>("GlobalSetting");
-                if (setting != null)
-                {
-                    var message = setting.GetType().GetMethod("SendMail", Utility.Find.Instance);
-                    if (message != null)
-                    {
-                        Utility.Mail.Send((Utility.MailData)message.Invoke(setting, new object[] { mailBody }));
-                    }
-                }
+                Utility.Mail.Send(GlobalSetting.Runtime.SendMail(mailBody.ToString()));
             }
 
             GUILayout.EndHorizontal();

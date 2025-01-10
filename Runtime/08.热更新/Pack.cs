@@ -17,24 +17,24 @@ using UnityEngine.Networking;
 
 namespace JFramework
 {
-    internal static class PackManager
+    public static class PackManager
     {
         public static async void LoadAssetData()
         {
-            if (GlobalManager.helper == null) return;
-            if (!GlobalManager.helper.assetPackMode)
+            if (GlobalSetting.Runtime == null) return;
+            if (!GlobalSetting.assetLoadMode)
             {
                 Utility.Event.Invoke(new PackCompleteEvent(false, "启动本地资源加载。"));
                 return;
             }
 
-            if (GlobalManager.helper.assetPackMode && !Directory.Exists(GlobalManager.assetPackPath))
+            if (GlobalSetting.assetLoadMode && !Directory.Exists(GlobalSetting.assetPackPath))
             {
-                Directory.CreateDirectory(GlobalManager.assetPackPath);
+                Directory.CreateDirectory(GlobalSetting.assetPackPath);
             }
 
-            var fileUri = GlobalManager.GetServerPath(GlobalManager.assetPackData);
-            var serverRequest = await LoadServerRequest(GlobalManager.assetPackData, fileUri);
+            var fileUri = GlobalSetting.GetServerPath(GlobalSetting.assetPackData);
+            var serverRequest = await LoadServerRequest(GlobalSetting.assetPackData, fileUri);
             if (!string.IsNullOrEmpty(serverRequest))
             {
                 var assetPacks = JsonManager.FromJson<List<PackData>>(serverRequest);
@@ -57,8 +57,8 @@ namespace JFramework
                 return;
             }
 
-            var persistentData = GlobalManager.GetPacketPath(GlobalManager.assetPackData);
-            var streamingAssets = GlobalManager.GetClientPath(GlobalManager.assetPackData);
+            var persistentData = GlobalSetting.GetPacketPath(GlobalSetting.assetPackData);
+            var streamingAssets = GlobalSetting.GetClientPath(GlobalSetting.assetPackData);
             var clientRequest = await LoadClientRequest(persistentData, streamingAssets);
             if (!string.IsNullOrEmpty(clientRequest))
             {
@@ -89,7 +89,7 @@ namespace JFramework
 
             foreach (var clientPack in GlobalManager.clientPacks.Keys)
             {
-                var filePath = GlobalManager.GetPacketPath(clientPack);
+                var filePath = GlobalSetting.GetPacketPath(clientPack);
                 if (File.Exists(filePath))
                 {
                     File.Delete(filePath);
@@ -99,7 +99,7 @@ namespace JFramework
             var status = await LoadPacketRequest(fileNames);
             if (status)
             {
-                var filePath = GlobalManager.GetPacketPath(GlobalManager.assetPackData);
+                var filePath = GlobalSetting.GetPacketPath(GlobalSetting.assetPackData);
                 File.WriteAllText(filePath, serverRequest);
             }
 
@@ -113,9 +113,9 @@ namespace JFramework
             {
                 foreach (var packName in packNames)
                 {
-                    var packUri = GlobalManager.GetServerPath(packName);
+                    var packUri = GlobalSetting.GetServerPath(packName);
                     var packData = await LoadPacketRequest(packName, packUri);
-                    var packPath = GlobalManager.GetPacketPath(packName);
+                    var packPath = GlobalSetting.GetPacketPath(packName);
                     await Task.Run(() => File.WriteAllBytes(packPath, packData));
                     if (fileNames.Contains(packName))
                     {
@@ -178,7 +178,7 @@ namespace JFramework
             using (var request = UnityWebRequest.Get(packUri))
             {
                 var result = request.SendWebRequest();
-                while (!result.isDone && GlobalManager.helper != null)
+                while (!result.isDone && GlobalSetting.Runtime != null)
                 {
                     Utility.Event.Invoke(new PackUpdateEvent(packName, request.downloadProgress));
                     await Task.Yield();
@@ -197,7 +197,7 @@ namespace JFramework
 
         private static async Task<string> LoadClientRequest(string persistentData, string streamingAssets)
         {
-            var packData = await GlobalManager.helper.LoadRequest(persistentData, streamingAssets);
+            var packData = await GlobalSetting.Runtime.LoadRequest(persistentData, streamingAssets);
             string result = default;
             if (packData.Key == 1)
             {
@@ -218,7 +218,7 @@ namespace JFramework
 
         internal static async Task<AssetBundle> LoadAssetRequest(string persistentData, string streamingAssets)
         {
-            var packData = await GlobalManager.helper.LoadRequest(persistentData, streamingAssets);
+            var packData = await GlobalSetting.Runtime.LoadRequest(persistentData, streamingAssets);
             byte[] result = default;
             if (packData.Key == 1)
             {
@@ -234,7 +234,7 @@ namespace JFramework
                 }
             }
 
-            return GlobalManager.helper != null ? AssetBundle.LoadFromMemory(result) : null;
+            return GlobalSetting.Runtime != null ? AssetBundle.LoadFromMemory(result) : null;
         }
 
         internal static void Dispose()

@@ -16,12 +16,12 @@ using UnityEngine;
 
 namespace JFramework
 {
-    public static class Data
+    public static class DataManager
     {
         public static async void LoadDataTable()
         {
-            if (GlobalManager.helper == null) return;
-            var assembly = Utility.Find.Assembly(GlobalManager.assemblyName);
+            if (GlobalSetting.Runtime == null) return;
+            var assembly = Utility.Find.Assembly(GlobalSetting.assemblyName);
             if (assembly == null) return;
             var assetTypes = new List<Type>();
             foreach (var assetType in assembly.GetTypes())
@@ -49,7 +49,7 @@ namespace JFramework
                 try
                 {
                     if (string.IsNullOrEmpty(assetType.FullName)) continue;
-                    var dataTable = (IDataTable)await AssetManager.Load<ScriptableObject>(GlobalManager.GetTablePath(assetType.Name));
+                    var dataTable = (IDataTable)await AssetManager.Load<ScriptableObject>(GlobalSetting.GetTablePath(assetType.Name));
                     var children = assembly.GetType(assetType.FullName.Substring(0, assetType.FullName.Length - 5));
                     var properties = children.GetProperties(Utility.Find.Instance);
                     foreach (var property in properties)
@@ -107,7 +107,7 @@ namespace JFramework
 
         public static T Get<T>(int key) where T : IData
         {
-            if (GlobalManager.helper == null) return default;
+            if (GlobalSetting.Runtime == null) return default;
             if (!GlobalManager.itemTable.TryGetValue(typeof(T), out var dataTable))
             {
                 return default;
@@ -123,7 +123,7 @@ namespace JFramework
 
         public static T Get<T>(string key) where T : IData
         {
-            if (GlobalManager.helper == null) return default;
+            if (GlobalSetting.Runtime == null) return default;
             if (!GlobalManager.nameTable.TryGetValue(typeof(T), out var dataTable))
             {
                 return default;
@@ -139,7 +139,7 @@ namespace JFramework
 
         public static T Get<T>(Enum key) where T : IData
         {
-            if (GlobalManager.helper == null) return default;
+            if (GlobalSetting.Runtime == null) return default;
             if (!GlobalManager.enumTable.TryGetValue(typeof(T), out var dataTable))
             {
                 return default;
@@ -155,7 +155,7 @@ namespace JFramework
 
         public static List<T> GetTable<T>() where T : IData
         {
-            if (GlobalManager.helper == null) return default;
+            if (GlobalSetting.Runtime == null) return default;
             if (GlobalManager.itemTable.TryGetValue(typeof(T), out var itemTable))
             {
                 var caches = new List<T>();

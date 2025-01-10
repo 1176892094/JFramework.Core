@@ -25,7 +25,7 @@ namespace JFramework
 
         public static T Load<T>(GameObject entity, float duration) where T : class, ITimer
         {
-            if (GlobalManager.helper == null) return default;
+            if (GlobalSetting.Runtime == null) return default;
             var timerData = Utility.Pool.Dequeue<T>();
             timerData.Start(entity, duration, OnComplete);
             GlobalManager.timerData.Add(timerData);

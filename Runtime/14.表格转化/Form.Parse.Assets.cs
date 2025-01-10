@@ -53,7 +53,7 @@ namespace JFramework
                 foreach (var data in dataTables)
                 {
                     await WriteAssets(data.Key, data.Value);
-                    GlobalManager.helper.CreateProgress(data.Key, ++progress / dataTables.Count);
+                    GlobalSetting.Runtime.CreateProgress(data.Key, ++progress / dataTables.Count);
                 }
             }
             catch (Exception e)
@@ -131,19 +131,19 @@ namespace JFramework
 
         private static async Task WriteAssets(string sheetName, List<string[]> scriptTexts)
         {
-            var filePath = Utility.Text.Format(GlobalManager.tablePath, sheetName);
+            var filePath = Utility.Text.Format(GlobalSetting.tablePath, sheetName);
             if (!File.Exists(filePath))
             {
                 return;
             }
 
-            filePath = Path.GetDirectoryName(GlobalManager.assetPath);
+            filePath = Path.GetDirectoryName(GlobalSetting.assetPath);
             if (!string.IsNullOrEmpty(filePath) && !Directory.Exists(filePath))
             {
                 Directory.CreateDirectory(filePath);
             }
 
-            filePath = Utility.Text.Format(GlobalManager.assetPath, sheetName);
+            filePath = Utility.Text.Format(GlobalSetting.assetPath, sheetName);
             if (File.Exists(filePath))
             {
                 File.Delete(filePath);
@@ -152,7 +152,7 @@ namespace JFramework
             var fileName = Utility.Text.Format("JFramework.Table.{0}DataTable", sheetName);
             var fileData = (IDataTable)ScriptableObject.CreateInstance(fileName);
             if (fileData == null) return;
-            var itemData = Utility.Text.Format("JFramework.Table.{0}Data,{1}", sheetName, GlobalManager.assemblyName);
+            var itemData = Utility.Text.Format("JFramework.Table.{0}Data,{1}", sheetName, GlobalSetting.assemblyName);
             await Task.Run(() =>
             {
                 var instance = (IData)Activator.CreateInstance(Utility.Find.Type(itemData));
@@ -166,7 +166,7 @@ namespace JFramework
                 }
             });
 
-            GlobalManager.helper.CreateAsset((ScriptableObject)fileData, filePath);
+            GlobalSetting.Runtime.CreateAsset((ScriptableObject)fileData, filePath);
         }
     }
 }

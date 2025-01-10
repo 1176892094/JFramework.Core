@@ -47,12 +47,12 @@ namespace JFramework
                 }
 
                 var writeAssets = false;
-                dataTables.Add(GlobalManager.assemblyPath, GlobalManager.assemblyData.Replace("Template", GlobalManager.assemblyName));
+                dataTables.Add(GlobalSetting.assemblyPath, GlobalSetting.assemblyData.Replace("Template", GlobalSetting.assemblyName));
                 var progress = 0f;
                 foreach (var data in dataTables)
                 {
                     var result = await Task.Run(() => WriteScripts(data.Key, data.Value));
-                    GlobalManager.helper.CreateProgress(data.Key, ++progress / dataTables.Count);
+                    GlobalSetting.Runtime.CreateProgress(data.Key, ++progress / dataTables.Count);
                     if (result)
                     {
                         writeAssets = true;
@@ -137,7 +137,7 @@ namespace JFramework
         private static KeyValuePair<string, string> WriteTable(string className, Dictionary<string, string> fields)
         {
             var builder = Utility.Pool.Dequeue<StringBuilder>();
-            var scriptText = GlobalManager.tableData.Replace("Template", className);
+            var scriptText = GlobalSetting.tableData.Replace("Template", className);
 
             foreach (var field in fields)
             {
@@ -173,13 +173,13 @@ namespace JFramework
             scriptText = scriptText.Replace("//TODO:2", builder.ToString());
             builder.Length = 0;
             Utility.Pool.Enqueue(builder);
-            return new KeyValuePair<string, string>(Utility.Text.Format(GlobalManager.tablePath, className), scriptText);
+            return new KeyValuePair<string, string>(Utility.Text.Format(GlobalSetting.tablePath, className), scriptText);
         }
 
         private static KeyValuePair<string, string> WriteStruct(string className, string classType)
         {
             var builder = Utility.Pool.Dequeue<StringBuilder>();
-            var scriptText = GlobalManager.structData.Replace("Template", className);
+            var scriptText = GlobalSetting.structData.Replace("Template", className);
 
             var members = classType.Substring(1, classType.IndexOf('}') - 1).Split(',');
             foreach (var member in members)
@@ -196,13 +196,13 @@ namespace JFramework
             scriptText = scriptText.Replace("//TODO:1", builder.ToString());
             builder.Length = 0;
             Utility.Pool.Enqueue(builder);
-            return new KeyValuePair<string, string>(Utility.Text.Format(GlobalManager.structPath, className), scriptText);
+            return new KeyValuePair<string, string>(Utility.Text.Format(GlobalSetting.structPath, className), scriptText);
         }
 
         private static KeyValuePair<string, string> WriteEnum(string className, IEnumerable<string> members)
         {
             var builder = Utility.Pool.Dequeue<StringBuilder>();
-            var scriptText = GlobalManager.enumData.Replace("Template", className);
+            var scriptText = GlobalSetting.enumData.Replace("Template", className);
 
             foreach (var member in members)
             {
@@ -222,7 +222,7 @@ namespace JFramework
             scriptText = scriptText.Replace("//TODO:1", builder.ToString());
             builder.Length = 0;
             Utility.Pool.Enqueue(builder);
-            return new KeyValuePair<string, string>(Utility.Text.Format(GlobalManager.enumPath, className), scriptText);
+            return new KeyValuePair<string, string>(Utility.Text.Format(GlobalSetting.enumPath, className), scriptText);
         }
 
         private static bool WriteScripts(string filePath, string fileData)

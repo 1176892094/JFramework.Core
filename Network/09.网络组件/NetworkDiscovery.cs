@@ -1,7 +1,6 @@
 using System;
 using System.Net;
 using System.Net.Sockets;
-using JFramework.Udp;
 using UnityEngine;
 
 namespace JFramework.Net
@@ -37,7 +36,7 @@ namespace JFramework.Net
                         EnableBroadcast = true,
                         MulticastLoopback = false
                     };
-                    BeginMulticastLock();
+                    GlobalSetting.Runtime.MulticastLock(true);
                     ServerReceive();
                     break;
                 case EntryMode.Client:
@@ -54,7 +53,7 @@ namespace JFramework.Net
 
         public void StopDiscovery()
         {
-            EndMulticastLock();
+            GlobalSetting.Runtime.MulticastLock(false);
             udpServer?.Close();
             udpClient?.Close();
             udpServer = null;
@@ -65,26 +64,6 @@ namespace JFramework.Net
         private void OnDestroy()
         {
             StopDiscovery();
-        }
-
-        private static void BeginMulticastLock()
-        {
-            var setting = Resources.Load<ScriptableObject>("GlobalSetting");
-            if (setting != null)
-            {
-                var message = setting.GetType().GetMethod("BeginMulticastLock", Utility.Find.Instance);
-                message?.Invoke(setting, null);
-            }
-        }
-
-        private static void EndMulticastLock()
-        {
-            var setting = Resources.Load<ScriptableObject>("GlobalSetting");
-            if (setting != null)
-            {
-                var message = setting.GetType().GetMethod("EndMulticastLock", Utility.Find.Instance);
-                message?.Invoke(setting, null);
-            }
         }
 
         private void ClientSend()

@@ -21,14 +21,12 @@ using AgentData = System.Collections.Generic.Dictionary<System.Type, UnityEngine
 
 namespace JFramework
 {
-    public partial class GlobalManager : MonoBehaviour
+    public class GlobalManager : MonoBehaviour
     {
-        internal static Helper helper;
-        
         internal static Canvas canvas;
 
         internal static GameObject entity;
-        
+
         internal static GameObject manager;
 
         internal static AudioSource musicSource;
@@ -70,5 +68,42 @@ namespace JFramework
         internal static readonly Dictionary<string, HashSet<UIPanel>> panelGroup = new Dictionary<string, HashSet<UIPanel>>();
 
         internal static readonly Dictionary<UIPanel, HashSet<string>> groupPanel = new Dictionary<UIPanel, HashSet<string>>();
+
+        private void Awake()
+        {
+            DontDestroyOnLoad(manager);
+            GlobalSetting.Runtime = Resources.Load<GlobalSetting>(nameof(GlobalSetting));
+        }
+
+        private void Update()
+        {
+            TimerManager.Update(Time.time, Time.unscaledTime);
+        }
+
+        private void OnDestroy()
+        {
+            GlobalSetting.Runtime = null;
+            UIManager.Dispose();
+            PoolManager.Dispose();
+            PackManager.Dispose();
+            DataManager.Dispose();
+            AudioManager.Dispose();
+            AssetManager.Dispose();
+            AgentManager.Dispose();
+            TimerManager.Dispose();
+            Utility.Pool.Dispose();
+            Utility.Event.Dispose();
+            AssetBundle.UnloadAllAssetBundles(true);
+            GC.Collect();
+        }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+        private static void RuntimeInitializeOnLoad()
+        {
+            manager = new GameObject(nameof(GlobalManager));
+            manager.AddComponent<GlobalManager>();
+            musicSource = manager.AddComponent<AudioSource>();
+            JsonManager.Load(setting, nameof(AudioSetting));
+        }
     }
 }

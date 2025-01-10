@@ -21,7 +21,7 @@ namespace JFramework
     {
         public static async void LoadAssetData()
         {
-            var platform = await LoadAssetPack(GlobalManager.helper.assetPlatform);
+            var platform = await LoadAssetPack(GlobalSetting.platformPath);
             GlobalManager.manifest ??= platform.LoadAsset<AssetBundleManifest>(nameof(AssetBundleManifest));
             Utility.Event.Invoke(new AssetAwakeEvent(GlobalManager.manifest.GetAllAssetBundles()));
 
@@ -39,7 +39,7 @@ namespace JFramework
         {
             try
             {
-                if (GlobalManager.helper == null) return default;
+                if (GlobalSetting.Runtime == null) return default;
                 var assetData = await LoadAsset(assetPath, typeof(T));
                 if (assetData != null)
                 {
@@ -60,7 +60,7 @@ namespace JFramework
         {
             try
             {
-                if (GlobalManager.helper == null) return;
+                if (GlobalSetting.Runtime == null) return;
                 var assetData = await LoadAsset(assetPath, typeof(T));
                 if (assetData != null)
                 {
@@ -78,18 +78,18 @@ namespace JFramework
 
         private static async Task<Object> LoadAsset(string assetPath, Type assetType)
         {
-            if (GlobalManager.helper.assetPackMode)
+            if (GlobalSetting.assetLoadMode)
             {
                 var assetPair = await LoadAssetPair(assetPath);
                 var assetPack = await LoadAssetPack(assetPair.Key);
-                var assetData = GlobalManager.helper.LoadByAssetPack(assetPair.Value, assetType, assetPack);
-                assetData ??= GlobalManager.helper.LoadByResources(assetPath, assetType);
+                var assetData = GlobalSetting.Runtime.LoadByAssetPack(assetPair.Value, assetType, assetPack);
+                assetData ??= GlobalSetting.Runtime.LoadByResources(assetPath, assetType);
                 return assetData;
             }
             else
             {
-                var assetData = GlobalManager.helper.LoadBySimulates(assetPath, assetType);
-                assetData ??= GlobalManager.helper.LoadByResources(assetPath, assetType);
+                var assetData = GlobalSetting.Runtime.LoadBySimulates(assetPath, assetType);
+                assetData ??= GlobalSetting.Runtime.LoadByResources(assetPath, assetType);
                 return assetData;
             }
         }
@@ -112,7 +112,7 @@ namespace JFramework
                 GlobalManager.assetData.Add(assetPath, assetData);
             }
 
-            var platform = await LoadAssetPack(GlobalManager.helper.assetPlatform);
+            var platform = await LoadAssetPack(GlobalSetting.platformPath);
             GlobalManager.manifest ??= platform.LoadAsset<AssetBundleManifest>(nameof(AssetBundleManifest));
 
             var assetPacks = GlobalManager.manifest.GetAllDependencies(assetData.Key);
@@ -141,8 +141,8 @@ namespace JFramework
                 return await assetTask;
             }
 
-            var persistentData = GlobalManager.GetPacketPath(assetPath);
-            var streamingAssets = GlobalManager.GetClientPath(assetPath);
+            var persistentData = GlobalSetting.GetPacketPath(assetPath);
+            var streamingAssets = GlobalSetting.GetClientPath(assetPath);
             assetTask = PackManager.LoadAssetRequest(persistentData, streamingAssets);
             GlobalManager.assetTask.Add(assetPath, assetTask);
             try
