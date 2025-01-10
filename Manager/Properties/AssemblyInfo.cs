@@ -1,15 +1,4 @@
-﻿// *********************************************************************************
-// # Project: JFramework
-// # Unity: 6000.3.5f1
-// # Author: 云谷千羽
-// # Version: 1.0.0
-// # History: 2025-01-10 16:01:33
-// # Recently: 2025-01-10 16:01:55
-// # Copyright: 2024, 云谷千羽
-// # Description: This is an automatically generated comment.
-// *********************************************************************************
-
-using System.Reflection;
+﻿using System.Reflection;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
@@ -30,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("8BDB64FE-516E-4EAC-AEC1-1DD7FF7CCCB5")]
+[assembly: Guid("9B2624C2-A568-44BF-934F-DF209D78F6B1")]
 
 // Version information for an assembly consists of the following four values:
 //
