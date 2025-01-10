@@ -49,7 +49,7 @@ namespace JFramework.Net
 
         private void OnValidate()
         {
-            var assetType = Service.Depend.GetType("JFramework.EditorSetting, JFramework.Unity");
+            var assetType = Service.Depend.GetType("JFramework.NetworkSetting, Unity.JFramework.CodeGen");
             var assetData = assetType.GetMethod("Validate", Service.Depend.Static);
             if (assetData != null)
             {
