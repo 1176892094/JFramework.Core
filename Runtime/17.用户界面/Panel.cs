@@ -167,7 +167,7 @@ namespace JFramework
 
                 if (!panelLayer.TryGetValue(layer, out var parent))
                 {
-                    var name = Text.Format("Layer-{0}", layer);
+                    var name = Utility.Text.Format("Layer-{0}", layer);
                     var child = new GameObject(name);
                     child.transform.SetParent(canvas.transform);
                     var renderer = child.AddComponent<Canvas>();

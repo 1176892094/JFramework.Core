@@ -19,7 +19,7 @@ namespace JFramework
     {
         public static void Inject(this IEntity entity)
         {
-            var fields = entity.GetType().GetFields(Service.Find.Instance);
+            var fields = entity.GetType().GetFields(Utility.Find.Instance);
             foreach (var field in fields)
             {
                 if (field.GetCustomAttribute<InjectAttribute>(true) == null)
@@ -65,22 +65,22 @@ namespace JFramework
             var component = child.GetComponent(field.FieldType);
             if (component == null)
             {
-                Log.Info(Service.Text.Format("没有找到依赖注入的组件: {0} {1} != {2}", field.FieldType, field.FieldType.Name, name));
+                Log.Info(Utility.Text.Format("没有找到依赖注入的组件: {0} {1} != {2}", field.FieldType, field.FieldType.Name, name));
                 return;
             }
 
             field.SetValue(inject, component);
 
-            var method = inject.GetType().GetMethod(name, Service.Find.Instance);
+            var method = inject.GetType().GetMethod(name, Utility.Find.Instance);
             if (method == null)
             {
                 return;
             }
 
-            var injectType = Service.Find.Type("UnityEngine.UI.Button,UnityEngine.UI");
+            var injectType = Utility.Find.Type("UnityEngine.UI.Button,UnityEngine.UI");
             if (component.TryGetComponent(injectType, out var button))
             {
-                var property = injectType.GetProperty("onClick", Service.Find.Instance);
+                var property = injectType.GetProperty("onClick", Utility.Find.Instance);
                 if (property != null)
                 {
                     inject.transform.SetButton(name, (UnityEvent)property.GetValue(button));
@@ -89,10 +89,10 @@ namespace JFramework
                 return;
             }
 
-            injectType = Service.Find.Type("UnityEngine.UI.Toggle,UnityEngine.UI");
+            injectType = Utility.Find.Type("UnityEngine.UI.Toggle,UnityEngine.UI");
             if (component.TryGetComponent(injectType, out var toggle))
             {
-                var property = injectType.GetProperty("onValueChanged", Service.Find.Instance);
+                var property = injectType.GetProperty("onValueChanged", Utility.Find.Instance);
                 if (property != null)
                 {
                     inject.transform.SetToggle(name, (UnityEvent<bool>)property.GetValue(toggle));

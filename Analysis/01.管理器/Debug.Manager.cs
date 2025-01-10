@@ -54,7 +54,7 @@ namespace JFramework
                     if (assembly.GetName().Name == "JFramework.Net")
                     {
                         var manager = assembly.GetType("JFramework.Net.NetworkManager");
-                        var windowMethod = manager.GetMethod("Window", Service.Find.Static);
+                        var windowMethod = manager.GetMethod("Window", Utility.Find.Static);
                         if (windowMethod != null)
                         {
                             OnWindow = (Action<GUILayoutOption>)Delegate.CreateDelegate(typeof(Action<GUILayoutOption>), windowMethod);
@@ -169,7 +169,7 @@ namespace JFramework
             GUILayout.BeginArea(MaxBox, "", "Box");
             GUILayout.BeginHorizontal();
             GUI.contentColor = windowColor;
-            if (GUILayout.Button(Service.Text.Format("FPS: {0}", frameData), Height30, Width80))
+            if (GUILayout.Button(Utility.Text.Format("FPS: {0}", frameData), Height30, Width80))
             {
                 status &= ~Status.Expand;
             }
@@ -292,12 +292,12 @@ namespace JFramework
             GUI.contentColor = windowColor;
             GUILayout.BeginArea(newRect, "", "Box");
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button(Service.Text.Format("FPS: {0}", frameData), Height30, Width80))
+            if (GUILayout.Button(Utility.Text.Format("FPS: {0}", frameData), Height30, Width80))
             {
                 status |= Status.Expand;
             }
 
-            if (GUILayout.Button(Service.Text.Format("Ping: {0}", (int)(framePing * 1000)), Height30))
+            if (GUILayout.Button(Utility.Text.Format("Ping: {0}", (int)(framePing * 1000)), Height30))
             {
                 if ((status & Status.Window) != 0)
                 {

@@ -175,7 +175,7 @@ namespace JFramework
                 scriptText = scriptText.Replace("//TODO:2", builder.ToString());
                 builder.Length = 0;
                 Heap.Enqueue(builder);
-                return new KeyValuePair<string, string>(Text.Format(tablePath, className), scriptText);
+                return new KeyValuePair<string, string>(Utility.Text.Format(tablePath, className), scriptText);
             }
 
             private static KeyValuePair<string, string> WriteStruct(string className, string classType)
@@ -198,7 +198,7 @@ namespace JFramework
                 scriptText = scriptText.Replace("//TODO:1", builder.ToString());
                 builder.Length = 0;
                 Heap.Enqueue(builder);
-                return new KeyValuePair<string, string>(Text.Format(structPath, className), scriptText);
+                return new KeyValuePair<string, string>(Utility.Text.Format(structPath, className), scriptText);
             }
 
             private static KeyValuePair<string, string> WriteEnum(string className, IEnumerable<string> members)
@@ -224,7 +224,7 @@ namespace JFramework
                 scriptText = scriptText.Replace("//TODO:1", builder.ToString());
                 builder.Length = 0;
                 Heap.Enqueue(builder);
-                return new KeyValuePair<string, string>(Text.Format(enumPath, className), scriptText);
+                return new KeyValuePair<string, string>(Utility.Text.Format(enumPath, className), scriptText);
             }
 
             private static bool WriteScripts(string filePath, string fileData)
@@ -251,7 +251,7 @@ namespace JFramework
                 }
 
                 File.WriteAllText(filePath, fileData);
-                Log.Info(Text.Format("生成 CSharp 脚本: {0}", filePath.Color("00FF00")));
+                Log.Info(Utility.Text.Format("生成 CSharp 脚本: {0}", filePath.Color("00FF00")));
                 return true;
             }
         }

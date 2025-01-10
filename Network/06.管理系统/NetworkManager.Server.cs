@@ -110,7 +110,7 @@ namespace JFramework.Net
 
                 if (isLoadScene && NetworkManager.sceneName == sceneName)
                 {
-                    Log.Error(Service.Text.Format("服务器正在加载 {0} 场景", sceneName));
+                    Log.Error(Utility.Text.Format("服务器正在加载 {0} 场景", sceneName));
                     return;
                 }
 
@@ -159,7 +159,7 @@ namespace JFramework.Net
 
             public static void Register<T>(Action<NetworkClient, T> handle) where T : struct, IMessage
             {
-                messages[Message<T>.Id] = (client, reader, channel) =>
+                messages[Utility.Hash<T>.Id] = (client, reader, channel) =>
                 {
                     try
                     {
@@ -168,7 +168,7 @@ namespace JFramework.Net
                     }
                     catch (Exception e)
                     {
-                        Log.Error(Service.Text.Format("{0} 调用失败。传输通道: {1}\n{2}", typeof(T).Name, channel, e));
+                        Log.Error(Utility.Text.Format("{0} 调用失败。传输通道: {1}\n{2}", typeof(T).Name, channel, e));
                         client.Disconnect();
                     }
                 };
@@ -176,7 +176,7 @@ namespace JFramework.Net
 
             public static void Register<T>(Action<NetworkClient, T, int> handle) where T : struct, IMessage
             {
-                messages[Message<T>.Id] = (client, reader, channel) =>
+                messages[Utility.Hash<T>.Id] = (client, reader, channel) =>
                 {
                     try
                     {
@@ -185,7 +185,7 @@ namespace JFramework.Net
                     }
                     catch (Exception e)
                     {
-                        Log.Error(Service.Text.Format("{0} 调用失败。传输通道: {1}\n{2}", typeof(T).Name, channel, e));
+                        Log.Error(Utility.Text.Format("{0} 调用失败。传输通道: {1}\n{2}", typeof(T).Name, channel, e));
                         client.Disconnect();
                     }
                 };
@@ -211,26 +211,26 @@ namespace JFramework.Net
             {
                 if (!spawns.TryGetValue(message.objectId, out var @object))
                 {
-                    Log.Warn(Service.Text.Format("无法为客户端 {0} 同步网络对象: {1}", client.clientId, message.objectId));
+                    Log.Warn(Utility.Text.Format("无法为客户端 {0} 同步网络对象: {1}", client.clientId, message.objectId));
                     return;
                 }
 
                 if (@object == null)
                 {
-                    Log.Warn(Service.Text.Format("无法为客户端 {0} 同步网络对象: {1}", client.clientId, message.objectId));
+                    Log.Warn(Utility.Text.Format("无法为客户端 {0} 同步网络对象: {1}", client.clientId, message.objectId));
                     return;
                 }
 
                 if (@object.connection != client)
                 {
-                    Log.Warn(Service.Text.Format("无法为客户端 {0} 同步网络对象: {1}", client.clientId, message.objectId));
+                    Log.Warn(Utility.Text.Format("无法为客户端 {0} 同步网络对象: {1}", client.clientId, message.objectId));
                     return;
                 }
 
                 using var reader = MemoryReader.Pop(message.segment);
                 if (!@object.ServerDeserialize(reader))
                 {
-                    Log.Warn(Service.Text.Format("无法为客户端 {0} 反序列化网络对象: {1}", client.clientId, message.objectId));
+                    Log.Warn(Utility.Text.Format("无法为客户端 {0} 反序列化网络对象: {1}", client.clientId, message.objectId));
                     client.Disconnect();
                 }
             }
@@ -240,19 +240,19 @@ namespace JFramework.Net
                 if (!client.isReady)
                 {
                     if (channel != Channel.Reliable) return;
-                    Log.Warn(Service.Text.Format("无法为客户端 {0} 进行远程调用，未准备就绪。", client.clientId));
+                    Log.Warn(Utility.Text.Format("无法为客户端 {0} 进行远程调用，未准备就绪。", client.clientId));
                     return;
                 }
 
                 if (!spawns.TryGetValue(message.objectId, out var @object))
                 {
-                    Log.Warn(Service.Text.Format("无法为客户端 {0} 进行远程调用，未找到对象 {1}。", client.clientId, message.objectId));
+                    Log.Warn(Utility.Text.Format("无法为客户端 {0} 进行远程调用，未找到对象 {1}。", client.clientId, message.objectId));
                     return;
                 }
 
                 if (NetworkDelegate.RequireReady(message.methodHash) && @object.connection != client)
                 {
-                    Log.Warn(Service.Text.Format("无法为客户端 {0} 进行远程调用，未通过验证 {1}。", client.clientId, message.objectId));
+                    Log.Warn(Utility.Text.Format("无法为客户端 {0} 进行远程调用，未通过验证 {1}。", client.clientId, message.objectId));
                     return;
                 }
 
@@ -267,7 +267,7 @@ namespace JFramework.Net
             {
                 if (clientId == 0)
                 {
-                    Log.Warn(Service.Text.Format("无法为客户端 {0} 建立通信连接。", clientId));
+                    Log.Warn(Utility.Text.Format("无法为客户端 {0} 建立通信连接。", clientId));
                     Transport.StopClient(clientId);
                 }
                 else if (clients.ContainsKey(clientId))
@@ -303,13 +303,13 @@ namespace JFramework.Net
             {
                 if (!clients.TryGetValue(clientId, out var client))
                 {
-                    Log.Warn(Service.Text.Format("无法为客户端 {0} 进行处理消息。未知客户端。", clientId));
+                    Log.Warn(Utility.Text.Format("无法为客户端 {0} 进行处理消息。未知客户端。", clientId));
                     return;
                 }
 
                 if (!client.reader.AddBatch(segment))
                 {
-                    Log.Warn(Service.Text.Format("无法为客户端 {0} 进行处理消息。", clientId));
+                    Log.Warn(Utility.Text.Format("无法为客户端 {0} 进行处理消息。", clientId));
                     client.Disconnect();
                     return;
                 }
@@ -319,7 +319,7 @@ namespace JFramework.Net
                     using var reader = MemoryReader.Pop(newSeg);
                     if (reader.residue < sizeof(ushort))
                     {
-                        Log.Warn(Service.Text.Format("无法为客户端 {0} 进行处理消息。没有头部。", clientId));
+                        Log.Warn(Utility.Text.Format("无法为客户端 {0} 进行处理消息。没有头部。", clientId));
                         client.Disconnect();
                         return;
                     }
@@ -327,7 +327,7 @@ namespace JFramework.Net
                     var message = reader.ReadUShort();
                     if (!messages.TryGetValue(message, out var action))
                     {
-                        Log.Warn(Service.Text.Format("无法为客户端 {0} 进行处理消息。未知的消息{1}。", clientId, message));
+                        Log.Warn(Utility.Text.Format("无法为客户端 {0} 进行处理消息。未知的消息{1}。", clientId, message));
                         client.Disconnect();
                         return;
                     }
@@ -338,7 +338,7 @@ namespace JFramework.Net
 
                 if (!isLoadScene && client.reader.Count > 0)
                 {
-                    Log.Warn(Service.Text.Format("无法为客户端 {0} 进行处理消息。残留消息: {1}。", clientId, client.reader.Count));
+                    Log.Warn(Utility.Text.Format("无法为客户端 {0} 进行处理消息。残留消息: {1}。", clientId, client.reader.Count));
                 }
             }
         }
@@ -372,13 +372,13 @@ namespace JFramework.Net
 
                 if (!obj.TryGetComponent(out NetworkObject @object))
                 {
-                    Log.Error(Service.Text.Format("网络对象 {0} 没有 NetworkObject 组件", obj), obj);
+                    Log.Error(Utility.Text.Format("网络对象 {0} 没有 NetworkObject 组件", obj), obj);
                     return;
                 }
 
                 if (spawns.ContainsKey(@object.objectId))
                 {
-                    Log.Warn(Service.Text.Format("网络对象 {0} 已经生成。", @object), @object);
+                    Log.Warn(Utility.Text.Format("网络对象 {0} 已经生成。", @object), @object);
                     return;
                 }
 
@@ -510,7 +510,7 @@ namespace JFramework.Net
                         {
                             if (@object == null)
                             {
-                                Log.Warn(Service.Text.Format("在客户端 {0} 找到了空的网络对象。", client.clientId));
+                                Log.Warn(Utility.Text.Format("在客户端 {0} 找到了空的网络对象。", client.clientId));
                                 return;
                             }
 

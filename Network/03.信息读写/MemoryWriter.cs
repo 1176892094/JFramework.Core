@@ -30,7 +30,7 @@ namespace JFramework.Net
         public unsafe void Write<T>(T value) where T : unmanaged
         {
             AddCapacity(position + sizeof(T));
-            Service.Unsafe.Write(buffer, value, ref position);
+            Utility.Unsafe.Write(buffer, value, ref position);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

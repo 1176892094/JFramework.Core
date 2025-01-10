@@ -3,8 +3,8 @@
 // # Unity: 6000.3.5f1
 // # Author: 云谷千羽
 // # Version: 1.0.0
-// # History: 2024-12-23 18:12:21
-// # Recently: 2025-01-08 17:01:25
+// # History: 2025-01-09 16:01:50
+// # Recently: 2025-01-10 16:01:55
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace JFramework
 {
-    public static partial class Service
+    public static partial class Utility
     {
         public static class Mail
         {
@@ -56,27 +56,25 @@ namespace JFramework
 
                         smtpClient.Send(mailMessage);
                     });
-
-                    Log.Info("邮件发送成功!");
                 }
                 catch (SmtpException e)
                 {
-                    Log.Error(Text.Format("邮件发送失败: {0}", e.Message));
+                    throw new SmtpException(e.ToString());
                 }
             }
+        }
 
-            [Serializable]
-            public struct MailData
-            {
-                public string smtpServer;
-                public int smtpPort;
-                public string senderName;
-                public string senderAddress;
-                public string senderPassword;
-                public string mailName;
-                public string mailBody;
-                public string targetAddress;
-            }
+        [Serializable]
+        public struct MailData
+        {
+            public string smtpServer;
+            public int smtpPort;
+            public string senderName;
+            public string senderAddress;
+            public string senderPassword;
+            public string mailName;
+            public string mailBody;
+            public string targetAddress;
         }
     }
 }

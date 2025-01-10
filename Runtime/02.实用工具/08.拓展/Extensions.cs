@@ -28,22 +28,22 @@ namespace JFramework
 
         public static string Bold(this string result)
         {
-            return Service.Text.Format("<b>{0}</b>", result);
+            return Utility.Text.Format("<b>{0}</b>", result);
         }
 
         public static string Line(this string result)
         {
-            return Service.Text.Format("<u>{0}</u>", result);
+            return Utility.Text.Format("<u>{0}</u>", result);
         }
 
         public static string Link(this string result, string format)
         {
-            return Service.Text.Format("<a href=\"{0}\">{1}</a>", format, result);
+            return Utility.Text.Format("<a href=\"{0}\">{1}</a>", format, result);
         }
 
         public static string Color(this string result, string format)
         {
-            return Service.Text.Format("<color=#{0}>{1}</color>", format, result);
+            return Utility.Text.Format("<color=#{0}>{1}</color>", format, result);
         }
 
         public static T ToEnum<T>(this string result) where T : struct, Enum
@@ -79,7 +79,7 @@ namespace JFramework
                 }
             }
 
-            return enumFlags[Service.Random.Next(enumFlags.Count)];
+            return enumFlags[Utility.Random.Next(enumFlags.Count)];
         }
     }
 }

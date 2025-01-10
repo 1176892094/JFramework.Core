@@ -146,7 +146,7 @@ namespace JFramework.Net
 
                 if (isLoadScene && NetworkManager.sceneName == sceneName)
                 {
-                    Log.Error(Service.Text.Format("客户端正在加载 {0} 场景", sceneName));
+                    Log.Error(Utility.Text.Format("客户端正在加载 {0} 场景", sceneName));
                     return;
                 }
 
@@ -198,7 +198,7 @@ namespace JFramework.Net
 
             public static void Register<T>(Action<T> handle) where T : struct, IMessage
             {
-                messages[Message<T>.Id] = (client, reader, channel) =>
+                messages[Utility.Hash<T>.Id] = (client, reader, channel) =>
                 {
                     try
                     {
@@ -207,7 +207,7 @@ namespace JFramework.Net
                     }
                     catch (Exception e)
                     {
-                        Log.Error(Service.Text.Format("{0} 调用失败。传输通道: {1}\n{2}", typeof(T).Name, channel, e));
+                        Log.Error(Utility.Text.Format("{0} 调用失败。传输通道: {1}\n{2}", typeof(T).Name, channel, e));
                         client.Disconnect();
                     }
                 };
@@ -248,13 +248,13 @@ namespace JFramework.Net
 
                 if (!spawns.TryGetValue(message.objectId, out var @object))
                 {
-                    Log.Warn(Service.Text.Format("无法同步网络对象: {0}", message.objectId));
+                    Log.Warn(Utility.Text.Format("无法同步网络对象: {0}", message.objectId));
                     return;
                 }
 
                 if (@object == null)
                 {
-                    Log.Warn(Service.Text.Format("无法同步网络对象: {0}", message.objectId));
+                    Log.Warn(Utility.Text.Format("无法同步网络对象: {0}", message.objectId));
                     return;
                 }
 
@@ -315,7 +315,7 @@ namespace JFramework.Net
                     {
                         if (scenes.TryGetValue(@object.sceneId, out var obj))
                         {
-                            Service.Text.Format("客户端场景对象重复。网络对象: {0} {1}", @object.name, obj.name);
+                            Utility.Text.Format("客户端场景对象重复。网络对象: {0} {1}", @object.name, obj.name);
                             continue;
                         }
 
@@ -387,7 +387,7 @@ namespace JFramework.Net
                     6 => "ConnectionClosed",
                     _ => "Unexpected",
                 };
-                Log.Warn(Service.Text.Format("错误代码: {0} => {1}", reason, message));
+                Log.Warn(Utility.Text.Format("错误代码: {0} => {1}", reason, message));
             }
 
             internal static void OnClientReceive(ArraySegment<byte> segment, int channel)
@@ -418,7 +418,7 @@ namespace JFramework.Net
                     var message = reader.ReadUShort();
                     if (!messages.TryGetValue(message, out var action))
                     {
-                        Log.Warn(Service.Text.Format("无法处理来自服务器的消息。未知的消息{0}", message));
+                        Log.Warn(Utility.Text.Format("无法处理来自服务器的消息。未知的消息{0}", message));
                         connection.Disconnect();
                         return;
                     }
@@ -429,7 +429,7 @@ namespace JFramework.Net
 
                 if (!isLoadScene && connection.reader.Count > 0)
                 {
-                    Log.Warn(Service.Text.Format("无法处理来自服务器的消息。残留消息: {0}", connection.reader.Count));
+                    Log.Warn(Utility.Text.Format("无法处理来自服务器的消息。残留消息: {0}", connection.reader.Count));
                 }
             }
         }
@@ -458,19 +458,19 @@ namespace JFramework.Net
 
                     if (!prefab.TryGetComponent(out @object))
                     {
-                        Log.Error(Service.Text.Format("无法注册网络对象 {0}。没有 NetworkObject 组件。", prefab.name));
+                        Log.Error(Utility.Text.Format("无法注册网络对象 {0}。没有 NetworkObject 组件。", prefab.name));
                         return;
                     }
 
                     if (@object.sceneId != 0)
                     {
-                        Log.Error(Service.Text.Format("无法注册网络对象 {0}。因为该预置体为场景对象。", @object.name));
+                        Log.Error(Utility.Text.Format("无法注册网络对象 {0}。因为该预置体为场景对象。", @object.name));
                         return;
                     }
 
                     if (@object.GetComponentsInChildren<NetworkObject>().Length > 1)
                     {
-                        Log.Error(Service.Text.Format("无法注册网络对象 {0}。持有多个 NetworkObject 组件。", @object.name));
+                        Log.Error(Utility.Text.Format("无法注册网络对象 {0}。持有多个 NetworkObject 组件。", @object.name));
                         return;
                     }
                 }
@@ -478,7 +478,7 @@ namespace JFramework.Net
                 {
                     if (!scenes.TryGetValue(message.sceneId, out @object))
                     {
-                        Log.Error(Service.Text.Format("无法注册网络对象 {0}。场景标识无效。", message.sceneId));
+                        Log.Error(Utility.Text.Format("无法注册网络对象 {0}。场景标识无效。", message.sceneId));
                         return;
                     }
 

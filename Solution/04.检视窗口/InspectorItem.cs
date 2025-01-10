@@ -33,7 +33,7 @@ namespace JFramework
 
         protected override void InitInspector(EditorWindow window, VisualElement parent, VisualElement element)
         {
-            if (element.parent[0].name == "JFramework Inspector")
+            if (element.parent[0].name == "JFramework Settings")
             {
                 element.parent.RemoveAt(0);
             }
@@ -51,7 +51,7 @@ namespace JFramework
         {
             var element = new VisualElement
             {
-                name = "JFramework Inspector",
+                name = "JFramework Settings",
             };
             InitTitle(element);
             InitTools(element);

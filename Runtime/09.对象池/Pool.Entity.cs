@@ -55,7 +55,7 @@ namespace JFramework
                 }
 
                 assetData = await Asset.Load<GameObject>(assetPath);
-                assetData.name = Text.Format("{0}", assetPath);
+                assetData.name = Utility.Text.Format("{0}", assetPath);
                 Object.DontDestroyOnLoad(assetData);
                 cached.Add(assetData);
                 return assetData;

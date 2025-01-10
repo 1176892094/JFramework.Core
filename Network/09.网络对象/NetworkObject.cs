@@ -49,8 +49,8 @@ namespace JFramework.Net
 
         private void OnValidate()
         {
-            var assetType = Service.Find.Type("JFramework.NetworkSetting, Unity.JFramework.CodeGen");
-            var assetData = assetType.GetMethod("Validate", Service.Find.Static);
+            var assetType = Utility.Find.Type("JFramework.NetworkSetting, Unity.JFramework.CodeGen");
+            var assetData = assetType.GetMethod("Validate", Utility.Find.Static);
             if (assetData != null)
             {
                 var assetPair = (KeyValuePair<string, ulong>)assetData.Invoke(null, new object[] { assetId, sceneId, gameObject });
@@ -107,19 +107,19 @@ namespace JFramework.Net
         {
             if (this == null)
             {
-                Log.Warn(Service.Text.Format("调用了已经删除的网络对象。{0} [{1}] {2}", mode, function, objectId));
+                Log.Warn(Utility.Text.Format("调用了已经删除的网络对象。{0} [{1}] {2}", mode, function, objectId));
                 return;
             }
 
             if (index >= entities.Length)
             {
-                Log.Warn(Service.Text.Format("网络对象{0}，没有找到组件{1}", objectId, index));
+                Log.Warn(Utility.Text.Format("网络对象{0}，没有找到组件{1}", objectId, index));
                 return;
             }
 
             if (!NetworkDelegate.Invoke(function, mode, client, reader, entities[index]))
             {
-                Log.Error(Service.Text.Format("无法调用{0} [{1}] 网络对象: {2} 网络标识: {3}", mode, function, gameObject.name, objectId));
+                Log.Error(Utility.Text.Format("无法调用{0} [{1}] 网络对象: {2} 网络标识: {3}", mode, function, gameObject.name, objectId));
             }
         }
 

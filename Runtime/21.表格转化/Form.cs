@@ -26,7 +26,7 @@ namespace JFramework
                 var fileName = Path.GetFileNameWithoutExtension(filePath);
                 var fileData = Path.GetDirectoryName(filePath);
                 if (fileData == null) return null;
-                fileData = Path.Combine(fileData, Text.Format("{0}_TMP{1}", fileName, fileType));
+                fileData = Path.Combine(fileData, Utility.Text.Format("{0}_TMP{1}", fileName, fileType));
                 File.Copy(filePath, fileData, true);
                 try
                 {
@@ -37,7 +37,7 @@ namespace JFramework
                     var dataTable = new List<KeyValuePair<string, string[,]>>();
                     for (var i = 0; i < sheetName.Count; i++)
                     {
-                        var sheet = Text.Format("xl/worksheets/sheet{0}.xml", i + 1);
+                        var sheet = Utility.Text.Format("xl/worksheets/sheet{0}.xml", i + 1);
                         var worksheet = GetWorksheet(LoadDocument(archive, sheet), sharedString);
                         dataTable.Add(new KeyValuePair<string, string[,]>(sheetName[i], worksheet));
                     }

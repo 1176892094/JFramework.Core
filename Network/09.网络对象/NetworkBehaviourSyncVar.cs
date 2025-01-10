@@ -102,7 +102,7 @@ namespace JFramework.Net
                     newValue = entity.objectId;
                     if (newValue == 0)
                     {
-                        Log.Warn(Service.Text.Format("设置网络变量的对象未初始化。对象名称: {0}", newObject.name));
+                        Log.Warn(Utility.Text.Format("设置网络变量的对象未初始化。对象名称: {0}", newObject.name));
                     }
                 }
             }
@@ -136,7 +136,7 @@ namespace JFramework.Net
                     newValue = entity.objectId;
                     if (newValue == 0)
                     {
-                        Log.Warn(Service.Text.Format("设置网络变量的对象未初始化。对象名称: {0}", newObject.name));
+                        Log.Warn(Utility.Text.Format("设置网络变量的对象未初始化。对象名称: {0}", newObject.name));
                     }
                 }
             }
@@ -186,7 +186,7 @@ namespace JFramework.Net
                 newValue = @object.objectId;
                 if (newValue == 0)
                 {
-                    Log.Warn(Service.Text.Format("设置网络变量的对象未初始化。对象名称: {0}", @object.name));
+                    Log.Warn(Utility.Text.Format("设置网络变量的对象未初始化。对象名称: {0}", @object.name));
                 }
             }
 
@@ -209,7 +209,7 @@ namespace JFramework.Net
                 newValue = @object.objectId;
                 if (newValue == 0)
                 {
-                    Log.Warn(Service.Text.Format("设置网络变量的对象未初始化。对象名称: {0}", @object.name));
+                    Log.Warn(Utility.Text.Format("设置网络变量的对象未初始化。对象名称: {0}", @object.name));
                 }
             }
 
@@ -260,7 +260,7 @@ namespace JFramework.Net
                 index = @object.componentId;
                 if (newValue == 0)
                 {
-                    Log.Warn(Service.Text.Format("设置网络变量的对象未初始化。对象名称: {0}", @object.name));
+                    Log.Warn(Utility.Text.Format("设置网络变量的对象未初始化。对象名称: {0}", @object.name));
                 }
             }
 
@@ -294,7 +294,7 @@ namespace JFramework.Net
                 index = @object.componentId;
                 if (newValue == 0)
                 {
-                    Log.Warn(Service.Text.Format("设置网络变量的对象未初始化。对象名称: {0}", @object.name));
+                    Log.Warn(Utility.Text.Format("设置网络变量的对象未初始化。对象名称: {0}", @object.name));
                 }
             }
 

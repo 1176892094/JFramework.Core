@@ -153,7 +153,7 @@ namespace JFramework
                         await request.SendWebRequest();
                         if (request.result != UnityWebRequest.Result.Success)
                         {
-                            Log.Info(Text.Format("请求服务器下载 {0} 失败!\n", packName));
+                            Log.Info(Utility.Text.Format("请求服务器下载 {0} 失败!\n", packName));
                             continue;
                         }
 
@@ -172,7 +172,7 @@ namespace JFramework
                     await request.SendWebRequest();
                     if (request.result != UnityWebRequest.Result.Success)
                     {
-                        Log.Info(Text.Format("请求服务器校验 {0} 失败!\n", packName));
+                        Log.Info(Utility.Text.Format("请求服务器校验 {0} 失败!\n", packName));
                         return null;
                     }
                 }
@@ -189,7 +189,7 @@ namespace JFramework
                     Event.Invoke(new PackUpdateEvent(packName, 1));
                     if (request.result != UnityWebRequest.Result.Success)
                     {
-                        Log.Info(Text.Format("请求服务器下载 {0} 失败!\n", packName));
+                        Log.Info(Utility.Text.Format("请求服务器下载 {0} 失败!\n", packName));
                         return null;
                     }
 
@@ -224,7 +224,7 @@ namespace JFramework
                 byte[] result = default;
                 if (packData.Key == 1)
                 {
-                    result = await Task.Run(() => Xor.Decrypt(File.ReadAllBytes(packData.Value)));
+                    result = await Task.Run(() => Utility.Xor.Decrypt(File.ReadAllBytes(packData.Value)));
                 }
                 else if (packData.Key == 2)
                 {
@@ -232,7 +232,7 @@ namespace JFramework
                     await request.SendWebRequest();
                     if (request.result == UnityWebRequest.Result.Success)
                     {
-                        result = await Task.Run(() => Xor.Decrypt(request.downloadHandler.data));
+                        result = await Task.Run(() => Utility.Xor.Decrypt(request.downloadHandler.data));
                     }
                 }
 

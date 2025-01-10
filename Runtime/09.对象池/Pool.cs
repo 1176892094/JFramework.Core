@@ -44,7 +44,7 @@ namespace JFramework
                 var assetPath = assetData.name;
                 if (!poolGroup.TryGetValue(assetPath, out var parent))
                 {
-                    parent = new GameObject(Text.Format("Pool - {0}", assetPath));
+                    parent = new GameObject(Utility.Text.Format("Pool - {0}", assetPath));
                     parent.transform.SetParent(manager.transform);
                     poolGroup.Add(assetPath, parent);
                 }

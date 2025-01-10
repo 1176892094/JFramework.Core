@@ -20,7 +20,7 @@ namespace JFramework
 
         private static string assetPath => helper.assetDataPath + "/{0}DataTable.asset";
 
-        private static string assemblyPath => Text.Format("{0}/{1}.asmdef", helper.scriptDataPath, helper.assemblyName);
+        private static string assemblyPath => Utility.Text.Format("{0}/{1}.asmdef", helper.scriptDataPath, helper.assemblyName);
 
         private static string enumPath => helper.scriptDataPath + "/01.枚举类/{0}.cs";
 
@@ -40,15 +40,15 @@ namespace JFramework
 
         private static string streamingAssetsPath => Application.streamingAssetsPath;
 
-        private static string assetPackData => Text.Format("{0}.json", helper.assetPackName);
+        private static string assetPackData => Utility.Text.Format("{0}.json", helper.assetPackName);
 
-        private static string assetPackPath => Text.Format("{0}/{1}", persistentDataPath, helper.assetPackPath);
+        private static string assetPackPath => Utility.Text.Format("{0}/{1}", persistentDataPath, helper.assetPackPath);
 
-        private static string GetScenePath(string assetName) => Text.Format("Scenes/{0}", assetName);
+        private static string GetScenePath(string assetName) => Utility.Text.Format("Scenes/{0}", assetName);
 
-        private static string GetPanelPath(string assetName) => Text.Format("Prefabs/{0}", assetName);
+        private static string GetPanelPath(string assetName) => Utility.Text.Format("Prefabs/{0}", assetName);
 
-        private static string GetTablePath(string assetName) => Text.Format("DataTable/{0}", assetName);
+        private static string GetTablePath(string assetName) => Utility.Text.Format("DataTable/{0}", assetName);
 
         private static string GetPacketPath(string fileName) => Path.Combine(assetPackPath, fileName);
 
@@ -60,10 +60,10 @@ namespace JFramework
 
         private static string GetJsonPath(string fileName)
         {
-            var filePath = Path.Combine(streamingAssetsPath, Text.Format("{0}.json", fileName));
+            var filePath = Path.Combine(streamingAssetsPath, Utility.Text.Format("{0}.json", fileName));
             if (!File.Exists(filePath))
             {
-                filePath = Path.Combine(persistentDataPath, Text.Format("{0}.json", fileName));
+                filePath = Path.Combine(persistentDataPath, Utility.Text.Format("{0}.json", fileName));
             }
 
             return filePath;

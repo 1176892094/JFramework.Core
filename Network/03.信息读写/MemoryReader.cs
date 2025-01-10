@@ -31,7 +31,7 @@ namespace JFramework.Net
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T Read<T>() where T : unmanaged
         {
-            return Service.Unsafe.Read<T>(buffer.Array, buffer.Offset, ref position);
+            return Utility.Unsafe.Read<T>(buffer.Array, buffer.Offset, ref position);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

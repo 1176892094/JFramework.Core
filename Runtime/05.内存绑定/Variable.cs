@@ -41,7 +41,7 @@ namespace JFramework
             set
             {
                 origin = value ?? (T)(object)string.Empty;
-                offset = Service.Random.Next(1, int.MaxValue);
+                offset = Utility.Random.Next(1, int.MaxValue);
                 buffer = unchecked(origin.GetHashCode() + offset);
             }
         }
@@ -49,7 +49,7 @@ namespace JFramework
         public Variable(T value = default)
         {
             origin = value ?? (T)(object)string.Empty;
-            offset = Service.Random.Next(1, int.MaxValue);
+            offset = Utility.Random.Next(1, int.MaxValue);
             buffer = unchecked(origin.GetHashCode() + offset);
         }
 

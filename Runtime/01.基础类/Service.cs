@@ -66,10 +66,6 @@ namespace JFramework
 
         private static readonly Dictionary<string, Task<AssetBundle>> assetTask = new Dictionary<string, Task<AssetBundle>>();
 
-        private static readonly Dictionary<string, Type> cachedType = new Dictionary<string, Type>();
-
-        private static readonly Dictionary<string, Assembly> assemblies = new Dictionary<string, Assembly>();
-
         private static readonly Dictionary<string, IPool> poolData = new Dictionary<string, IPool>();
 
         private static readonly Dictionary<string, GameObject> poolGroup = new Dictionary<string, GameObject>();

@@ -88,7 +88,7 @@ namespace JFramework
             catch (Exception e)
             {
                 OnFinish.Invoke();
-                Log.Info(Service.Text.Format("计时器无法执行方法：\n{0}", e));
+                Log.Info(Utility.Text.Format("计时器无法执行方法：\n{0}", e));
             }
         }
 

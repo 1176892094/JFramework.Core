@@ -66,7 +66,7 @@ namespace JFramework
             poolDataInfos.Clear();
             foreach (var poolInfo in objectInfos)
             {
-                var assemblyName = Service.Text.Format("{0} - {1}", poolInfo.assetType.Assembly.GetName().Name, message);
+                var assemblyName = Utility.Text.Format("{0} - {1}", poolInfo.assetType.Assembly.GetName().Name, message);
                 if (!poolDataInfos.TryGetValue(assemblyName, out var results))
                 {
                     results = new List<Reference>();
@@ -87,11 +87,11 @@ namespace JFramework
                 {
                     if (string.IsNullOrEmpty(data.assetPath))
                     {
-                        GUILayout.Label(Service.Text.Format("{0}", data.assetType.Name), Height20);
+                        GUILayout.Label(Utility.Text.Format("{0}", data.assetType.Name), Height20);
                     }
                     else
                     {
-                        GUILayout.Label(Service.Text.Format("{0} - {1}", data.assetType.Name, data.assetPath), Height20);
+                        GUILayout.Label(Utility.Text.Format("{0} - {1}", data.assetType.Name, data.assetPath), Height20);
                     }
                 }
 

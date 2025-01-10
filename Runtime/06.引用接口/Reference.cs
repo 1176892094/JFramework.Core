@@ -33,7 +33,7 @@ namespace JFramework
 
         public override string ToString()
         {
-            return Service.Text.Format("{0}\t\t{1}\t\t{2}\t\t{3}", unusedCount, cachedCount, dequeueCount, enqueueCount);
+            return Utility.Text.Format("{0}\t\t{1}\t\t{2}\t\t{3}", unusedCount, cachedCount, dequeueCount, enqueueCount);
         }
     }
 }

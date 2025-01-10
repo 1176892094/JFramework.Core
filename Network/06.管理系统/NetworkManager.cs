@@ -179,58 +179,6 @@ namespace JFramework.Net
             StopServer();
         }
 
-        public static string GetHostName()
-        {
-            try
-            {
-                var interfaces = NetworkInterface.GetAllNetworkInterfaces();
-                foreach (var inter in interfaces)
-                {
-                    if (inter.OperationalStatus == OperationalStatus.Up && inter.NetworkInterfaceType != NetworkInterfaceType.Loopback)
-                    {
-                        var properties = inter.GetIPProperties();
-                        foreach (var ip in properties.UnicastAddresses)
-                        {
-                            if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
-                            {
-                                return ip.Address.ToString();
-                            }
-                        }
-                    }
-                }
-
-                var addresses = Dns.GetHostEntry(Dns.GetHostName()).AddressList; // 虚拟机无法解析网络接口 因此额外解析主机地址
-                foreach (var ip in addresses)
-                {
-                    if (ip.AddressFamily == AddressFamily.InterNetwork)
-                    {
-                        return ip.ToString();
-                    }
-                }
-
-                return "127.0.0.1";
-            }
-            catch
-            {
-                return "127.0.0.1";
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static uint GetStableId(string name)
-        {
-            var result = 23U;
-            unchecked
-            {
-                foreach (var c in name)
-                {
-                    result = result * 31 + c;
-                }
-
-                return result;
-            }
-        }
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NetworkObject GetNetworkObject(uint objectId)
         {

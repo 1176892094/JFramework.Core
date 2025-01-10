@@ -3,27 +3,32 @@
 // # Unity: 6000.3.5f1
 // # Author: 云谷千羽
 // # Version: 1.0.0
-// # History: 2024-12-23 18:12:21
-// # Recently: 2025-01-08 17:01:39
+// # History: 2025-01-09 16:01:50
+// # Recently: 2025-01-10 16:01:56
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
 
 using System;
+using System.Collections.Generic;
 using System.Reflection;
+
+// ReSharper disable All
 
 namespace JFramework
 {
-    public static partial class Service
+    public static partial class Utility
     {
         public static class Find
         {
             public const BindingFlags Static = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
             public const BindingFlags Instance = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+            private static readonly Dictionary<string, Type> cachedType = new Dictionary<string, Type>();
+            private static readonly Dictionary<string, Assembly> assemblies = new Dictionary<string, Assembly>();
 
             public static Assembly Assembly(string name)
             {
-                if (Service.assemblies.TryGetValue(name, out var assembly))
+                if (Find.assemblies.TryGetValue(name, out var assembly))
                 {
                     return assembly;
                 }
@@ -40,7 +45,7 @@ namespace JFramework
 
                 if (assembly != null)
                 {
-                    Service.assemblies[name] = assembly;
+                    Find.assemblies[name] = assembly;
                 }
 
                 return assembly;
@@ -48,7 +53,7 @@ namespace JFramework
 
             public static Type Type(string name)
             {
-                if (Service.cachedType.TryGetValue(name, out var cachedType))
+                if (Find.cachedType.TryGetValue(name, out var cachedType))
                 {
                     return cachedType;
                 }
@@ -61,7 +66,7 @@ namespace JFramework
 
                 var assembly = Assembly(name.Substring(index + 1).Trim());
                 cachedType = assembly.GetType(name.Substring(0, index));
-                Service.cachedType.Add(name, cachedType);
+                Find.cachedType.Add(name, cachedType);
                 return cachedType;
             }
         }

@@ -41,9 +41,9 @@ namespace JFramework
             {
                 var path = GetJsonPath(name);
                 var json = ToJson(data);
-                json = Zip.Compress(json);
+                json = Utility.Zip.Compress(json);
                 var item = Encoding.UTF8.GetBytes(json);
-                item = Xor.Encrypt(item);
+                item = Utility.Xor.Encrypt(item);
                 File.WriteAllBytes(path, item);
             }
 
@@ -56,9 +56,9 @@ namespace JFramework
                 }
 
                 var item = File.ReadAllBytes(path);
-                item = Xor.Decrypt(item);
+                item = Utility.Xor.Decrypt(item);
                 var json = Encoding.UTF8.GetString(item);
-                json = Zip.Decompress(json);
+                json = Utility.Zip.Decompress(json);
                 FromJson(json, data);
             }
         }

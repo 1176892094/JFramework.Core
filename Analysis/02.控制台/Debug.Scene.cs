@@ -31,7 +31,7 @@ namespace JFramework
         private void SceneWindow()
         {
             GUILayout.BeginHorizontal();
-            GUILayout.Label(Service.Text.Format("GameObject [{0}]", gameObjects.Count), "Button", BoxWidth, Height30);
+            GUILayout.Label(Utility.Text.Format("GameObject [{0}]", gameObjects.Count), "Button", BoxWidth, Height30);
             if (GUILayout.Button("Refresh", Height30))
             {
                 UpdateGameObject();

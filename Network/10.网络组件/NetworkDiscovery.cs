@@ -72,7 +72,7 @@ namespace JFramework.Net
             var setting = Resources.Load<ScriptableObject>("GlobalSetting");
             if (setting != null)
             {
-                var message = setting.GetType().GetMethod("BeginMulticastLock", Service.Find.Instance);
+                var message = setting.GetType().GetMethod("BeginMulticastLock", Utility.Find.Instance);
                 message?.Invoke(setting, null);
             }
         }
@@ -82,7 +82,7 @@ namespace JFramework.Net
             var setting = Resources.Load<ScriptableObject>("GlobalSetting");
             if (setting != null)
             {
-                var message = setting.GetType().GetMethod("EndMulticastLock", Service.Find.Instance);
+                var message = setting.GetType().GetMethod("EndMulticastLock", Utility.Find.Instance);
                 message?.Invoke(setting, null);
             }
         }

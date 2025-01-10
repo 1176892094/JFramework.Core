@@ -93,10 +93,10 @@ namespace JFramework
                 var setting = Resources.Load<ScriptableObject>("GlobalSetting");
                 if (setting != null)
                 {
-                    var message = setting.GetType().GetMethod("SendMail", Service.Find.Instance);
+                    var message = setting.GetType().GetMethod("SendMail", Utility.Find.Instance);
                     if (message != null)
                     {
-                        Service.Mail.Send((Service.Mail.MailData)message.Invoke(setting, new object[] { mailBody }));
+                        Utility.Mail.Send((Utility.MailData)message.Invoke(setting, new object[] { mailBody }));
                     }
                 }
             }
@@ -110,7 +110,7 @@ namespace JFramework
             foreach (var logInfo in logInfos.Values)
             {
                 GUI.contentColor = logInfo.status ? Color.white : Color.gray;
-                if (GUILayout.Button(Service.Text.Format("{0} [{1}]", logInfo.logType, logInfo.count), Height30))
+                if (GUILayout.Button(Utility.Text.Format("{0} [{1}]", logInfo.logType, logInfo.count), Height30))
                 {
                     logInfo.status = !logInfo.status;
                 }
