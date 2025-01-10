@@ -17,67 +17,64 @@ using Object = UnityEngine.Object;
 
 namespace JFramework
 {
-    public static partial class Service
+    internal class EntityPool : IPool
     {
-        private class EntityPool : IPool
+        private readonly HashSet<GameObject> cached = new HashSet<GameObject>();
+        private readonly Queue<GameObject> unused = new Queue<GameObject>();
+
+        public EntityPool(string assetPath, Type assetType)
         {
-            private readonly HashSet<GameObject> cached = new HashSet<GameObject>();
-            private readonly Queue<GameObject> unused = new Queue<GameObject>();
+            this.assetPath = assetPath;
+            this.assetType = assetType;
+        }
 
-            public EntityPool(string assetPath, Type assetType)
+        public Type assetType { get; private set; }
+        public string assetPath { get; private set; }
+        public int caches => cached.Count;
+        public int unuseds => unused.Count;
+        public int dequeue { get; private set; }
+        public int enqueue { get; private set; }
+
+        public async Task<GameObject> Dequeue()
+        {
+            dequeue++;
+            GameObject assetData;
+            if (unused.Count > 0)
             {
-                this.assetPath = assetPath;
-                this.assetType = assetType;
-            }
-
-            public Type assetType { get; private set; }
-            public string assetPath { get; private set; }
-            public int caches => cached.Count;
-            public int unuseds => unused.Count;
-            public int dequeue { get; private set; }
-            public int enqueue { get; private set; }
-
-            public async Task<GameObject> Dequeue()
-            {
-                dequeue++;
-                GameObject assetData;
-                if (unused.Count > 0)
+                assetData = unused.Dequeue();
+                if (assetData != null)
                 {
-                    assetData = unused.Dequeue();
-                    if (assetData != null)
-                    {
-                        cached.Add(assetData);
-                        return assetData;
-                    }
-
-                    enqueue++;
-                    cached.Remove(assetData);
+                    cached.Add(assetData);
+                    return assetData;
                 }
 
-                assetData = await Asset.Load<GameObject>(assetPath);
-                Object.DontDestroyOnLoad(assetData);
-                assetData.name = assetPath;
-                cached.Add(assetData);
-                return assetData;
+                enqueue++;
+                cached.Remove(assetData);
             }
 
-            public bool Enqueue(GameObject assetData)
+            assetData = await AssetManager.Load<GameObject>(assetPath);
+            Object.DontDestroyOnLoad(assetData);
+            assetData.name = assetPath;
+            cached.Add(assetData);
+            return assetData;
+        }
+
+        public bool Enqueue(GameObject assetData)
+        {
+            if (cached.Remove(assetData))
             {
-                if (cached.Remove(assetData))
-                {
-                    enqueue++;
-                    unused.Enqueue(assetData);
-                    return true;
-                }
-
-                return false;
+                enqueue++;
+                unused.Enqueue(assetData);
+                return true;
             }
 
-            void IDisposable.Dispose()
-            {
-                cached.Clear();
-                unused.Clear();
-            }
+            return false;
+        }
+
+        void IDisposable.Dispose()
+        {
+            cached.Clear();
+            unused.Clear();
         }
     }
 }

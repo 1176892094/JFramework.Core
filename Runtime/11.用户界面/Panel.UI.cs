@@ -13,18 +13,18 @@ using UnityEngine;
 
 namespace JFramework
 {
-    public abstract class UIPanel : MonoBehaviour, IEntity
+    public abstract class UIPanel : MonoBehaviour
     {
         public UIState state { get; set; } = UIState.Common;
 
         protected virtual void Awake()
         {
-            this.Inject();
+            gameObject.Inject();
         }
 
         protected virtual void OnDestroy()
         {
-            this.Destroy();
+            gameObject.Destroy();
         }
 
         public virtual void Show()

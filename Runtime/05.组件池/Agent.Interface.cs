@@ -10,11 +10,12 @@
 // *********************************************************************************
 
 using System;
+using UnityEngine;
 
 namespace JFramework
 {
     public interface IAgent : IDisposable
     {
-        void OnAwake(IEntity owner);
+        void OnAwake(GameObject owner);
     }
 }

@@ -13,13 +13,13 @@ using UnityEngine;
 
 namespace JFramework
 {
-    public abstract class Agent<T> : ScriptableObject, IAgent where T : IEntity
+    public abstract class Agent<T> : ScriptableObject, IAgent where T : Component
     {
         [SerializeField] private T instance;
 
-        public T owner => instance ??= (T)Service.entity;
+        public T owner => instance ??= GlobalManager.entity.GetComponent<T>();
 
-        public virtual void OnAwake(IEntity owner) => instance ??= (T)owner;
+        public virtual void OnAwake(GameObject owner) => instance ??= owner.GetComponent<T>();
 
         public virtual void Dispose() => instance = default;
     }

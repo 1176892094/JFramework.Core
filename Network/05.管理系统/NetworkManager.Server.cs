@@ -130,7 +130,7 @@ namespace JFramework.Net
                     client.Send(new SceneMessage(sceneName));
                 }
 
-                Service.Asset.LoadScene(sceneName);
+                AssetManager.LoadScene(sceneName);
             }
 
             internal static void LoadSceneComplete(string sceneName)
@@ -462,7 +462,7 @@ namespace JFramework.Net
                 @object.OnStopServer();
                 if (@object.assetId.Equals(@object.name, StringComparison.OrdinalIgnoreCase))
                 {
-                    Service.Entity.Hide(@object.gameObject);
+                    PoolManager.Hide(@object.gameObject);
                     @object.Reset();
                     return;
                 }

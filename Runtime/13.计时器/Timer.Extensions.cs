@@ -17,12 +17,12 @@ namespace JFramework
     {
         public static Watch Watch(this GameObject current, float duration)
         {
-            return Service.Timer.Load<Watch>(current, duration);
+            return TimerManager.Load<Watch>(current, duration);
         }
 
         public static Tween Tween(this GameObject current, float duration)
         {
-            return Service.Timer.Load<Tween>(current, duration);
+            return TimerManager.Load<Tween>(current, duration);
         }
 
         public static Tween DOMoveX(this Transform transform, float endValue, float duration)

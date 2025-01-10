@@ -16,7 +16,7 @@ using UnityEngine;
 
 namespace JFramework.Net
 {
-    public abstract partial class NetworkBehaviour : MonoBehaviour, IEntity
+    public abstract partial class NetworkBehaviour : MonoBehaviour
     {
         public SyncMode syncDirection;
 

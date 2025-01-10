@@ -15,62 +15,59 @@ using UnityEngine;
 
 namespace JFramework
 {
-    public static partial class Service
+    internal class AgentPool : IPool
     {
-        private class AgentPool : IPool
+        private readonly HashSet<ScriptableObject> cached = new HashSet<ScriptableObject>();
+        private readonly Queue<ScriptableObject> unused = new Queue<ScriptableObject>();
+
+        public AgentPool(Type assetType)
         {
-            private readonly HashSet<ScriptableObject> cached = new HashSet<ScriptableObject>();
-            private readonly Queue<ScriptableObject> unused = new Queue<ScriptableObject>();
+            this.assetType = assetType;
+        }
 
-            public AgentPool(Type assetType)
+        public Type assetType { get; private set; }
+        public string assetPath { get; private set; }
+        public int caches => cached.Count;
+        public int unuseds => unused.Count;
+        public int dequeue { get; private set; }
+        public int enqueue { get; private set; }
+
+        public ScriptableObject Dequeue()
+        {
+            dequeue++;
+            ScriptableObject assetData;
+            if (unused.Count > 0)
             {
-                this.assetType = assetType;
-            }
-
-            public Type assetType { get; private set; }
-            public string assetPath { get; private set; }
-            public int caches => cached.Count;
-            public int unuseds => unused.Count;
-            public int dequeue { get; private set; }
-            public int enqueue { get; private set; }
-
-            public ScriptableObject Dequeue()
-            {
-                dequeue++;
-                ScriptableObject assetData;
-                if (unused.Count > 0)
+                assetData = unused.Dequeue();
+                if (assetData != null)
                 {
-                    assetData = unused.Dequeue();
-                    if (assetData != null)
-                    {
-                        cached.Add(assetData);
-                        return assetData;
-                    }
-
-                    enqueue++;
-                    cached.Remove(assetData);
+                    cached.Add(assetData);
+                    return assetData;
                 }
 
-                assetData = ScriptableObject.CreateInstance(assetType);
-                assetData.name = assetType.Name;
-                cached.Add(assetData);
-                return assetData;
+                enqueue++;
+                cached.Remove(assetData);
             }
 
-            public void Enqueue(ScriptableObject assetData)
-            {
-                if (cached.Remove(assetData))
-                {
-                    enqueue++;
-                    unused.Enqueue(assetData);
-                }
-            }
+            assetData = ScriptableObject.CreateInstance(assetType);
+            assetData.name = assetType.Name;
+            cached.Add(assetData);
+            return assetData;
+        }
 
-            void IDisposable.Dispose()
+        public void Enqueue(ScriptableObject assetData)
+        {
+            if (cached.Remove(assetData))
             {
-                cached.Clear();
-                unused.Clear();
+                enqueue++;
+                unused.Enqueue(assetData);
             }
+        }
+
+        void IDisposable.Dispose()
+        {
+            cached.Clear();
+            unused.Clear();
         }
     }
 }

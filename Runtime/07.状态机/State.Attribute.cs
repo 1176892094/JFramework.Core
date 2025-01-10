@@ -11,10 +11,11 @@
 
 using System.Collections.Generic;
 using System.Text;
+using UnityEngine;
 
 namespace JFramework
 {
-    public abstract class Attribute<TEntity, T> : Agent<TEntity> where TEntity : IEntity
+    public abstract class Attribute<TOwner, T> : Agent<TOwner> where TOwner : Component
     {
         private readonly Dictionary<T, Variable<float>> attributes = new Dictionary<T, Variable<float>>();
 

@@ -15,59 +15,56 @@ using UnityEngine.SceneManagement;
 
 namespace JFramework
 {
-    public static partial class Service
+    public static partial class AssetManager
     {
-        public static partial class Asset
+        public static async void LoadScene(string assetPath)
         {
-            public static async void LoadScene(string assetPath)
+            try
             {
-                try
+                if (GlobalManager.helper == null) return;
+                var assetData = await LoadSceneAsset(GlobalManager.GetScenePath(assetPath));
+                if (assetData != null)
                 {
-                    if (helper == null) return;
-                    var assetData = await LoadSceneAsset(GetScenePath(assetPath));
-                    if (assetData != null)
+                    Utility.Event.Invoke(new SceneAwakeEvent(assetPath));
+                    var request = SceneManager.LoadSceneAsync(assetPath, LoadSceneMode.Single);
+                    if (request != null)
                     {
-                        Utility.Event.Invoke(new SceneAwakeEvent(assetPath));
-                        var request = SceneManager.LoadSceneAsync(assetPath, LoadSceneMode.Single);
-                        if (request != null)
+                        while (!request.isDone && GlobalManager.helper != null)
                         {
-                            while (!request.isDone && helper != null)
-                            {
-                                Utility.Event.Invoke(new SceneUpdateEvent(request.progress));
-                                await Task.Yield();
-                            }
+                            Utility.Event.Invoke(new SceneUpdateEvent(request.progress));
+                            await Task.Yield();
                         }
-
-                        Utility.Event.Invoke(new SceneCompleteEvent());
-                        return;
                     }
 
-                    Log.Warn(Utility.Text.Format("加载资源 {0} 为空!", assetPath));
+                    Utility.Event.Invoke(new SceneCompleteEvent());
+                    return;
                 }
-                catch (Exception e)
+
+                Log.Warn(Utility.Text.Format("加载资源 {0} 为空!", assetPath));
+            }
+            catch (Exception e)
+            {
+                Log.Warn(Utility.Text.Format("加载场景 {0} 失败!\n{1}", assetPath, e));
+            }
+        }
+
+        private static async Task<string> LoadSceneAsset(string assetPath)
+        {
+            if (GlobalManager.helper.assetPackMode)
+            {
+                var assetPair = await LoadAssetPair(assetPath);
+                var assetPack = await LoadAssetPack(assetPair.Key);
+                var assetData = assetPack.GetAllScenePaths();
+                foreach (var data in assetData)
                 {
-                    Log.Warn(Utility.Text.Format("加载场景 {0} 失败!\n{1}", assetPath, e));
+                    if (data == assetPair.Value)
+                    {
+                        return data;
+                    }
                 }
             }
 
-            private static async Task<string> LoadSceneAsset(string assetPath)
-            {
-                if (helper.assetPackMode)
-                {
-                    var assetPair = await LoadAssetPair(assetPath);
-                    var assetPack = await LoadAssetPack(assetPair.Key);
-                    var assetData =  assetPack.GetAllScenePaths();
-                    foreach (var data in assetData)
-                    {
-                        if (data == assetPair.Value)
-                        {
-                            return data;
-                        }
-                    }
-                }
-
-                return assetPath.Substring(assetPath.LastIndexOf('/') + 1);
-            }
+            return assetPath.Substring(assetPath.LastIndexOf('/') + 1);
         }
     }
 }

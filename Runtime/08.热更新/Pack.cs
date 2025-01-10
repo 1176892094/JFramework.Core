@@ -17,154 +17,124 @@ using UnityEngine.Networking;
 
 namespace JFramework
 {
-    public static partial class Service
+    internal static class PackManager
     {
-        public static class Pack
+        public static async void LoadAssetData()
         {
-            public static async void LoadAssetData()
+            if (GlobalManager.helper == null) return;
+            if (!GlobalManager.helper.assetPackMode)
             {
-                if (helper == null) return;
-                if (!helper.assetPackMode)
+                Utility.Event.Invoke(new PackCompleteEvent(false, "启动本地资源加载。"));
+                return;
+            }
+
+            if (GlobalManager.helper.assetPackMode && !Directory.Exists(GlobalManager.assetPackPath))
+            {
+                Directory.CreateDirectory(GlobalManager.assetPackPath);
+            }
+
+            var fileUri = GlobalManager.GetServerPath(GlobalManager.assetPackData);
+            var serverRequest = await LoadServerRequest(GlobalManager.assetPackData, fileUri);
+            if (!string.IsNullOrEmpty(serverRequest))
+            {
+                var assetPacks = JsonManager.FromJson<List<PackData>>(serverRequest);
+                foreach (var assetPack in assetPacks)
                 {
-                    Utility.Event.Invoke(new PackCompleteEvent(false, "启动本地资源加载。"));
-                    return;
+                    GlobalManager.serverPacks.Add(assetPack.name, assetPack);
                 }
 
-                if (helper.assetPackMode && !Directory.Exists(assetPackPath))
+                var sizes = new int[assetPacks.Count];
+                for (var i = 0; i < sizes.Length; i++)
                 {
-                    Directory.CreateDirectory(assetPackPath);
+                    sizes[i] = assetPacks[i].size;
                 }
 
-                var fileUri = GetServerPath(assetPackData);
-                var serverRequest = await LoadServerRequest(assetPackData, fileUri);
-                if (!string.IsNullOrEmpty(serverRequest))
+                Utility.Event.Invoke(new PackAwakeEvent(sizes));
+            }
+            else
+            {
+                Utility.Event.Invoke(new PackCompleteEvent(false, "没有连接到服务器!"));
+                return;
+            }
+
+            var persistentData = GlobalManager.GetPacketPath(GlobalManager.assetPackData);
+            var streamingAssets = GlobalManager.GetClientPath(GlobalManager.assetPackData);
+            var clientRequest = await LoadClientRequest(persistentData, streamingAssets);
+            if (!string.IsNullOrEmpty(clientRequest))
+            {
+                var assetPacks = JsonManager.FromJson<List<PackData>>(clientRequest);
+                foreach (var assetPack in assetPacks)
                 {
-                    var assetPacks = Json.FromJson<List<PackData>>(serverRequest);
-                    foreach (var assetPack in assetPacks)
-                    {
-                        serverPacks.Add(assetPack.name, assetPack);
-                    }
-
-                    var sizes = new int[assetPacks.Count];
-                    for (var i = 0; i < sizes.Length; i++)
-                    {
-                        sizes[i] = assetPacks[i].size;
-                    }
-
-                    Utility.Event.Invoke(new PackAwakeEvent(sizes));
+                    GlobalManager.clientPacks.Add(assetPack.name, assetPack);
                 }
-                else
-                {
-                    Utility.Event.Invoke(new PackCompleteEvent(false, "没有连接到服务器!"));
-                    return;
-                }
+            }
 
-                var persistentData = GetPacketPath(assetPackData);
-                var streamingAssets = GetClientPath(assetPackData);
-                var clientRequest = await LoadClientRequest(persistentData, streamingAssets);
-                if (!string.IsNullOrEmpty(clientRequest))
+            var fileNames = new HashSet<string>();
+            foreach (var fileName in GlobalManager.serverPacks.Keys)
+            {
+                if (GlobalManager.clientPacks.TryGetValue(fileName, out var assetPack))
                 {
-                    var assetPacks = Json.FromJson<List<PackData>>(clientRequest);
-                    foreach (var assetPack in assetPacks)
-                    {
-                        clientPacks.Add(assetPack.name, assetPack);
-                    }
-                }
-
-                var fileNames = new HashSet<string>();
-                foreach (var fileName in serverPacks.Keys)
-                {
-                    if (clientPacks.TryGetValue(fileName, out var assetPack))
-                    {
-                        if (assetPack != serverPacks[fileName])
-                        {
-                            fileNames.Add(fileName);
-                        }
-
-                        clientPacks.Remove(fileName);
-                    }
-                    else
+                    if (assetPack != GlobalManager.serverPacks[fileName])
                     {
                         fileNames.Add(fileName);
                     }
-                }
 
-                foreach (var clientPack in clientPacks.Keys)
+                    GlobalManager.clientPacks.Remove(fileName);
+                }
+                else
                 {
-                    var filePath = GetPacketPath(clientPack);
-                    if (File.Exists(filePath))
-                    {
-                        File.Delete(filePath);
-                    }
+                    fileNames.Add(fileName);
                 }
-
-                var status = await LoadPacketRequest(fileNames);
-                if (status)
-                {
-                    var filePath = GetPacketPath(assetPackData);
-                    File.WriteAllText(filePath, serverRequest);
-                }
-
-                Utility.Event.Invoke(new PackCompleteEvent(status, status ? "更新完成!" : "更新失败!"));
             }
 
-            private static async Task<bool> LoadPacketRequest(HashSet<string> fileNames)
+            foreach (var clientPack in GlobalManager.clientPacks.Keys)
             {
-                var packNames = new HashSet<string>(fileNames);
-                for (var i = 0; i < 5; i++)
+                var filePath = GlobalManager.GetPacketPath(clientPack);
+                if (File.Exists(filePath))
                 {
-                    foreach (var packName in packNames)
-                    {
-                        var packUri = GetServerPath(packName);
-                        var packData = await LoadPacketRequest(packName, packUri);
-                        var packPath = GetPacketPath(packName);
-                        await Task.Run(() => File.WriteAllBytes(packPath, packData));
-                        if (fileNames.Contains(packName))
-                        {
-                            fileNames.Remove(packName);
-                        }
-                    }
-
-                    if (fileNames.Count == 0)
-                    {
-                        break;
-                    }
+                    File.Delete(filePath);
                 }
-
-                return fileNames.Count == 0;
             }
 
-            private static async Task<string> LoadServerRequest(string packName, string packUri)
+            var status = await LoadPacketRequest(fileNames);
+            if (status)
             {
-                for (var i = 0; i < 5; i++)
+                var filePath = GlobalManager.GetPacketPath(GlobalManager.assetPackData);
+                File.WriteAllText(filePath, serverRequest);
+            }
+
+            Utility.Event.Invoke(new PackCompleteEvent(status, status ? "更新完成!" : "更新失败!"));
+        }
+
+        private static async Task<bool> LoadPacketRequest(HashSet<string> fileNames)
+        {
+            var packNames = new HashSet<string>(fileNames);
+            for (var i = 0; i < 5; i++)
+            {
+                foreach (var packName in packNames)
                 {
-                    using (var request = UnityWebRequest.Head(packUri))
+                    var packUri = GlobalManager.GetServerPath(packName);
+                    var packData = await LoadPacketRequest(packName, packUri);
+                    var packPath = GlobalManager.GetPacketPath(packName);
+                    await Task.Run(() => File.WriteAllBytes(packPath, packData));
+                    if (fileNames.Contains(packName))
                     {
-                        request.timeout = 1;
-                        await request.SendWebRequest();
-                        if (request.result != UnityWebRequest.Result.Success)
-                        {
-                            continue;
-                        }
-                    }
-
-                    using (var request = UnityWebRequest.Get(packUri))
-                    {
-                        await request.SendWebRequest();
-                        if (request.result != UnityWebRequest.Result.Success)
-                        {
-                            Log.Info(Utility.Text.Format("请求服务器下载 {0} 失败!\n", packName));
-                            continue;
-                        }
-
-                        return request.downloadHandler.text;
+                        fileNames.Remove(packName);
                     }
                 }
 
-                return null;
+                if (fileNames.Count == 0)
+                {
+                    break;
+                }
             }
 
-            private static async Task<byte[]> LoadPacketRequest(string packName, string packUri)
+            return fileNames.Count == 0;
+        }
+
+        private static async Task<string> LoadServerRequest(string packName, string packUri)
+        {
+            for (var i = 0; i < 5; i++)
             {
                 using (var request = UnityWebRequest.Head(packUri))
                 {
@@ -172,78 +142,105 @@ namespace JFramework
                     await request.SendWebRequest();
                     if (request.result != UnityWebRequest.Result.Success)
                     {
-                        Log.Info(Utility.Text.Format("请求服务器校验 {0} 失败!\n", packName));
-                        return null;
+                        continue;
                     }
                 }
 
                 using (var request = UnityWebRequest.Get(packUri))
                 {
-                    var result = request.SendWebRequest();
-                    while (!result.isDone && helper != null)
-                    {
-                        Utility.Event.Invoke(new PackUpdateEvent(packName, request.downloadProgress));
-                        await Task.Yield();
-                    }
-
-                    Utility.Event.Invoke(new PackUpdateEvent(packName, 1));
+                    await request.SendWebRequest();
                     if (request.result != UnityWebRequest.Result.Success)
                     {
                         Log.Info(Utility.Text.Format("请求服务器下载 {0} 失败!\n", packName));
-                        return null;
+                        continue;
                     }
 
-                    return request.downloadHandler.data;
+                    return request.downloadHandler.text;
                 }
             }
 
-            private static async Task<string> LoadClientRequest(string persistentData, string streamingAssets)
+            return null;
+        }
+
+        private static async Task<byte[]> LoadPacketRequest(string packName, string packUri)
+        {
+            using (var request = UnityWebRequest.Head(packUri))
             {
-                var packData = await helper.LoadRequest(persistentData, streamingAssets);
-                string result = default;
-                if (packData.Key == 1)
+                request.timeout = 1;
+                await request.SendWebRequest();
+                if (request.result != UnityWebRequest.Result.Success)
                 {
-                    result = File.ReadAllText(packData.Value);
+                    Log.Info(Utility.Text.Format("请求服务器校验 {0} 失败!\n", packName));
+                    return null;
                 }
-                else if (packData.Key == 2)
-                {
-                    using var request = UnityWebRequest.Get(packData.Value);
-                    await request.SendWebRequest();
-                    if (request.result == UnityWebRequest.Result.Success)
-                    {
-                        result = request.downloadHandler.text;
-                    }
-                }
-
-                return result;
             }
 
-            internal static async Task<AssetBundle> LoadAssetRequest(string persistentData, string streamingAssets)
+            using (var request = UnityWebRequest.Get(packUri))
             {
-                var packData = await helper.LoadRequest(persistentData, streamingAssets);
-                byte[] result = default;
-                if (packData.Key == 1)
+                var result = request.SendWebRequest();
+                while (!result.isDone && GlobalManager.helper != null)
                 {
-                    result = await Task.Run(() => Utility.Xor.Decrypt(File.ReadAllBytes(packData.Value)));
-                }
-                else if (packData.Key == 2)
-                {
-                    using var request = UnityWebRequest.Get(packData.Value);
-                    await request.SendWebRequest();
-                    if (request.result == UnityWebRequest.Result.Success)
-                    {
-                        result = await Task.Run(() => Utility.Xor.Decrypt(request.downloadHandler.data));
-                    }
+                    Utility.Event.Invoke(new PackUpdateEvent(packName, request.downloadProgress));
+                    await Task.Yield();
                 }
 
-                return helper != null ? AssetBundle.LoadFromMemory(result) : null;
+                Utility.Event.Invoke(new PackUpdateEvent(packName, 1));
+                if (request.result != UnityWebRequest.Result.Success)
+                {
+                    Log.Info(Utility.Text.Format("请求服务器下载 {0} 失败!\n", packName));
+                    return null;
+                }
+
+                return request.downloadHandler.data;
             }
+        }
 
-            internal static void Dispose()
+        private static async Task<string> LoadClientRequest(string persistentData, string streamingAssets)
+        {
+            var packData = await GlobalManager.helper.LoadRequest(persistentData, streamingAssets);
+            string result = default;
+            if (packData.Key == 1)
             {
-                clientPacks.Clear();
-                serverPacks.Clear();
+                result = File.ReadAllText(packData.Value);
             }
+            else if (packData.Key == 2)
+            {
+                using var request = UnityWebRequest.Get(packData.Value);
+                await request.SendWebRequest();
+                if (request.result == UnityWebRequest.Result.Success)
+                {
+                    result = request.downloadHandler.text;
+                }
+            }
+
+            return result;
+        }
+
+        internal static async Task<AssetBundle> LoadAssetRequest(string persistentData, string streamingAssets)
+        {
+            var packData = await GlobalManager.helper.LoadRequest(persistentData, streamingAssets);
+            byte[] result = default;
+            if (packData.Key == 1)
+            {
+                result = await Task.Run(() => Utility.Xor.Decrypt(File.ReadAllBytes(packData.Value)));
+            }
+            else if (packData.Key == 2)
+            {
+                using var request = UnityWebRequest.Get(packData.Value);
+                await request.SendWebRequest();
+                if (request.result == UnityWebRequest.Result.Success)
+                {
+                    result = await Task.Run(() => Utility.Xor.Decrypt(request.downloadHandler.data));
+                }
+            }
+
+            return GlobalManager.helper != null ? AssetBundle.LoadFromMemory(result) : null;
+        }
+
+        internal static void Dispose()
+        {
+            GlobalManager.clientPacks.Clear();
+            GlobalManager.serverPacks.Clear();
         }
     }
 }

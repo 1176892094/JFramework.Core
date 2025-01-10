@@ -8,6 +8,7 @@
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
+
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -16,155 +17,152 @@ using Object = UnityEngine.Object;
 
 namespace JFramework
 {
-    public static partial class Service
+    public static partial class AssetManager
     {
-        public static partial class Asset
+        public static async void LoadAssetData()
         {
-            public static async void LoadAssetData()
+            var platform = await LoadAssetPack(GlobalManager.helper.assetPlatform);
+            GlobalManager.manifest ??= platform.LoadAsset<AssetBundleManifest>(nameof(AssetBundleManifest));
+            Utility.Event.Invoke(new AssetAwakeEvent(GlobalManager.manifest.GetAllAssetBundles()));
+
+            var assetPacks = GlobalManager.manifest.GetAllAssetBundles();
+            foreach (var assetPack in assetPacks)
             {
-                var platform = await LoadAssetPack(helper.assetPlatform);
-                manifest ??= platform.LoadAsset<AssetBundleManifest>(nameof(AssetBundleManifest));
-                Utility.Event.Invoke(new AssetAwakeEvent(manifest.GetAllAssetBundles()));
-
-                var assetPacks = manifest.GetAllAssetBundles();
-                foreach (var assetPack in assetPacks)
-                {
-                    _ = LoadAssetPack(assetPack);
-                }
-
-                await Task.WhenAll(assetTask.Values);
-                Utility.Event.Invoke(new AssetCompleteEvent());
+                _ = LoadAssetPack(assetPack);
             }
 
-            public static async Task<T> Load<T>(string assetPath) where T : Object
+            await Task.WhenAll(GlobalManager.assetTask.Values);
+            Utility.Event.Invoke(new AssetCompleteEvent());
+        }
+
+        public static async Task<T> Load<T>(string assetPath) where T : Object
+        {
+            try
             {
-                try
+                if (GlobalManager.helper == null) return default;
+                var assetData = await LoadAsset(assetPath, typeof(T));
+                if (assetData != null)
                 {
-                    if (helper == null) return default;
-                    var assetData = await LoadAsset(assetPath, typeof(T));
-                    if (assetData != null)
-                    {
-                        return (T)assetData;
-                    }
-
-                    Log.Warn(Utility.Text.Format("加载资源 {0} 为空!", assetPath));
-                }
-                catch (Exception e)
-                {
-                    Log.Warn(Utility.Text.Format("加载资源 {0} 失败!\n{1}", assetPath, e));
+                    return (T)assetData;
                 }
 
-                return default;
+                Log.Warn(Utility.Text.Format("加载资源 {0} 为空!", assetPath));
+            }
+            catch (Exception e)
+            {
+                Log.Warn(Utility.Text.Format("加载资源 {0} 失败!\n{1}", assetPath, e));
             }
 
-            public static async void Load<T>(string assetPath, Action<T> assetAction) where T : Object
-            {
-                try
-                {
-                    if (helper == null) return;
-                    var assetData = await LoadAsset(assetPath, typeof(T));
-                    if (assetData != null)
-                    {
-                        assetAction.Invoke((T)assetData);
-                        return;
-                    }
+            return default;
+        }
 
-                    Log.Warn(Utility.Text.Format("加载资源 {0} 为空!", assetPath));
-                }
-                catch (Exception e)
+        public static async void Load<T>(string assetPath, Action<T> assetAction) where T : Object
+        {
+            try
+            {
+                if (GlobalManager.helper == null) return;
+                var assetData = await LoadAsset(assetPath, typeof(T));
+                if (assetData != null)
                 {
-                    Log.Warn(Utility.Text.Format("加载资源 {0} 失败!\n{1}", assetPath, e));
+                    assetAction.Invoke((T)assetData);
+                    return;
                 }
+
+                Log.Warn(Utility.Text.Format("加载资源 {0} 为空!", assetPath));
             }
-
-            private static async Task<Object> LoadAsset(string assetPath, Type assetType)
+            catch (Exception e)
             {
-                if (helper.assetPackMode)
+                Log.Warn(Utility.Text.Format("加载资源 {0} 失败!\n{1}", assetPath, e));
+            }
+        }
+
+        private static async Task<Object> LoadAsset(string assetPath, Type assetType)
+        {
+            if (GlobalManager.helper.assetPackMode)
+            {
+                var assetPair = await LoadAssetPair(assetPath);
+                var assetPack = await LoadAssetPack(assetPair.Key);
+                var assetData = GlobalManager.helper.LoadByAssetPack(assetPair.Value, assetType, assetPack);
+                assetData ??= GlobalManager.helper.LoadByResources(assetPath, assetType);
+                return assetData;
+            }
+            else
+            {
+                var assetData = GlobalManager.helper.LoadBySimulates(assetPath, assetType);
+                assetData ??= GlobalManager.helper.LoadByResources(assetPath, assetType);
+                return assetData;
+            }
+        }
+
+        private static async Task<KeyValuePair<string, string>> LoadAssetPair(string assetPath)
+        {
+            if (!GlobalManager.assetData.TryGetValue(assetPath, out var assetData))
+            {
+                var index = assetPath.LastIndexOf('/');
+                if (index < 0)
                 {
-                    var assetPair = await LoadAssetPair(assetPath);
-                    var assetPack = await LoadAssetPack(assetPair.Key);
-                    var assetData = helper.LoadByAssetPack(assetPair.Value, assetType, assetPack);
-                    assetData ??= helper.LoadByResources(assetPath, assetType);
-                    return assetData;
+                    assetData = new KeyValuePair<string, string>(string.Empty, assetPath);
                 }
                 else
                 {
-                    var assetData = helper.LoadBySimulates(assetPath, assetType);
-                    assetData ??= helper.LoadByResources(assetPath, assetType);
-                    return assetData;
+                    var assetPack = assetPath.Substring(0, index).ToLower();
+                    assetData = new KeyValuePair<string, string>(assetPack, assetPath.Substring(index + 1));
                 }
+
+                GlobalManager.assetData.Add(assetPath, assetData);
             }
 
-            private static async Task<KeyValuePair<string, string>> LoadAssetPair(string assetPath)
+            var platform = await LoadAssetPack(GlobalManager.helper.assetPlatform);
+            GlobalManager.manifest ??= platform.LoadAsset<AssetBundleManifest>(nameof(AssetBundleManifest));
+
+            var assetPacks = GlobalManager.manifest.GetAllDependencies(assetData.Key);
+            foreach (var assetPack in assetPacks)
             {
-                if (!Service.assetData.TryGetValue(assetPath, out var assetData))
-                {
-                    var index = assetPath.LastIndexOf('/');
-                    if (index < 0)
-                    {
-                        assetData = new KeyValuePair<string, string>(string.Empty, assetPath);
-                    }
-                    else
-                    {
-                        var assetPack = assetPath.Substring(0, index).ToLower();
-                        assetData = new KeyValuePair<string, string>(assetPack, assetPath.Substring(index + 1));
-                    }
-
-                    Service.assetData.Add(assetPath, assetData);
-                }
-
-                var platform = await LoadAssetPack(helper.assetPlatform);
-                manifest ??= platform.LoadAsset<AssetBundleManifest>(nameof(AssetBundleManifest));
-
-                var assetPacks = manifest.GetAllDependencies(assetData.Key);
-                foreach (var assetPack in assetPacks)
-                {
-                    _ = LoadAssetPack(assetPack);
-                }
-
-                return assetData;
+                _ = LoadAssetPack(assetPack);
             }
 
-            private static async Task<AssetBundle> LoadAssetPack(string assetPath)
+            return assetData;
+        }
+
+        private static async Task<AssetBundle> LoadAssetPack(string assetPath)
+        {
+            if (string.IsNullOrEmpty(assetPath))
             {
-                if (string.IsNullOrEmpty(assetPath))
-                {
-                    return null;
-                }
-
-                if (Service.assetPack.TryGetValue(assetPath, out var assetPack))
-                {
-                    return assetPack;
-                }
-
-                if (Service.assetTask.TryGetValue(assetPath, out var assetTask))
-                {
-                    return await assetTask;
-                }
-
-                var persistentData = GetPacketPath(assetPath);
-                var streamingAssets = GetClientPath(assetPath);
-                assetTask = Pack.LoadAssetRequest(persistentData, streamingAssets);
-                Service.assetTask.Add(assetPath, assetTask);
-                try
-                {
-                    assetPack = await assetTask;
-                    Service.assetPack.Add(assetPath, assetPack);
-                    Utility.Event.Invoke(new AssetUpdateEvent(assetPath));
-                    return assetPack;
-                }
-                finally
-                {
-                    Service.assetTask.Remove(assetPath);
-                }
+                return null;
             }
 
-            internal static void Dispose()
+            if (GlobalManager.assetPack.TryGetValue(assetPath, out var assetPack))
             {
-                assetData.Clear();
-                assetTask.Clear();
-                assetPack.Clear();
+                return assetPack;
             }
+
+            if (GlobalManager.assetTask.TryGetValue(assetPath, out var assetTask))
+            {
+                return await assetTask;
+            }
+
+            var persistentData = GlobalManager.GetPacketPath(assetPath);
+            var streamingAssets = GlobalManager.GetClientPath(assetPath);
+            assetTask = PackManager.LoadAssetRequest(persistentData, streamingAssets);
+            GlobalManager.assetTask.Add(assetPath, assetTask);
+            try
+            {
+                assetPack = await assetTask;
+                GlobalManager.assetPack.Add(assetPath, assetPack);
+                Utility.Event.Invoke(new AssetUpdateEvent(assetPath));
+                return assetPack;
+            }
+            finally
+            {
+                GlobalManager.assetTask.Remove(assetPath);
+            }
+        }
+
+        internal static void Dispose()
+        {
+            GlobalManager.assetData.Clear();
+            GlobalManager.assetTask.Clear();
+            GlobalManager.assetPack.Clear();
         }
     }
 }

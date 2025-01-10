@@ -13,129 +13,128 @@ using System.Collections.Generic;
 
 namespace JFramework
 {
-    public static partial class Service
+    public static partial class UIManager
     {
-        public static class Group
+        public static void Listen(string group, UIPanel panel)
         {
-            public static void Listen(string group, UIPanel panel)
+            if (!GlobalManager.panelGroup.TryGetValue(group, out var panelGroup))
             {
-                if (!Service.panelGroup.TryGetValue(group, out var panelGroup))
-                {
-                    panelGroup = new HashSet<UIPanel>();
-                    Service.panelGroup.Add(group, panelGroup);
-                }
-
-                if (!Service.groupPanel.TryGetValue(panel, out var groupPanel))
-                {
-                    groupPanel = new HashSet<string>();
-                    Service.groupPanel.Add(panel, groupPanel);
-                }
-
-                if (panelGroup.Add(panel))
-                {
-                    groupPanel.Add(group);
-                }
+                panelGroup = new HashSet<UIPanel>();
+                GlobalManager.panelGroup.Add(group, panelGroup);
             }
 
-            public static void Remove(string group, UIPanel panel)
+            if (!GlobalManager.groupPanel.TryGetValue(panel, out var groupPanel))
             {
-                if (!Service.panelGroup.TryGetValue(group, out var panelGroup))
-                {
-                    panelGroup = new HashSet<UIPanel>();
-                    Service.panelGroup.Add(group, panelGroup);
-                }
-
-                if (!Service.groupPanel.TryGetValue(panel, out var groupPanel))
-                {
-                    groupPanel = new HashSet<string>();
-                    Service.groupPanel.Add(panel, groupPanel);
-                }
-
-                if (panelGroup.Remove(panel))
-                {
-                    groupPanel.Remove(group);
-                }
+                groupPanel = new HashSet<string>();
+                GlobalManager.groupPanel.Add(panel, groupPanel);
             }
 
-            public static void Show(string group)
+            if (panelGroup.Add(panel))
             {
-                if (Service.panelGroup.TryGetValue(group, out var panelGroup))
+                groupPanel.Add(group);
+            }
+        }
+
+        public static void Remove(string group, UIPanel panel)
+        {
+            if (!GlobalManager.panelGroup.TryGetValue(group, out var panelGroup))
+            {
+                panelGroup = new HashSet<UIPanel>();
+                GlobalManager.panelGroup.Add(group, panelGroup);
+            }
+
+            if (!GlobalManager.groupPanel.TryGetValue(panel, out var groupPanel))
+            {
+                groupPanel = new HashSet<string>();
+                GlobalManager.groupPanel.Add(panel, groupPanel);
+            }
+
+            if (panelGroup.Remove(panel))
+            {
+                groupPanel.Remove(group);
+            }
+        }
+
+        public static void Show(string group)
+        {
+            if (GlobalManager.panelGroup.TryGetValue(group, out var panelGroup))
+            {
+                foreach (var panel in panelGroup)
                 {
-                    foreach (var panel in panelGroup)
+                    if (!panel.gameObject.activeInHierarchy)
                     {
-                        if (!panel.gameObject.activeInHierarchy)
-                        {
-                            panel.Show();
-                        }
+                        panel.Show();
+                    }
+                }
+            }
+        }
+
+        public static void Hide(string group)
+        {
+            if (GlobalManager.panelGroup.TryGetValue(group, out var panelGroup))
+            {
+                foreach (var panel in panelGroup)
+                {
+                    if (panel.gameObject.activeInHierarchy)
+                    {
+                        panel.Hide();
+                    }
+                }
+            }
+        }
+
+        internal static bool ShowInGroup(UIPanel panel)
+        {
+            if (!GlobalManager.groupPanel.TryGetValue(panel, out var groupPanel))
+            {
+                groupPanel = new HashSet<string>();
+                GlobalManager.groupPanel.Add(panel, groupPanel);
+            }
+
+            foreach (var group in groupPanel)
+            {
+                if (!GlobalManager.panelGroup.TryGetValue(group, out var panelGroup))
+                {
+                    continue;
+                }
+
+                foreach (var other in panelGroup)
+                {
+                    if (panel != other && other.gameObject.activeInHierarchy)
+                    {
+                        PoolManager.Hide(other.gameObject);
                     }
                 }
             }
 
-            public static void Hide(string group)
+            return !panel.gameObject.activeInHierarchy;
+        }
+
+        internal static void Dispose()
+        {
+            var groupPanel = new List<UIPanel>(GlobalManager.groupPanel.Keys);
+            foreach (var panel in groupPanel)
             {
-                if (Service.panelGroup.TryGetValue(group, out var panelGroup))
+                if (GlobalManager.groupPanel.TryGetValue(panel, out var group))
                 {
-                    foreach (var panel in panelGroup)
-                    {
-                        if (panel.gameObject.activeInHierarchy)
-                        {
-                            panel.Hide();
-                        }
-                    }
+                    group.Clear();
                 }
             }
 
-            internal static bool ShowInGroup(UIPanel panel)
+            GlobalManager.groupPanel.Clear();
+
+            var panelGroup = new List<string>(GlobalManager.panelGroup.Keys);
+            foreach (var group in panelGroup)
             {
-                if (!Service.groupPanel.TryGetValue(panel, out var groupPanel))
+                if (GlobalManager.panelGroup.TryGetValue(group, out var panel))
                 {
-                    groupPanel = new HashSet<string>();
-                    Service.groupPanel.Add(panel, groupPanel);
+                    panel.Clear();
                 }
-
-                foreach (var group in groupPanel)
-                {
-                    if (!Service.panelGroup.TryGetValue(group, out var panelGroup))
-                    {
-                        continue;
-                    }
-
-                    foreach (var other in panelGroup)
-                    {
-                        if (panel != other && other.gameObject.activeInHierarchy)
-                        {
-                            Entity.Hide(other.gameObject);
-                        }
-                    }
-                }
-
-                return !panel.gameObject.activeInHierarchy;
             }
 
-            internal static void Dispose()
-            {
-                var groupPanel = new List<UIPanel>(Service.groupPanel.Keys);
-                foreach (var panel in groupPanel)
-                {
-                    if (Service.groupPanel.TryGetValue(panel, out var group))
-                    {
-                        group.Clear();
-                    }
-                }
-
-                Service.groupPanel.Clear();
-
-                var panelGroup = new List<string>(Service.panelGroup.Keys);
-                foreach (var group in panelGroup)
-                {
-                    if (Service.panelGroup.TryGetValue(group, out var panel))
-                    {
-                        panel.Clear();
-                    }
-                }
-
-                Service.panelGroup.Clear();
-            }
+            GlobalManager.panelGroup.Clear();
+            GlobalManager.panelData.Clear();
+            GlobalManager.panelLayer.Clear();
         }
     }
 }

@@ -16,223 +16,220 @@ using UnityEngine;
 
 namespace JFramework
 {
-    public static partial class Service
+    public static class Data
     {
-        public static class Data
+        public static async void LoadDataTable()
         {
-            public static async void LoadDataTable()
+            if (GlobalManager.helper == null) return;
+            var assembly = Utility.Find.Assembly(GlobalManager.assemblyName);
+            if (assembly == null) return;
+            var assetTypes = new List<Type>();
+            foreach (var assetType in assembly.GetTypes())
             {
-                if (helper == null) return;
-                var assembly = Utility.Find.Assembly(assemblyName);
-                if (assembly == null) return;
-                var assetTypes = new List<Type>();
-                foreach (var assetType in assembly.GetTypes())
+                if (typeof(IDataTable).IsAssignableFrom(assetType))
                 {
-                    if (typeof(IDataTable).IsAssignableFrom(assetType))
+                    assetTypes.Add(assetType);
+                }
+            }
+
+            if (assetTypes.Count == 0)
+            {
+                return;
+            }
+
+            var names = new string[assetTypes.Count];
+            for (var i = 0; i < names.Length; i++)
+            {
+                names[i] = assetTypes[i].Name;
+            }
+
+            Utility.Event.Invoke(new DataAwakeEvent(names));
+            foreach (var assetType in assetTypes)
+            {
+                try
+                {
+                    if (string.IsNullOrEmpty(assetType.FullName)) continue;
+                    var dataTable = (IDataTable)await AssetManager.Load<ScriptableObject>(GlobalManager.GetTablePath(assetType.Name));
+                    var children = assembly.GetType(assetType.FullName.Substring(0, assetType.FullName.Length - 5));
+                    var properties = children.GetProperties(Utility.Find.Instance);
+                    foreach (var property in properties)
                     {
-                        assetTypes.Add(assetType);
-                    }
-                }
-
-                if (assetTypes.Count == 0)
-                {
-                    return;
-                }
-
-                var names = new string[assetTypes.Count];
-                for (var i = 0; i < names.Length; i++)
-                {
-                    names[i] = assetTypes[i].Name;
-                }
-
-                Utility.Event.Invoke(new DataAwakeEvent(names));
-                foreach (var assetType in assetTypes)
-                {
-                    try
-                    {
-                        if (string.IsNullOrEmpty(assetType.FullName)) continue;
-                        var dataTable = (IDataTable)await Asset.Load<ScriptableObject>(GetTablePath(assetType.Name));
-                        var children = assembly.GetType(assetType.FullName.Substring(0, assetType.FullName.Length - 5));
-                        var properties = children.GetProperties(Utility.Find.Instance);
-                        foreach (var property in properties)
+                        if (property.GetCustomAttribute(typeof(PrimaryAttribute)) == null)
                         {
-                            if (property.GetCustomAttribute(typeof(PrimaryAttribute)) == null)
-                            {
-                                continue;
-                            }
-
-                            if (property.PropertyType == typeof(int))
-                            {
-                                itemTable.Add(children, LoadData<int>());
-                            }
-                            else if (property.PropertyType == typeof(string))
-                            {
-                                nameTable.Add(children, LoadData<string>());
-                            }
-                            else if (property.PropertyType.IsEnum)
-                            {
-                                enumTable.Add(children, LoadData<Enum>());
-                            }
-
                             continue;
-
-                            Dictionary<T, IData> LoadData<T>()
-                            {
-                                var items = new Dictionary<T, IData>();
-                                for (var i = 0; i < dataTable.Count; i++)
-                                {
-                                    var data = dataTable.GetData(i);
-                                    var item = (T)property.GetValue(data);
-                                    if (!items.ContainsKey(item))
-                                    {
-                                        items.Add(item, data);
-                                        continue;
-                                    }
-
-                                    Log.Warn(Utility.Text.Format("加载数据 {0} 失败。键值重复: {1}", assetType.Name, item));
-                                }
-
-                                return items;
-                            }
                         }
 
-                        Utility.Event.Invoke(new DataUpdateEvent(assetType.Name));
-                    }
-                    catch (Exception e)
-                    {
-                        Log.Error(Utility.Text.Format("加载 {0} 数据失败!\n{1}", assetType.Name, e));
-                    }
-                }
+                        if (property.PropertyType == typeof(int))
+                        {
+                            GlobalManager.itemTable.Add(children, LoadData<int>());
+                        }
+                        else if (property.PropertyType == typeof(string))
+                        {
+                            GlobalManager.nameTable.Add(children, LoadData<string>());
+                        }
+                        else if (property.PropertyType.IsEnum)
+                        {
+                            GlobalManager.enumTable.Add(children, LoadData<Enum>());
+                        }
 
-                Utility.Event.Invoke(new DataCompleteEvent());
+                        continue;
+
+                        Dictionary<T, IData> LoadData<T>()
+                        {
+                            var items = new Dictionary<T, IData>();
+                            for (var i = 0; i < dataTable.Count; i++)
+                            {
+                                var data = dataTable.GetData(i);
+                                var item = (T)property.GetValue(data);
+                                if (!items.ContainsKey(item))
+                                {
+                                    items.Add(item, data);
+                                    continue;
+                                }
+
+                                Log.Warn(Utility.Text.Format("加载数据 {0} 失败。键值重复: {1}", assetType.Name, item));
+                            }
+
+                            return items;
+                        }
+                    }
+
+                    Utility.Event.Invoke(new DataUpdateEvent(assetType.Name));
+                }
+                catch (Exception e)
+                {
+                    Log.Error(Utility.Text.Format("加载 {0} 数据失败!\n{1}", assetType.Name, e));
+                }
             }
 
-            public static T Get<T>(int key) where T : IData
+            Utility.Event.Invoke(new DataCompleteEvent());
+        }
+
+        public static T Get<T>(int key) where T : IData
+        {
+            if (GlobalManager.helper == null) return default;
+            if (!GlobalManager.itemTable.TryGetValue(typeof(T), out var dataTable))
             {
-                if (helper == null) return default;
-                if (!itemTable.TryGetValue(typeof(T), out var dataTable))
-                {
-                    return default;
-                }
-
-                if (!dataTable.TryGetValue(key, out var data))
-                {
-                    return default;
-                }
-
-                return (T)data;
-            }
-
-            public static T Get<T>(string key) where T : IData
-            {
-                if (helper == null) return default;
-                if (!nameTable.TryGetValue(typeof(T), out var dataTable))
-                {
-                    return default;
-                }
-
-                if (!dataTable.TryGetValue(key, out var data))
-                {
-                    return default;
-                }
-
-                return (T)data;
-            }
-
-            public static T Get<T>(Enum key) where T : IData
-            {
-                if (helper == null) return default;
-                if (!enumTable.TryGetValue(typeof(T), out var dataTable))
-                {
-                    return default;
-                }
-
-                if (!dataTable.TryGetValue(key, out var data))
-                {
-                    return default;
-                }
-
-                return (T)data;
-            }
-
-            public static List<T> GetTable<T>() where T : IData
-            {
-                if (helper == null) return default;
-                if (Service.itemTable.TryGetValue(typeof(T), out var itemTable))
-                {
-                    var caches = new List<T>();
-                    foreach (T data in itemTable.Values)
-                    {
-                        caches.Add(data);
-                    }
-
-                    return caches;
-                }
-
-                if (Service.nameTable.TryGetValue(typeof(T), out var nameTable))
-                {
-                    var caches = new List<T>();
-                    foreach (T data in nameTable.Values)
-                    {
-                        caches.Add(data);
-                    }
-
-                    return caches;
-                }
-
-                if (Service.enumTable.TryGetValue(typeof(T), out var enumTable))
-                {
-                    var caches = new List<T>();
-                    foreach (T data in enumTable.Values)
-                    {
-                        caches.Add(data);
-                    }
-
-                    return caches;
-                }
-
-                Log.Error(Utility.Text.Format("获取 {0} 失败!", typeof(T).Name));
                 return default;
             }
 
-            internal static void Dispose()
+            if (!dataTable.TryGetValue(key, out var data))
             {
-                var itemTable = new List<Type>(Service.itemTable.Keys);
-                foreach (var data in itemTable)
-                {
-                    if (Service.itemTable.TryGetValue(data, out var pool))
-                    {
-                        pool.Clear();
-                        Service.itemTable.Remove(data);
-                    }
-                }
-
-                Service.itemTable.Clear();
-
-                var enumTable = new List<Type>(Service.enumTable.Keys);
-                foreach (var data in enumTable)
-                {
-                    if (Service.enumTable.TryGetValue(data, out var pool))
-                    {
-                        pool.Clear();
-                        Service.enumTable.Remove(data);
-                    }
-                }
-
-                Service.enumTable.Clear();
-
-                var nameTable = new List<Type>(Service.nameTable.Keys);
-                foreach (var data in nameTable)
-                {
-                    if (Service.nameTable.TryGetValue(data, out var pool))
-                    {
-                        pool.Clear();
-                        Service.nameTable.Remove(data);
-                    }
-                }
-
-                Service.nameTable.Clear();
+                return default;
             }
+
+            return (T)data;
+        }
+
+        public static T Get<T>(string key) where T : IData
+        {
+            if (GlobalManager.helper == null) return default;
+            if (!GlobalManager.nameTable.TryGetValue(typeof(T), out var dataTable))
+            {
+                return default;
+            }
+
+            if (!dataTable.TryGetValue(key, out var data))
+            {
+                return default;
+            }
+
+            return (T)data;
+        }
+
+        public static T Get<T>(Enum key) where T : IData
+        {
+            if (GlobalManager.helper == null) return default;
+            if (!GlobalManager.enumTable.TryGetValue(typeof(T), out var dataTable))
+            {
+                return default;
+            }
+
+            if (!dataTable.TryGetValue(key, out var data))
+            {
+                return default;
+            }
+
+            return (T)data;
+        }
+
+        public static List<T> GetTable<T>() where T : IData
+        {
+            if (GlobalManager.helper == null) return default;
+            if (GlobalManager.itemTable.TryGetValue(typeof(T), out var itemTable))
+            {
+                var caches = new List<T>();
+                foreach (T data in itemTable.Values)
+                {
+                    caches.Add(data);
+                }
+
+                return caches;
+            }
+
+            if (GlobalManager.nameTable.TryGetValue(typeof(T), out var nameTable))
+            {
+                var caches = new List<T>();
+                foreach (T data in nameTable.Values)
+                {
+                    caches.Add(data);
+                }
+
+                return caches;
+            }
+
+            if (GlobalManager.enumTable.TryGetValue(typeof(T), out var enumTable))
+            {
+                var caches = new List<T>();
+                foreach (T data in enumTable.Values)
+                {
+                    caches.Add(data);
+                }
+
+                return caches;
+            }
+
+            Log.Error(Utility.Text.Format("获取 {0} 失败!", typeof(T).Name));
+            return default;
+        }
+
+        internal static void Dispose()
+        {
+            var itemTable = new List<Type>(GlobalManager.itemTable.Keys);
+            foreach (var data in itemTable)
+            {
+                if (GlobalManager.itemTable.TryGetValue(data, out var pool))
+                {
+                    pool.Clear();
+                    GlobalManager.itemTable.Remove(data);
+                }
+            }
+
+            GlobalManager.itemTable.Clear();
+
+            var enumTable = new List<Type>(GlobalManager.enumTable.Keys);
+            foreach (var data in enumTable)
+            {
+                if (GlobalManager.enumTable.TryGetValue(data, out var pool))
+                {
+                    pool.Clear();
+                    GlobalManager.enumTable.Remove(data);
+                }
+            }
+
+            GlobalManager.enumTable.Clear();
+
+            var nameTable = new List<Type>(GlobalManager.nameTable.Keys);
+            foreach (var data in nameTable)
+            {
+                if (GlobalManager.nameTable.TryGetValue(data, out var pool))
+                {
+                    pool.Clear();
+                    GlobalManager.nameTable.Remove(data);
+                }
+            }
+
+            GlobalManager.nameTable.Clear();
         }
     }
 }

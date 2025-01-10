@@ -16,98 +16,95 @@ using Object = UnityEngine.Object;
 
 namespace JFramework
 {
-    public static partial class Service
+    internal static class AgentManager
     {
-        internal static class Agent
+        public static T Show<T>(GameObject entity) where T : ScriptableObject
         {
-            public static T Show<T>(IEntity entity) where T : ScriptableObject, IAgent
+            if (GlobalManager.helper == null) return default;
+            if (!GlobalManager.agentData.TryGetValue(entity, out var agentData))
             {
-                if (helper == null) return default;
-                if (!Service.agentData.TryGetValue(entity, out var agentData))
-                {
-                    agentData = new Dictionary<Type, IAgent>();
-                    Service.agentData.Add(entity, agentData);
-                }
-
-                if (!agentData.TryGetValue(typeof(T), out var agent))
-                {
-                    Service.entity = entity;
-                    agent = (IAgent)LoadPool(typeof(T)).Dequeue();
-                    agentData.Add(typeof(T), agent);
-                    agent.OnAwake(entity);
-                }
-
-                return (T)Service.agentData[entity][typeof(T)];
+                agentData = new Dictionary<Type, ScriptableObject>();
+                GlobalManager.agentData.Add(entity, agentData);
             }
 
-            public static IAgent Show(IEntity entity, Type agentType)
+            if (!agentData.TryGetValue(typeof(T), out var agent))
             {
-                if (helper == null) return default;
-                if (!Service.agentData.TryGetValue(entity, out var agentData))
-                {
-                    agentData = new Dictionary<Type, IAgent>();
-                    Service.agentData.Add(entity, agentData);
-                }
-
-                if (!agentData.TryGetValue(agentType, out var agent))
-                {
-                    Service.entity = entity;
-                    agent = (IAgent)LoadPool(agentType).Dequeue();
-                    agentData.Add(agentType, agent);
-                    agent.OnAwake(entity);
-                }
-
-                return Service.agentData[entity][agentType];
+                GlobalManager.entity = entity;
+                agent = LoadPool(typeof(T)).Dequeue();
+                agentData.Add(typeof(T), agent);
+                ((IAgent)agent).OnAwake(entity);
             }
 
-            public static void Hide(IEntity entity)
-            {
-                if (helper == null) return;
-                if (Service.agentData.TryGetValue(entity, out var agentData))
-                {
-                    foreach (var agent in agentData.Values)
-                    {
-                        agent.Dispose();
-                        LoadPool(agent.GetType()).Enqueue((ScriptableObject)agent);
-                    }
+            return (T)GlobalManager.agentData[entity][typeof(T)];
+        }
 
-                    agentData.Clear();
-                    Service.agentData.Remove(entity);
-                }
+        public static ScriptableObject Show(GameObject entity, Type agentType)
+        {
+            if (GlobalManager.helper == null) return default;
+            if (!GlobalManager.agentData.TryGetValue(entity, out var agentData))
+            {
+                agentData = new Dictionary<Type, ScriptableObject>();
+                GlobalManager.agentData.Add(entity, agentData);
             }
 
-            private static AgentPool LoadPool(Type heapType)
+            if (!agentData.TryGetValue(agentType, out var agent))
             {
-                var assetName = heapType.Name;
-                if (Service.poolData.TryGetValue(assetName, out var poolData))
-                {
-                    return (AgentPool)poolData;
-                }
-
-                poolData = new AgentPool(heapType);
-                Service.poolData.Add(assetName, poolData);
-                return (AgentPool)poolData;
+                GlobalManager.entity = entity;
+                agent = LoadPool(agentType).Dequeue();
+                agentData.Add(agentType, agent);
+                ((IAgent)agent).OnAwake(entity);
             }
 
-            internal static void Dispose()
-            {
-                var agentCaches = new List<IEntity>(agentData.Keys);
-                foreach (var cache in agentCaches)
-                {
-                    if (Service.agentData.TryGetValue(cache, out var agentData))
-                    {
-                        foreach (var agent in agentData.Values)
-                        {
-                            Object.Destroy((ScriptableObject)agent);
-                        }
+            return GlobalManager.agentData[entity][agentType];
+        }
 
-                        agentData.Clear();
-                        Service.agentData.Remove(cache);
-                    }
+        public static void Hide(GameObject entity)
+        {
+            if (GlobalManager.helper == null) return;
+            if (GlobalManager.agentData.TryGetValue(entity, out var agentData))
+            {
+                foreach (var agent in agentData.Values)
+                {
+                    ((IAgent)agent).Dispose();
+                    LoadPool(agent.GetType()).Enqueue(agent);
                 }
 
                 agentData.Clear();
+                GlobalManager.agentData.Remove(entity);
             }
+        }
+
+        private static AgentPool LoadPool(Type assetType)
+        {
+            var assetName = assetType.Name;
+            if (GlobalManager.poolData.TryGetValue(assetName, out var poolData))
+            {
+                return (AgentPool)poolData;
+            }
+
+            poolData = new AgentPool(assetType);
+            GlobalManager.poolData.Add(assetName, poolData);
+            return (AgentPool)poolData;
+        }
+
+        internal static void Dispose()
+        {
+            var agentCaches = new List<GameObject>(GlobalManager.agentData.Keys);
+            foreach (var cache in agentCaches)
+            {
+                if (GlobalManager.agentData.TryGetValue(cache, out var agentData))
+                {
+                    foreach (var agent in agentData.Values)
+                    {
+                        Object.Destroy(agent);
+                    }
+
+                    agentData.Clear();
+                    GlobalManager.agentData.Remove(cache);
+                }
+            }
+
+            GlobalManager.agentData.Clear();
         }
     }
 }

@@ -16,63 +16,61 @@ using Object = UnityEngine.Object;
 
 namespace JFramework
 {
-    public static partial class Service
+    internal class AudioPool : IPool
     {
-        private class AudioPool : IPool
+        private readonly HashSet<AudioSource> cached = new HashSet<AudioSource>();
+        private readonly Queue<AudioSource> unused = new Queue<AudioSource>();
+
+        public AudioPool(string assetPath, Type assetType)
         {
-            private readonly HashSet<AudioSource> cached = new HashSet<AudioSource>();
-            private readonly Queue<AudioSource> unused = new Queue<AudioSource>();
+            this.assetPath = assetPath;
+            this.assetType = assetType;
+        }
 
-            public AudioPool(string assetPath, Type assetType)
+        public Type assetType { get; private set; }
+        public string assetPath { get; private set; }
+        public int caches => cached.Count;
+        public int unuseds => unused.Count;
+        public int dequeue { get; private set; }
+        public int enqueue { get; private set; }
+
+        public AudioSource Dequeue()
+        {
+            dequeue++;
+            AudioSource assetData;
+            if (unused.Count > 0)
             {
-                this.assetPath = assetPath;
-                this.assetType = assetType;
-            }
-
-            public Type assetType { get; private set; }
-            public string assetPath { get; private set; }
-            public int caches => cached.Count;
-            public int unuseds => unused.Count;
-            public int dequeue { get; private set; }
-            public int enqueue { get; private set; }
-
-            public AudioSource Dequeue()
-            {
-                dequeue++;
-                AudioSource assetData;
-                if (unused.Count > 0)
+                assetData = unused.Dequeue();
+                if (assetData != null)
                 {
-                    assetData = unused.Dequeue();
-                    if (assetData != null)
-                    {
-                        cached.Add(assetData);
-                        return assetData;
-                    }
-
-                    enqueue++;
-                    cached.Remove(assetData);
+                    cached.Add(assetData);
+                    return assetData;
                 }
 
-                assetData = new GameObject(assetPath).AddComponent<AudioSource>();
-                Object.DontDestroyOnLoad(assetData.gameObject);
-                cached.Add(assetData);
-                return assetData;
+                enqueue++;
+                cached.Remove(assetData);
             }
 
-            public void Enqueue(AudioSource assetData)
-            {
-                if (cached.Remove(assetData))
-                {
-                    enqueue++;
-                    unused.Enqueue(assetData);
-                }
-            }
+            assetData = new GameObject(assetPath).AddComponent<AudioSource>();
+            Object.DontDestroyOnLoad(assetData.gameObject);
+            assetData.name = assetPath;
+            cached.Add(assetData);
+            return assetData;
+        }
 
-            void IDisposable.Dispose()
+        public void Enqueue(AudioSource assetData)
+        {
+            if (cached.Remove(assetData))
             {
-                cached.Clear();
-                unused.Clear();
+                enqueue++;
+                unused.Enqueue(assetData);
             }
+        }
+
+        void IDisposable.Dispose()
+        {
+            cached.Clear();
+            unused.Clear();
         }
     }
 }

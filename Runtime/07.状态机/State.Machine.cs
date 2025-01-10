@@ -11,24 +11,18 @@
 
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace JFramework
 {
-    public abstract class StateMachine<TEntity> : Agent<TEntity> where TEntity : IEntity
+    public abstract class StateMachine<TOwner> : Agent<TOwner> where TOwner : Component
     {
         private readonly Dictionary<Type, IState> states = new Dictionary<Type, IState>();
-        public IState state { get; private set; }
+        public IState state;
 
         public override void Dispose()
         {
             state = null;
-            var copies = new List<IState>(states.Values);
-            foreach (var stateData in copies)
-            {
-                stateData.Dispose();
-                Utility.Pool.Enqueue(stateData, stateData.GetType());
-            }
-
             states.Clear();
         }
 
@@ -39,16 +33,12 @@ namespace JFramework
 
         public void AddState<T>() where T : IState, new()
         {
-            var stateData = Utility.Pool.Dequeue<IState>(typeof(T));
-            states[typeof(T)] = stateData;
-            stateData.OnAwake(owner);
+            states[typeof(T)] = (IState)AgentManager.Show(owner.gameObject, typeof(T));
         }
 
-        public void AddState<T>(Type stateType) where T : IState
+        public void AddState(Type stateType)
         {
-            var stateData = Utility.Pool.Dequeue<IState>(stateType);
-            states[typeof(T)] = stateData;
-            stateData.OnAwake(owner);
+            states[stateType] = (IState)AgentManager.Show(owner.gameObject, stateType);
         }
 
         public void ChangeState<T>() where T : IState
@@ -56,6 +46,23 @@ namespace JFramework
             state.OnExit();
             state = states[typeof(T)];
             state.OnEnter();
+        }
+
+        public void ChangeState(Type stateType)
+        {
+            state.OnExit();
+            state = states[stateType];
+            state.OnEnter();
+        }
+
+        public void RemoveState<T>() where T : IState, new()
+        {
+            states.Remove(typeof(T));
+        }
+
+        public void RemoveState(Type stateType)
+        {
+            states.Remove(stateType);
         }
     }
 }

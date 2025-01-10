@@ -13,7 +13,7 @@ using System;
 
 namespace JFramework
 {
-    public interface IGrid : IEntity, IDisposable
+    public interface IGrid : IDisposable
     {
         void Select();
     }

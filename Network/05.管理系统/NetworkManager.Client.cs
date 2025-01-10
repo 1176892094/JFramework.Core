@@ -155,7 +155,7 @@ namespace JFramework.Net
                 isLoadScene = true;
                 Instance.sceneName = sceneName;
 
-                Service.Asset.LoadScene(sceneName);
+                AssetManager.LoadScene(sceneName);
             }
 
             internal static void LoadSceneComplete(string sceneName)
@@ -345,7 +345,7 @@ namespace JFramework.Net
 
                 if (@object.assetId.Equals(@object.name, StringComparison.OrdinalIgnoreCase))
                 {
-                    Service.Entity.Hide(@object.gameObject);
+                    PoolManager.Hide(@object.gameObject);
                     @object.Reset();
                     return;
                 }
@@ -449,11 +449,11 @@ namespace JFramework.Net
                     GameObject prefab;
                     if (message.isPool)
                     {
-                        prefab = await Service.Entity.Show(message.assetId);
+                        prefab = await PoolManager.Show(message.assetId);
                     }
                     else
                     {
-                        prefab = await Service.Asset.Load<GameObject>(message.assetId);
+                        prefab = await AssetManager.Load<GameObject>(message.assetId);
                     }
 
                     if (!prefab.TryGetComponent(out @object))

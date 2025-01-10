@@ -125,7 +125,7 @@ namespace JFramework.Net
             }
 
             var rooms = Utility.Zip.Decompress(request.downloadHandler.text);
-            var jsons = Service.Json.FromJson<Room[]>("{" + "\"value\":" + rooms + "}");
+            var jsons = JsonManager.FromJson<Room[]>("{" + "\"value\":" + rooms + "}");
             Utility.Event.Invoke(new LobbyUpdateEvent(jsons));
             Log.Info("房间信息：" + rooms);
         }

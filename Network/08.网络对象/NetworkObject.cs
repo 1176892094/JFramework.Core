@@ -16,7 +16,7 @@ using UnityEngine;
 
 namespace JFramework.Net
 {
-    public sealed partial class NetworkObject : MonoBehaviour, IEntity
+    public sealed partial class NetworkObject : MonoBehaviour
     {
         [SerializeField] internal string assetId;
 

@@ -13,38 +13,35 @@ using UnityEngine;
 
 namespace JFramework
 {
-    public static partial class Service
+    internal static class TimerManager
     {
-        internal static class Timer
+        public static void Update(float elapsedTime, float unscaleTime)
         {
-            public static void Update(float elapsedTime, float unscaleTime)
+            for (var i = GlobalManager.timerData.Count - 1; i >= 0; i--)
             {
-                for (var i = timerData.Count - 1; i >= 0; i--)
-                {
-                    timerData[i].Update(elapsedTime, unscaleTime);
-                }
+                GlobalManager.timerData[i].Update(elapsedTime, unscaleTime);
             }
+        }
 
-            public static T Load<T>(GameObject entity, float duration) where T : class, ITimer
+        public static T Load<T>(GameObject entity, float duration) where T : class, ITimer
+        {
+            if (GlobalManager.helper == null) return default;
+            var timerData = Utility.Pool.Dequeue<T>();
+            timerData.Start(entity, duration, OnComplete);
+            GlobalManager.timerData.Add(timerData);
+            return timerData;
+
+            void OnComplete()
             {
-                if (helper == null) return default;
-                var timerData = Utility.Pool.Dequeue<T>();
-                timerData.Start(entity, duration, OnComplete);
-                Service.timerData.Add(timerData);
-                return timerData;
-
-                void OnComplete()
-                {
-                    Service.timerData.Remove(timerData);
-                    timerData.Dispose();
-                    Utility.Pool.Enqueue(timerData, typeof(T));
-                }
+                GlobalManager.timerData.Remove(timerData);
+                timerData.Dispose();
+                Utility.Pool.Enqueue(timerData, typeof(T));
             }
+        }
 
-            internal static void Dispose()
-            {
-                timerData.Clear();
-            }
+        internal static void Dispose()
+        {
+            GlobalManager.timerData.Clear();
         }
     }
 }

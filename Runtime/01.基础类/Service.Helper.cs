@@ -17,7 +17,7 @@ using Object = UnityEngine.Object;
 
 namespace JFramework
 {
-    public partial class Service
+    public partial class GlobalManager
     {
         public interface Helper
         {

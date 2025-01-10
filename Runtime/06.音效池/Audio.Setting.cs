@@ -13,13 +13,10 @@ using System;
 
 namespace JFramework
 {
-    public static partial class Service
+    [Serializable]
+    internal class AudioSetting
     {
-        [Serializable]
-        private class AudioSetting
-        {
-            public float audioValue = 0.5f;
-            public float musicValue = 0.5f;
-        }
+        public float audioValue = 0.5f;
+        public float musicValue = 0.5f;
     }
 }

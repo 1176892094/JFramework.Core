@@ -16,85 +16,82 @@ using UnityEngine;
 
 namespace JFramework
 {
-    public static partial class Service
+    public static class PoolManager
     {
-        public static class Entity
+        public static async Task<GameObject> Show(string assetPath)
         {
-            public static async Task<GameObject> Show(string assetPath)
+            if (GlobalManager.helper == null) return default;
+            var assetData = await LoadPool(assetPath).Dequeue();
+            assetData.transform.SetParent(null);
+            assetData.SetActive(true);
+            return assetData;
+        }
+
+        public static async void Show(string assetPath, Action<GameObject> assetAction)
+        {
+            if (GlobalManager.helper == null) return;
+            var assetData = await LoadPool(assetPath).Dequeue();
+            assetData.transform.SetParent(null);
+            assetData.SetActive(true);
+            assetAction.Invoke(assetData);
+        }
+
+        public static bool Hide(GameObject assetData)
+        {
+            if (GlobalManager.helper == null) return false;
+            var assetPath = assetData.name;
+            if (!GlobalManager.poolGroup.TryGetValue(assetPath, out var parent))
             {
-                if (helper == null) return default;
-                var assetData = await LoadPool(assetPath).Dequeue();
-                assetData.transform.SetParent(null);
-                assetData.SetActive(true);
-                return assetData;
+                parent = new GameObject(Utility.Text.Format("Pool - {0}", assetPath));
+                parent.transform.SetParent(GlobalManager.manager.transform);
+                GlobalManager.poolGroup.Add(assetPath, parent);
             }
 
-            public static async void Show(string assetPath, Action<GameObject> assetAction)
+            assetData.SetActive(false);
+            assetData.transform.SetParent(parent.transform);
+            return LoadPool(assetData.name).Enqueue(assetData);
+        }
+
+        private static EntityPool LoadPool(string assetPath)
+        {
+            if (GlobalManager.poolData.TryGetValue(assetPath, out var poolData))
             {
-                if (helper == null) return;
-                var assetData = await LoadPool(assetPath).Dequeue();
-                assetData.transform.SetParent(null);
-                assetData.SetActive(true);
-                assetAction.Invoke(assetData);
-            }
-
-            public static bool Hide(GameObject assetData)
-            {
-                if (helper == null) return false;
-                var assetPath = assetData.name;
-                if (!poolGroup.TryGetValue(assetPath, out var parent))
-                {
-                    parent = new GameObject(Utility.Text.Format("Pool - {0}", assetPath));
-                    parent.transform.SetParent(manager.transform);
-                    poolGroup.Add(assetPath, parent);
-                }
-
-                assetData.SetActive(false);
-                assetData.transform.SetParent(parent.transform);
-                return LoadPool(assetData.name).Enqueue(assetData);
-            }
-
-            private static EntityPool LoadPool(string assetPath)
-            {
-                if (Service.poolData.TryGetValue(assetPath, out var poolData))
-                {
-                    return (EntityPool)poolData;
-                }
-
-                poolData = new EntityPool(assetPath, typeof(GameObject));
-                Service.poolData.Add(assetPath, poolData);
                 return (EntityPool)poolData;
             }
 
-            public static Reference[] Reference()
-            {
-                var index = 0;
-                var results = new Reference[poolData.Count];
-                foreach (var value in poolData.Values)
-                {
-                    var type = value.assetType;
-                    var path = value.assetPath;
-                    results[index++] = new Reference(type, path, value.caches, value.unuseds, value.dequeue, value.enqueue);
-                }
+            poolData = new EntityPool(assetPath, typeof(GameObject));
+            GlobalManager.poolData.Add(assetPath, poolData);
+            return (EntityPool)poolData;
+        }
 
-                return results;
+        public static Reference[] Reference()
+        {
+            var index = 0;
+            var results = new Reference[GlobalManager.poolData.Count];
+            foreach (var value in GlobalManager.poolData.Values)
+            {
+                var type = value.assetType;
+                var path = value.assetPath;
+                results[index++] = new Reference(type, path, value.caches, value.unuseds, value.dequeue, value.enqueue);
             }
 
-            internal static void Dispose()
-            {
-                var poolCaches = new List<string>(poolData.Keys);
-                foreach (var cache in poolCaches)
-                {
-                    if (Service.poolData.TryGetValue(cache, out var poolData))
-                    {
-                        poolData.Dispose();
-                        Service.poolData.Remove(cache);
-                    }
-                }
+            return results;
+        }
 
-                poolData.Clear();
-                poolGroup.Clear();
+        internal static void Dispose()
+        {
+            var poolCaches = new List<string>(GlobalManager.poolData.Keys);
+            foreach (var cache in poolCaches)
+            {
+                if (GlobalManager.poolData.TryGetValue(cache, out var poolData))
+                {
+                    poolData.Dispose();
+                    GlobalManager.poolData.Remove(cache);
+                }
             }
+
+            GlobalManager.poolData.Clear();
+            GlobalManager.poolGroup.Clear();
         }
     }
 }

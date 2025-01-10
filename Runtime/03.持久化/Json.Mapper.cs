@@ -15,7 +15,7 @@ using Object = UnityEngine.Object;
 
 namespace JFramework
 {
-    public static partial class Service
+    public static partial class JsonManager
     {
         [Serializable]
         private class JsonMapper<T>
@@ -28,38 +28,35 @@ namespace JFramework
             }
         }
 
-        public static partial class Json
+        public static string ToJson<T>(T data)
         {
-            public static string ToJson<T>(T data)
+            if (typeof(T).IsSubclassOf(typeof(Object)))
             {
-                if (typeof(T).IsSubclassOf(typeof(Object)))
-                {
-                    return JsonUtility.ToJson(data);
-                }
-
-                return JsonUtility.ToJson(new JsonMapper<T>(data));
+                return JsonUtility.ToJson(data);
             }
 
-            public static void FromJson<T>(string json, T data)
-            {
-                if (typeof(T).IsSubclassOf(typeof(Object)))
-                {
-                    JsonUtility.FromJsonOverwrite(json, data);
-                    return;
-                }
+            return JsonUtility.ToJson(new JsonMapper<T>(data));
+        }
 
-                JsonUtility.FromJsonOverwrite(json, new JsonMapper<T>(data));
+        public static void FromJson<T>(string json, T data)
+        {
+            if (typeof(T).IsSubclassOf(typeof(Object)))
+            {
+                JsonUtility.FromJsonOverwrite(json, data);
+                return;
             }
 
-            public static T FromJson<T>(string json)
-            {
-                if (typeof(T).IsSubclassOf(typeof(Object)))
-                {
-                    return JsonUtility.FromJson<T>(json);
-                }
+            JsonUtility.FromJsonOverwrite(json, new JsonMapper<T>(data));
+        }
 
-                return JsonUtility.FromJson<JsonMapper<T>>(json).value;
+        public static T FromJson<T>(string json)
+        {
+            if (typeof(T).IsSubclassOf(typeof(Object)))
+            {
+                return JsonUtility.FromJson<T>(json);
             }
+
+            return JsonUtility.FromJson<JsonMapper<T>>(json).value;
         }
     }
 }

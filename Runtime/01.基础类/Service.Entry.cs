@@ -13,36 +13,35 @@ using UnityEngine;
 
 namespace JFramework
 {
-    public static partial class Service
+    public partial class GlobalManager
     {
         public static class Entry
         {
             public static void Register(Helper helper)
             {
-                Service.helper = helper;
-                Json.Load(setting, nameof(AudioSetting));
+                GlobalManager.helper = helper;
+                JsonManager.Load(setting, nameof(AudioSetting));
                 manager = new GameObject("PoolManager");
                 musicSource = manager.AddComponent<AudioSource>();
-                Object.DontDestroyOnLoad(manager);
+                DontDestroyOnLoad(manager);
             }
 
             public static void Update()
             {
-                Timer.Update(Time.time, Time.unscaledTime);
+                TimerManager.Update(Time.time, Time.unscaledTime);
             }
 
             public static void UnRegister()
             {
                 helper = null;
-                Pack.Dispose();
+                PackManager.Dispose();
                 Data.Dispose();
-                Audio.Dispose();
-                Group.Dispose();
-                Asset.Dispose();
-                Agent.Dispose();
-                Panel.Dispose();
-                Timer.Dispose();
-                Entity.Dispose();
+                AudioManager.Dispose();
+                AssetManager.Dispose();
+                AgentManager.Dispose();
+                UIManager.Dispose();
+                TimerManager.Dispose();
+                PoolManager.Dispose();
                 Utility.Pool.Dispose();
                 Utility.Event.Dispose();
             }

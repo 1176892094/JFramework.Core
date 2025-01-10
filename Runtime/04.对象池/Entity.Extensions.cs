@@ -3,12 +3,13 @@
 // # Unity: 6000.3.5f1
 // # Author: 云谷千羽
 // # Version: 1.0.0
-// # History: 2025-01-09 20:01:51
-// # Recently: 2025-01-10 20:01:56
+// # History: 2025-01-08 18:01:44
+// # Recently: 2025-01-08 18:01:44
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
 
+using System;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.Events;
@@ -17,7 +18,22 @@ namespace JFramework
 {
     public static partial class Extensions
     {
-        public static void Inject(this IEntity entity)
+        public static ScriptableObject Agent(this GameObject current, Type agentType)
+        {
+            return AgentManager.Show(current, agentType);
+        }
+
+        public static T Agent<T>(this GameObject current) where T : ScriptableObject
+        {
+            return AgentManager.Show<T>(current);
+        }
+
+        public static void Destroy(this GameObject current)
+        {
+            AgentManager.Hide(current);
+        }
+        
+              public static void Inject(this GameObject entity)
         {
             var fields = entity.GetType().GetFields(Utility.Find.Instance);
             foreach (var field in fields)
@@ -54,7 +70,7 @@ namespace JFramework
             }
         }
 
-        private static void SetValue(this IEntity inject, FieldInfo field, string name)
+        private static void SetValue(this GameObject inject, FieldInfo field, string name)
         {
             var child = inject.transform.GetChild(name);
             if (child == null)
