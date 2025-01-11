@@ -25,7 +25,7 @@ namespace JFramework
             if (!GlobalManager.Instance) return;
             if (!GlobalSetting.assetLoadMode)
             {
-                Service.Event.Invoke(new PackCompleteEvent(false, "启动本地资源加载。"));
+                Service.Event.Invoke(new PackCompleteEvent(0, "启动本地资源加载。"));
                 return;
             }
 
@@ -54,7 +54,7 @@ namespace JFramework
             }
             else
             {
-                Service.Event.Invoke(new PackCompleteEvent(false, "没有连接到服务器!"));
+                Service.Event.Invoke(new PackCompleteEvent(-1, "没有连接到服务器!"));
                 return;
             }
 
@@ -104,7 +104,7 @@ namespace JFramework
                 File.WriteAllText(filePath, serverRequest);
             }
 
-            Service.Event.Invoke(new PackCompleteEvent(status, status ? "更新完成!" : "更新失败!"));
+            Service.Event.Invoke(new PackCompleteEvent(1, status ? "更新完成!" : "更新失败!"));
         }
 
         private static async Task<bool> LoadPacketRequest(HashSet<string> fileNames)

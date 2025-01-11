@@ -35,10 +35,10 @@ namespace JFramework.Common
 
     public struct PackCompleteEvent : IEvent
     {
-        public bool status { get; private set; }
+        public int status { get; private set; }
         public string message { get; private set; }
 
-        public PackCompleteEvent(bool status, string message)
+        public PackCompleteEvent(int status, string message)
         {
             this.status = status;
             this.message = message;

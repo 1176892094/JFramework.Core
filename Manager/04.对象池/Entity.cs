@@ -39,12 +39,11 @@ namespace JFramework
         public static bool Hide(GameObject assetData)
         {
             if (!GlobalManager.Instance) return false;
-            var assetPath = assetData.name;
-            if (!GlobalManager.poolGroup.TryGetValue(assetPath, out var parent))
+            if (!GlobalManager.poolGroup.TryGetValue(assetData.name, out var parent))
             {
-                parent = new GameObject(Service.Text.Format("Pool - {0}", assetPath));
+                parent = new GameObject(Service.Text.Format("Pool - {0}", assetData.name));
                 parent.transform.SetParent(GlobalManager.Instance.transform);
-                GlobalManager.poolGroup.Add(assetPath, parent);
+                GlobalManager.poolGroup.Add(assetData.name, parent);
             }
 
             assetData.SetActive(false);
@@ -70,9 +69,9 @@ namespace JFramework
             var results = new Reference[GlobalManager.poolData.Count];
             foreach (var value in GlobalManager.poolData.Values)
             {
-                var type = value.assetType;
-                var path = value.assetPath;
-                results[index++] = new Reference(type, path, value.caches, value.unuseds, value.dequeue, value.enqueue);
+                var assetType = value.assetType;
+                var assetPath = value.assetPath;
+                results[index++] = new Reference(assetType, assetPath, value.caches, value.unuseds, value.dequeue, value.enqueue);
             }
 
             return results;

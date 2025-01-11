@@ -11,16 +11,6 @@ namespace JFramework
         public int dequeue { get; }
         public int enqueue { get; }
 
-        public Reference(Type assetType, int caches, int unuseds, int dequeue, int enqueue)
-        {
-            assetPath = string.Empty;
-            this.assetType = assetType;
-            this.caches = caches;
-            this.unuseds = unuseds;
-            this.dequeue = dequeue;
-            this.enqueue = enqueue;
-        }
-
         public Reference(Type assetType, string assetPath, int caches, int unuseds, int dequeue, int enqueue)
         {
             this.assetType = assetType;

@@ -57,11 +57,11 @@ namespace JFramework
             {
                 var index = 0;
                 var results = new Reference[poolData.Count];
-                foreach (var pair in poolData)
+                foreach (var value in poolData.Values)
                 {
-                    var key = pair.Key;
-                    var value = pair.Value;
-                    results[index++] = new Reference(key, value.caches, value.unuseds, value.dequeue, value.enqueue);
+                    var assetType = value.assetType;
+                    var assetPath = value.assetPath;
+                    results[index++] = new Reference(assetType, assetPath, value.caches, value.unuseds, value.dequeue, value.enqueue);
                 }
 
                 return results;
