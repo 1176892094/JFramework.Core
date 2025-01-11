@@ -52,7 +52,7 @@ namespace JFramework.Net
                     break;
             }
 
-            Log.Warn($"客户端: {clientId} 错误代码: {reason}\n{message}");
+            Log.Warn(Service.Text.Format("客户端: {0}  错误代码: {1}\n{2}", clientId, reason, message));
         }
 
         public void ServerConnect(int clientId)
@@ -139,7 +139,8 @@ namespace JFramework.Net
 
                     rooms.Add(id, room);
                     clients.Add(clientId, room);
-                    Log.Info($"客户端 {clientId} 创建游戏房间。房间名：{room.roomName} 房间数：{rooms.Count} 连接数：{clients.Count}");
+                    Log.Info(Service.Text.Format("客户端 {0} 创建房间。 房间名称: {1} 房间数: {2} 连接数: {3}", clientId, room.roomName, rooms.Count,
+                        clients.Count));
 
                     using var writer = MemoryWriter.Pop();
                     writer.WriteByte((byte)OpCodes.CreateRoom);
@@ -154,7 +155,8 @@ namespace JFramework.Net
                     {
                         room.clients.Add(clientId);
                         clients.Add(clientId, room);
-                        Log.Info($"客户端 {clientId} 加入游戏房间。房间名：{room.roomName} 房间数：{rooms.Count} 连接数：{clients.Count}");
+                        Log.Info(Service.Text.Format("客户端 {0} 加入房间。 房间名称: {1} 房间数: {2} 连接数: {3}", clientId, room.roomName, rooms.Count,
+                            clients.Count));
 
                         using var writer = MemoryWriter.Pop();
                         writer.WriteByte((byte)OpCodes.JoinRoom);
@@ -191,7 +193,7 @@ namespace JFramework.Net
                     {
                         if (message.Count > transport.MessageSize(channel))
                         {
-                            Log.Info($"接收消息大小过大！消息大小：{message.Count}");
+                            Log.Warn(Service.Text.Format("接收消息大小过大！消息大小: {0}", message.Count));
                             ServerDisconnect(clientId);
                             return;
                         }

@@ -67,7 +67,7 @@ namespace JFramework.Net
 
             void ConfigureServer(IRestServer server)
             {
-                server.Prefixes.Add($"http://*:{port}/");
+                server.Prefixes.Add(Service.Text.Format("http://*:{0}/", port));
             }
         }
 
