@@ -101,15 +101,4 @@ namespace JFramework.Common
         public readonly Uri uri;
         public ResponseMessage(Uri uri) => this.uri = uri;
     }
-
-    public struct RoomMessage : IMessage
-    {
-        public string roomId;
-        public string roomName;
-        public string roomData;
-        public RoomMode roomMode;
-        public int maxCount;
-        public int clientId;
-        public int[] clients;
-    }
 }

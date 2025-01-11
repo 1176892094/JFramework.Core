@@ -25,7 +25,7 @@ namespace JFramework
         private Status status;
         private Window window;
         private Color windowColor = Color.white;
-        
+
         private Vector2 consoleView = Vector2.zero;
         private Vector2 messageView = Vector2.zero;
         private Vector2 assemblyView = Vector2.zero;
@@ -38,7 +38,7 @@ namespace JFramework
         private Vector2 scrollScreenView = Vector2.zero;
         private Vector2 scrollMemoryView = Vector2.zero;
         private Vector2 scrollProjectView = Vector2.zero;
-        private event Action<GUILayoutOption> OnWindow;
+        private event Action OnWindow;
 
         private void Awake()
         {
@@ -54,10 +54,10 @@ namespace JFramework
                     if (assembly.GetName().Name == "JFramework.Net")
                     {
                         var manager = assembly.GetType("JFramework.Net.NetworkManager");
-                        var windowMethod = manager.GetMethod("Window", Service.Find.Static);
-                        if (windowMethod != null)
+                        var message = manager.GetMethod("Window", Service.Find.Static);
+                        if (message != null)
                         {
-                            OnWindow = (Action<GUILayoutOption>)Delegate.CreateDelegate(typeof(Action<GUILayoutOption>), windowMethod);
+                            OnWindow = (Action)Delegate.CreateDelegate(typeof(Action), message);
                         }
 
                         status |= Status.Ping;
@@ -313,7 +313,10 @@ namespace JFramework
             GUILayout.EndHorizontal();
             if (status.HasFlag(Status.Window))
             {
-                OnWindow?.Invoke(Height30);
+                var boxAlignment = GUI.skin.box.alignment;
+                GUI.skin.box.alignment = TextAnchor.MiddleCenter;
+                OnWindow?.Invoke();
+                GUI.skin.box.alignment = boxAlignment;
             }
 
             GUILayout.EndArea();

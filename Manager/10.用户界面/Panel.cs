@@ -176,7 +176,7 @@ namespace JFramework
             transform.offsetMin = Vector2.zero;
             transform.offsetMax = Vector2.zero;
             transform.localScale = Vector3.one;
-            parent.localPosition = Vector3.zero;
+            transform.localPosition = Vector3.zero;
         }
 
         private static void Destroy(UIPanel panel, Type assetType)

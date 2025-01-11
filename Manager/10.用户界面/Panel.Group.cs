@@ -83,7 +83,7 @@ namespace JFramework
             }
         }
 
-        internal static bool ShowInGroup(UIPanel panel)
+        private static bool ShowInGroup(UIPanel panel)
         {
             if (!GlobalManager.groupPanel.TryGetValue(panel, out var groupPanel))
             {

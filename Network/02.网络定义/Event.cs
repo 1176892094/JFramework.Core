@@ -111,9 +111,9 @@ namespace JFramework.Common
 
     public struct LobbyUpdateEvent : IEvent
     {
-        public RoomMessage[] rooms { get; private set; }
+        public RoomData[] rooms { get; private set; }
 
-        public LobbyUpdateEvent(RoomMessage[] rooms)
+        public LobbyUpdateEvent(RoomData[] rooms)
         {
             this.rooms = rooms;
         }
