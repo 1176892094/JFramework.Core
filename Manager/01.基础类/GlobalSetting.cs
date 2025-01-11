@@ -78,6 +78,8 @@ namespace JFramework
         internal static string assetPackPath => Service.Text.Format("{0}/{1}", Application.persistentDataPath, Instance.assetBuildPath);
 
         internal static string GetScenePath(string assetName) => Service.Text.Format("Scenes/{0}", assetName);
+        
+        internal static string GetAudioPath(string assetName) => Service.Text.Format("Audios/{0}", assetName);
 
         internal static string GetPanelPath(string assetName) => Service.Text.Format("Prefabs/{0}", assetName);
 

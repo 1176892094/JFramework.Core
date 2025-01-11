@@ -152,12 +152,9 @@ namespace JFramework
             if (!GlobalManager.Instance) return;
             if (!GlobalManager.panelLayer.TryGetValue(layer, out var parent))
             {
-                var index = layer.ToString().Substring(5);
-                var child = new GameObject(Service.Text.Format("Layer - {0}", index));
+                var name = Service.Text.Format("Pool - Canvas/{0}", layer);
+                var child = new GameObject(name, typeof(RectTransform));
                 child.transform.SetParent(GlobalManager.canvas.transform);
-                var renderer = child.AddComponent<Canvas>();
-                renderer.overrideSorting = true;
-                renderer.sortingOrder = (byte)layer;
                 parent = child.GetComponent<RectTransform>();
                 parent.anchorMin = Vector2.zero;
                 parent.anchorMax = Vector2.one;

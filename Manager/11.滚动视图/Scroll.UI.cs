@@ -31,7 +31,7 @@ namespace JFramework
 
         Rect IScroll.rect => assetRect;
         string IScroll.prefab => assetPath;
-        RectTransform IScroll.content => content;
+        RectTransform IContent.content => content;
 
         public void SetItem(List<TItem> items)
         {

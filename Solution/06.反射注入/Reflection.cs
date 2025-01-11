@@ -57,7 +57,7 @@ namespace JFramework
         public static readonly GUIContent unityIcon;
         public static readonly GUIContent prefabIcon;
         public static readonly GUIContent objectIcon;
-        public static readonly GUIContent targetIcon;
+        public static readonly GUIContent scriptIcon;
         public static readonly GUIContent customIcon;
         public static readonly GUIContent windowIcon;
 
@@ -100,8 +100,10 @@ namespace JFramework
 
             unityIcon = EditorGUIUtility.IconContent("UnityLogo");
             prefabIcon = EditorGUIUtility.IconContent("Prefab Icon");
-            targetIcon = EditorGUIUtility.IconContent("Transform Icon");
+           // targetIcon = EditorGUIUtility.IconContent("Transform Icon");
+           // panelIcon = EditorGUIUtility.IconContent("d_RectTransform Icon");
             objectIcon = EditorGUIUtility.IconContent("GameObject Icon");
+            scriptIcon = EditorGUIUtility.IconContent("cs Script Icon");
 
             buildIcon = EditorGUIUtility.IconContent("BuildSettings.Standalone");
             windowIcon = EditorGUIUtility.IconContent("UnityEditor.AnimationWindow");

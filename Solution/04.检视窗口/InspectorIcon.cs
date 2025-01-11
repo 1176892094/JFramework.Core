@@ -18,8 +18,6 @@ using Object = UnityEngine.Object;
 
 namespace JFramework
 {
-    using Editor = UnityEditor.Editor;
-
     internal sealed class InspectorIcon : Inspector
     {
         private static readonly Dictionary<int, GUIContent> contents = new Dictionary<int, GUIContent>();
@@ -122,7 +120,7 @@ namespace JFramework
                         break;
                     }
                 }
-                else if (!EditorApplication.isPlaying && tracker.GetVisible(i) == 1)
+                else if (tracker.GetVisible(i) == 1)
                 {
                     status = true;
                     break;
@@ -233,7 +231,7 @@ namespace JFramework
                 content = new GUIContent(icon, ObjectNames.NicifyVariableName(component.GetType().Name));
                 if (icon.name is "cs Script Icon" or "d_cs Script Icon")
                 {
-                    content.image = EditorGUIUtility.IconContent("cs Script Icon").image;
+                    content.image = Reflection.scriptIcon.image;
                 }
 
                 contents[componentId] = content;

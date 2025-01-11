@@ -16,7 +16,7 @@ namespace JFramework.Common
 {
     internal interface ITimer : IDisposable
     {
-        void Start(GameObject owner, float duration, Action OnFinish);
+        void Start(GameObject owner, float duration, Action OnDispose);
         
         void Update(float elapsedTime, float unscaleTime);
     }

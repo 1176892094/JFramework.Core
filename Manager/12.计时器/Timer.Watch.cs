@@ -20,8 +20,8 @@ namespace JFramework
     {
         private float duration;
         private float keepTime;
-        private Action OnFinish;
-        private Action OnUpdate;
+        private Action OnDispose;
+        private Action OnUpdated;
 
         private GameObject owner;
         private int progress;
@@ -34,19 +34,19 @@ namespace JFramework
             progress = 0;
             duration = 0;
             waitTime = 0;
-            OnUpdate = null;
-            OnFinish = null;
             unscaled = false;
+            OnUpdated = null;
+            OnDispose = null;
         }
 
-        void ITimer.Start(GameObject owner, float duration, Action OnFinish)
+        void ITimer.Start(GameObject owner, float duration, Action OnDispose)
         {
             progress = 1;
             waitTime = 0;
             unscaled = false;
             this.owner = owner;
             this.duration = duration;
-            this.OnFinish = OnFinish;
+            this.OnDispose = OnDispose;
         }
 
         void ITimer.Update(float elapsedTime, float unscaleTime)
@@ -55,13 +55,13 @@ namespace JFramework
             {
                 if (owner == null)
                 {
-                    OnFinish.Invoke();
+                    OnDispose.Invoke();
                     return;
                 }
 
                 if (!owner.activeInHierarchy)
                 {
-                    OnFinish.Invoke();
+                    OnDispose.Invoke();
                     return;
                 }
 
@@ -79,29 +79,29 @@ namespace JFramework
 
                 progress--;
                 waitTime = keepTime + duration;
-                OnUpdate.Invoke();
+                OnUpdated?.Invoke();
 
                 if (progress == 0)
                 {
-                    OnFinish.Invoke();
+                    OnDispose.Invoke();
                 }
             }
             catch (Exception e)
             {
-                OnFinish.Invoke();
+                OnDispose.Invoke();
                 Debug.Log(Service.Text.Format("计时器无法执行方法：\n{0}", e));
             }
         }
 
-        public Watch Invoke(Action OnUpdate)
+        public Watch OnUpdate(Action OnUpdated)
         {
-            this.OnUpdate = OnUpdate;
+            this.OnUpdated = OnUpdated;
             return this;
         }
 
-        public Watch OnComplete(Action OnFinish)
+        public Watch OnComplete(Action OnDispose)
         {
-            this.OnFinish += OnFinish;
+            this.OnDispose += OnDispose;
             return this;
         }
 

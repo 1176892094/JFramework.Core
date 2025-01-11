@@ -13,10 +13,14 @@ using UnityEngine;
 
 namespace JFramework.Common
 {
-    public interface IScroll
+    public interface IContent
+    {
+        RectTransform content { get; }
+    }
+
+    public interface IScroll : IContent
     {
         Rect rect { get; }
         string prefab { get; }
-        RectTransform content { get; }
     }
 }

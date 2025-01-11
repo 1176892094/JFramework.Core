@@ -19,8 +19,8 @@ namespace JFramework
     public sealed class Tween : ITimer
     {
         private float duration;
-        private Action OnFinish;
-        private Action<float> OnUpdate;
+        private Action OnDispose;
+        private Action<float> OnUpdated;
 
         private GameObject owner;
         private float progress;
@@ -32,17 +32,17 @@ namespace JFramework
             progress = 0;
             duration = 0;
             waitTime = 0;
-            OnUpdate = null;
-            OnFinish = null;
+            OnUpdated = null;
+            OnDispose = null;
         }
 
-        void ITimer.Start(GameObject owner, float duration, Action OnFinish)
+        void ITimer.Start(GameObject owner, float duration, Action OnDispose)
         {
             progress = 0;
             waitTime = 0;
             this.owner = owner;
             this.duration = duration;
-            this.OnFinish = OnFinish;
+            this.OnDispose = OnDispose;
         }
 
         void ITimer.Update(float elapsedTime, float unscaleTime)
@@ -51,13 +51,13 @@ namespace JFramework
             {
                 if (owner == null)
                 {
-                    OnFinish.Invoke();
+                    OnDispose.Invoke();
                     return;
                 }
 
                 if (!owner.activeInHierarchy)
                 {
-                    OnFinish.Invoke();
+                    OnDispose.Invoke();
                     return;
                 }
 
@@ -72,29 +72,29 @@ namespace JFramework
                     progress = 1;
                 }
 
-                OnUpdate.Invoke(progress);
+                OnUpdated.Invoke(progress);
 
                 if (progress >= 1)
                 {
-                    OnFinish.Invoke();
+                    OnDispose.Invoke();
                 }
             }
             catch (Exception e)
             {
-                OnFinish.Invoke();
+                OnDispose.Invoke();
                 Debug.Log(Service.Text.Format("缓动差值无法执行方法：\n{0}", e));
             }
         }
 
-        public Tween Invoke(Action<float> OnUpdate)
+        public Tween OnUpdate(Action<float> OnUpdated)
         {
-            this.OnUpdate = OnUpdate;
+            this.OnUpdated = OnUpdated;
             return this;
         }
 
-        public void OnComplete(Action OnFinish)
+        public void OnComplete(Action OnDispose)
         {
-            this.OnFinish += OnFinish;
+            this.OnDispose += OnDispose;
         }
     }
 }

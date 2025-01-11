@@ -142,7 +142,7 @@ namespace JFramework
             }
 
             Texture icon = AssetPreview.GetMiniThumbnail(target);
-
+           
             if (icon.name is "d_Prefab Icon" or "Prefab Icon")
             {
                 if (PrefabUtility.IsAnyPrefabInstanceRoot(target))
@@ -150,12 +150,7 @@ namespace JFramework
                     return Reflection.prefabIcon.image;
                 }
             }
-
-            if (icon.name is "cs Script Icon" or "d_cs Script Icon")
-            {
-                return Reflection.targetIcon.image;
-            }
-
+            
             var components = target.GetComponents<Component>();
             Component component;
             if (components.Length > 1)
@@ -187,9 +182,9 @@ namespace JFramework
                 return Reflection.objectIcon.image;
             }
 
-            if (icon.name is "cs Script Icon" or "d_cs Script Icon")
+            if (icon.name is "cs Script Icon" or "d_cs Script Icon" or "dll Script Icon")
             {
-                return Reflection.targetIcon.image;
+                return AssetPreview.GetMiniThumbnail(components[0]);
             }
 
             return icon;
