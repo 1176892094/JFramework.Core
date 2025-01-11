@@ -27,10 +27,10 @@ namespace JFramework
         public static GlobalManager Instance;
         
         public static Canvas canvas;
+        
+        public static AudioSource audioSource;
 
         internal static Component entity;
-        
-        internal static AudioSource musicSource;
 
         internal static AssetBundleManifest manifest;
 
@@ -74,7 +74,6 @@ namespace JFramework
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            musicSource = gameObject.AddComponent<AudioSource>();
             JsonManager.Load(setting, nameof(AudioSetting));
         }
 

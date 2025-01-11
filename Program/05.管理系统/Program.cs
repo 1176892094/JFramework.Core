@@ -11,6 +11,7 @@
 
 using System;
 using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
@@ -44,10 +45,14 @@ namespace JFramework.Net
                 }
 
                 Setting = JsonConvert.DeserializeObject<Setting>(await File.ReadAllTextAsync("setting.json"));
-
+                
                 Log.Info("加载程序集...");
+                Assembly.LoadFile(Path.GetFullPath("JFramework.dll"));
+                Assembly.LoadFile(Path.GetFullPath("JFramework.Kcp.dll"));
+                
                 Log.Info("初始化传输类...");
                 Process = new Process(transport);
+                
                 transport.OnServerError = Process.ServerError;
                 transport.OnServerConnect = Process.ServerConnect;
                 transport.OnServerReceive = Process.ServerReceive;

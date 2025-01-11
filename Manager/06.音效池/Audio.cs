@@ -22,7 +22,7 @@ namespace JFramework
             set
             {
                 GlobalManager.setting.musicValue = value;
-                GlobalManager.musicSource.volume = value;
+                GlobalManager.audioSource.volume = value;
                 JsonManager.Save(GlobalManager.setting, nameof(AudioSetting));
             }
         }
@@ -45,14 +45,14 @@ namespace JFramework
         public static async void PlayMain(string assetPath, Action<AudioSource> assetAction = null)
         {
             if (!GlobalManager.Instance) return;
-            var musicSource = GlobalManager.musicSource;
-            musicSource.transform.SetParent(null);
-            musicSource.gameObject.SetActive(true);
-            musicSource.clip = await AssetManager.Load<AudioClip>(assetPath);
-            musicSource.loop = true;
-            musicSource.volume = musicValue;
-            assetAction?.Invoke(musicSource);
-            musicSource.Play();
+            var audioSource = GlobalManager.audioSource;
+            audioSource.transform.SetParent(null);
+            audioSource.gameObject.SetActive(true);
+            audioSource.clip = await AssetManager.Load<AudioClip>(assetPath);
+            audioSource.loop = true;
+            audioSource.volume = musicValue;
+            assetAction?.Invoke(audioSource);
+            audioSource.Play();
         }
 
         public static async void PlayLoop(string assetPath, Action<AudioSource> assetAction = null)
@@ -88,14 +88,14 @@ namespace JFramework
             if (!GlobalManager.Instance) return;
             if (pause)
             {
-                GlobalManager.musicSource.Pause();
+                GlobalManager.audioSource.Pause();
             }
             else
             {
-                GlobalManager.musicSource.Stop();
+                GlobalManager.audioSource.Stop();
             }
 
-            LoadPool(GlobalManager.musicSource.name).Enqueue(GlobalManager.musicSource);
+            LoadPool(GlobalManager.audioSource.name).Enqueue(GlobalManager.audioSource);
         }
 
         public static void StopLoop(AudioSource assetData)

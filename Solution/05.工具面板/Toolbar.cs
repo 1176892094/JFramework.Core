@@ -167,10 +167,17 @@ namespace JFramework
             {
                 style =
                 {
+                    width = 30,
                     backgroundColor = Color.white * 0.5f,
                     unityTextAlign = TextAnchor.MiddleCenter,
+                    borderBottomWidth = 0,
+                    borderTopWidth = 0,
+                    borderLeftWidth = 0,
+                    borderRightWidth = 0,
+                    marginLeft = 1,
+                    marginRight = 1,
                 },
-                iconImage = texture as Texture2D
+                iconImage = texture as Texture2D,
             };
             button.RegisterCallback<MouseEnterEvent>(_ => button.style.backgroundColor = Color.white * 0.6f);
             button.RegisterCallback<MouseLeaveEvent>(_ => button.style.backgroundColor = Color.white * 0.5f);

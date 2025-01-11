@@ -19,7 +19,7 @@ namespace JFramework.Net
         /// <summary>
         /// 服务器密钥
         /// </summary>
-        public string ServerKey = "Secret Key";
+        public string ServerKey = Guid.NewGuid().ToString();
 
         /// <summary>
         /// Rest服务器端口
