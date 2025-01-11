@@ -15,6 +15,8 @@ namespace JFramework
 {
     public abstract class UIPanel : MonoBehaviour
     {
+        public UILayer layer { get; set; } = UILayer.Layer1;
+        
         public UIState state { get; set; } = UIState.Common;
 
         protected virtual void Awake()

@@ -64,7 +64,7 @@ namespace JFramework
 
         internal static readonly Dictionary<Component, AgentData> agentData = new Dictionary<Component, AgentData>();
 
-        internal static readonly Dictionary<int, RectTransform> panelLayer = new Dictionary<int, RectTransform>();
+        internal static readonly Dictionary<UILayer, RectTransform> panelLayer = new Dictionary<UILayer, RectTransform>();
 
         internal static readonly Dictionary<string, HashSet<UIPanel>> panelGroup = new Dictionary<string, HashSet<UIPanel>>();
 

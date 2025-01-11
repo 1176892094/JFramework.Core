@@ -30,7 +30,7 @@ namespace JFramework
 
             var panel = (UIPanel)component;
             GlobalManager.panelData.Add(assetType, panel);
-            Surface(panel);
+            Surface(panel.transform, panel.layer);
             return panel;
         }
 
@@ -147,34 +147,36 @@ namespace JFramework
             }
         }
 
-        public static void Surface(UIPanel panel, int layer = 1)
+        public static void Surface(Transform panel, UILayer layer)
         {
             if (!GlobalManager.Instance) return;
             if (!GlobalManager.panelLayer.TryGetValue(layer, out var parent))
             {
-                var name = Service.Text.Format("Layer-{0}", layer);
-                var child = new GameObject(name);
+                var index = layer.ToString().Substring(5);
+                var child = new GameObject(Service.Text.Format("Layer - {0}", index));
                 child.transform.SetParent(GlobalManager.canvas.transform);
                 var renderer = child.AddComponent<Canvas>();
                 renderer.overrideSorting = true;
-                renderer.sortingOrder = layer;
+                renderer.sortingOrder = (byte)layer;
                 parent = child.GetComponent<RectTransform>();
                 parent.anchorMin = Vector2.zero;
                 parent.anchorMax = Vector2.one;
                 parent.offsetMin = Vector2.zero;
                 parent.offsetMax = Vector2.zero;
                 parent.localScale = Vector3.one;
+                parent.localPosition = Vector3.zero;
                 GlobalManager.panelLayer.Add(layer, parent);
-                parent.SetSiblingIndex(layer);
+                parent.SetSiblingIndex((byte)layer);
             }
 
-            var transform = (RectTransform)panel.transform;
+            var transform = (RectTransform)panel;
             transform.SetParent(parent);
             transform.anchorMin = Vector2.zero;
             transform.anchorMax = Vector2.one;
             transform.offsetMin = Vector2.zero;
             transform.offsetMax = Vector2.zero;
             transform.localScale = Vector3.one;
+            parent.localPosition = Vector3.zero;
         }
 
         private static void Destroy(UIPanel panel, Type assetType)

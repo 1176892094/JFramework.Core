@@ -45,8 +45,6 @@ namespace JFramework
 
         [SerializeField] protected string assetCachePath = "Assets/Template";
 
-        [SerializeField] protected DebugWindow debugWindow = DebugWindow.Disable;
-
         protected abstract string scriptDataPath { get; }
 
         protected abstract string assetDataPath { get; }
@@ -135,12 +133,6 @@ namespace JFramework
         {
             Simulate,
             Authentic
-        }
-
-        protected enum DebugWindow : byte
-        {
-            Enable,
-            Disable,
         }
     }
 }
