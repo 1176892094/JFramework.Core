@@ -64,12 +64,12 @@ namespace JFramework
 
         internal static readonly Dictionary<Component, AgentData> agentData = new Dictionary<Component, AgentData>();
 
-        internal static readonly Dictionary<UILayer, RectTransform> panelLayer = new Dictionary<UILayer, RectTransform>();
-
         internal static readonly Dictionary<string, HashSet<UIPanel>> panelGroup = new Dictionary<string, HashSet<UIPanel>>();
 
         internal static readonly Dictionary<UIPanel, HashSet<string>> groupPanel = new Dictionary<UIPanel, HashSet<string>>();
-
+        
+        internal static readonly Dictionary<UILayer, RectTransform> panelLayer = new Dictionary<UILayer, RectTransform>();
+        
         private void Awake()
         {
             Instance = this;

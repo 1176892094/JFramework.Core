@@ -10,7 +10,6 @@
 // *********************************************************************************
 
 using System;
-using JFramework.Net;
 using UnityEngine;
 
 namespace JFramework.Common

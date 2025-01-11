@@ -21,6 +21,19 @@ namespace JFramework.Net
         Client = 3,
     }
 
+    public enum SyncMode : byte
+    {
+        Server,
+        Client
+    }
+    
+    public enum RoomMode : byte
+    {
+        Public,
+        Private,
+        Locked,
+    }
+    
     internal enum OpCodes : byte
     {
         Connect = 1,
@@ -31,19 +44,6 @@ namespace JFramework.Net
         LeaveRoom = 6,
         UpdateData = 7,
         KickRoom = 8,
-    }
-
-    public enum RoomMode : byte
-    {
-        Public,
-        Private,
-        Locked,
-    }
-
-    public enum SyncMode : byte
-    {
-        Server,
-        Client
     }
 
     internal enum StateMode : byte

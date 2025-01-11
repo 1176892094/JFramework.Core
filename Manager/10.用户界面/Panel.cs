@@ -28,6 +28,7 @@ namespace JFramework
                 component = obj.AddComponent(assetType);
             }
 
+            obj.name = assetPath;
             var panel = (UIPanel)component;
             GlobalManager.panelData.Add(assetType, panel);
             Surface(panel.transform, panel.layer);
@@ -43,7 +44,8 @@ namespace JFramework
                 panel = await Load(assetPath, typeof(T));
                 panel.Show();
             }
-            else if (ShowInGroup(panel))
+
+            if (ShowInGroup(panel))
             {
                 panel.Show();
             }
@@ -92,7 +94,8 @@ namespace JFramework
                 panel = await Load(assetPath, assetType);
                 panel.Show();
             }
-            else if (ShowInGroup(panel))
+
+            if (ShowInGroup(panel))
             {
                 panel.Show();
             }

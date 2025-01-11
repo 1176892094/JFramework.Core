@@ -102,7 +102,7 @@ namespace JFramework
                 {
                     if (panel != other && other.gameObject.activeInHierarchy)
                     {
-                        PoolManager.Hide(other.gameObject);
+                        other.Hide();
                     }
                 }
             }

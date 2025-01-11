@@ -17,35 +17,30 @@ using UnityEngine;
 namespace JFramework
 {
     [Serializable]
-    public sealed class Scroll<TPanel, TItem, TGrid> : Agent<TPanel> where TPanel : UIPanel, IScroll where TGrid : Component, IGrid<TPanel, TItem>
+    internal sealed class Scroll<TPanel, TItem, TGrid> where TPanel : UIPanel, IScroll where TGrid : Component, IGrid<TPanel, TItem>
     {
         private Dictionary<int, TGrid> grids = new Dictionary<int, TGrid>();
         private List<TItem> items;
         private int oldMaxIndex = -1;
         private int oldMinIndex = -1;
+        private TPanel owner;
         private int row => (int)owner.rect.y;
         private int column => (int)owner.rect.x;
         private float width => owner.rect.width;
         private float height => owner.rect.height;
         private string prefab => owner.prefab;
 
-        private void Awake()
+        public Scroll(Component owner)
         {
-            owner.content.pivot = Vector2.up;
-            owner.content.anchorMin = Vector2.up;
-            owner.content.anchorMax = Vector2.one;
+            this.owner = (TPanel)owner;
+            this.owner.content.pivot = Vector2.up;
+            this.owner.content.anchorMin = Vector2.up;
+            this.owner.content.anchorMax = Vector2.one;
         }
 
-        public override void Dispose()
+        public void Dispose()
         {
             items = null;
-            grids.Clear();
-            oldMinIndex = -1;
-            oldMaxIndex = -1;
-        }
-
-        public void SetItem(List<TItem> items)
-        {
             foreach (var i in grids.Keys)
             {
                 if (grids.TryGetValue(i, out var grid))
@@ -59,6 +54,13 @@ namespace JFramework
             }
 
             grids.Clear();
+            oldMinIndex = -1;
+            oldMaxIndex = -1;
+        }
+
+        public void SetItem(List<TItem> items)
+        {
+            Dispose();
             this.items = items;
             owner.content.anchoredPosition = Vector2.zero;
             owner.content.sizeDelta = new Vector2(0, Mathf.Ceil((float)items.Count / column * height + 1));
@@ -124,7 +126,7 @@ namespace JFramework
                         transform.SetParent(owner.content);
                         transform.localScale = Vector3.one;
                         transform.localPosition = new Vector3(posX, posY, 0);
-                        ((RectTransform)transform).sizeDelta = new Vector2(width / column, height / row);
+                        ((RectTransform)transform).sizeDelta = new Vector2(width, height);
 
                         if (!grids.ContainsKey(index))
                         {

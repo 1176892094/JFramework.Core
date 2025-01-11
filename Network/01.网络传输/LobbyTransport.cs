@@ -24,7 +24,7 @@ namespace JFramework.Net
         public string roomName;
         public string roomData;
         public string serverId;
-        public string serverKey = "Secret Key";
+        public string serverKey;
 
         private readonly Dictionary<int, int> clients = new Dictionary<int, int>();
         private readonly Dictionary<int, int> players = new Dictionary<int, int>();

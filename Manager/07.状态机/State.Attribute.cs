@@ -81,6 +81,7 @@ namespace JFramework
 
         public override void Dispose()
         {
+            base.Dispose();
             attributes.Clear();
         }
 

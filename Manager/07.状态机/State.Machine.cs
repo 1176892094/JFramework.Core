@@ -23,8 +23,9 @@ namespace JFramework
 
         public override void Dispose()
         {
-            state = null;
+            base.Dispose();
             states.Clear();
+            state = null;
         }
 
         public void OnUpdate()
@@ -34,12 +35,12 @@ namespace JFramework
 
         public void AddState<T>() where T : State<TOwner>
         {
-            states[typeof(T)] = (State<TOwner>)AgentManager.Show(owner, typeof(T));
+            states.Add(typeof(T), (IState)AgentManager.Show(owner, typeof(T)));
         }
 
         public void AddState(Type stateType)
         {
-            states[stateType] = (State<TOwner>)AgentManager.Show(owner, stateType);
+            states.Add(stateType, (IState)AgentManager.Show(owner, stateType));
         }
 
         public void ChangeState<T>() where T : State<TOwner>

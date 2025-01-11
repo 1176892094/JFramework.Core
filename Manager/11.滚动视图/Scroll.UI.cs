@@ -19,14 +19,26 @@ namespace JFramework
     [Serializable]
     public abstract class UIScroll<TItem, TGrid> : UIPanel, IScroll where TGrid : Component, IGrid<UIScroll<TItem, TGrid>, TItem>
     {
-        [SerializeField, Inject] protected Scroll<UIScroll<TItem, TGrid>, TItem, TGrid> scroll;
-        [SerializeField, Inject] protected RectTransform content;
-        [SerializeField] protected string assetPath;
+        [Inject] public RectTransform content;
         [SerializeField] protected Rect assetRect;
+        [SerializeField] protected string assetPath;
+        private Scroll<UIScroll<TItem, TGrid>, TItem, TGrid> scroll;
 
-        private void Update()
+        protected override void Awake()
+        {
+            base.Awake();
+            scroll = new Scroll<UIScroll<TItem, TGrid>, TItem, TGrid>(this);
+        }
+
+        protected virtual void Update()
         {
             scroll.Update();
+        }
+
+        public override void Hide()
+        {
+            base.Hide();
+            scroll.Dispose();
         }
 
         Rect IScroll.rect => assetRect;
