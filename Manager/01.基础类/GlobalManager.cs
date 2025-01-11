@@ -24,12 +24,12 @@ namespace JFramework
 {
     public class GlobalManager : MonoBehaviour
     {
-        internal static GlobalManager Instance;
+        public static GlobalManager Instance;
         
-        internal static Canvas canvas;
+        public static Canvas canvas;
 
-        internal static GameObject entity;
-
+        internal static Component entity;
+        
         internal static AudioSource musicSource;
 
         internal static AssetBundleManifest manifest;
@@ -62,7 +62,7 @@ namespace JFramework
 
         internal static readonly Dictionary<string, GameObject> poolGroup = new Dictionary<string, GameObject>();
 
-        internal static readonly Dictionary<GameObject, AgentData> agentData = new Dictionary<GameObject, AgentData>();
+        internal static readonly Dictionary<Component, AgentData> agentData = new Dictionary<Component, AgentData>();
 
         internal static readonly Dictionary<int, RectTransform> panelLayer = new Dictionary<int, RectTransform>();
 

@@ -19,7 +19,7 @@ namespace JFramework.Net
     public partial class NetworkManager : MonoBehaviour, IEvent<SceneCompleteEvent>
     {
         public static NetworkManager Instance;
-        
+
         public Transport transport;
 
         public int sendRate = 30;
@@ -173,9 +173,9 @@ namespace JFramework.Net
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static bool Tick(ref double sendTime)
+        public static bool Tick(float sendRate, ref double sendTime)
         {
-            var duration = 1.0 / Instance.sendRate;
+            var duration = 1.0 / sendRate;
             if (sendTime + duration <= Time.unscaledTimeAsDouble)
             {
                 sendTime = (long)(Time.unscaledTimeAsDouble / duration) * duration;
@@ -184,20 +184,24 @@ namespace JFramework.Net
 
             return false;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static NetworkObject GetNetworkObject(uint objectId)
         {
             if (Server.isActive)
             {
-                Server.spawns.TryGetValue(objectId, out var @object);
-                return @object;
+                if (Server.spawns.TryGetValue(objectId, out var @object))
+                {
+                    return @object;
+                }
             }
 
             if (Client.isActive)
             {
-                Client.spawns.TryGetValue(objectId, out var @object);
-                return @object;
+                if (Client.spawns.TryGetValue(objectId, out var @object))
+                {
+                    return @object;
+                }
             }
 
             return null;

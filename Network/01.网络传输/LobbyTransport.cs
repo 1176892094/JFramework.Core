@@ -126,7 +126,7 @@ namespace JFramework.Net
             }
 
             var rooms = Service.Zip.Decompress(request.downloadHandler.text);
-            var jsons = JsonManager.FromJson<Room[]>("{" + "\"value\":" + rooms + "}");
+            var jsons = JsonManager.FromJson<RoomMessage[]>("{" + "\"value\":" + rooms + "}");
             Service.Event.Invoke(new LobbyUpdateEvent(jsons));
             Debug.Log("房间信息：" + rooms);
         }
@@ -356,18 +356,6 @@ namespace JFramework.Net
 
         public override void ServerAfterUpdate()
         {
-        }
-
-        [Serializable]
-        public struct Room
-        {
-            public string roomId;
-            public string roomName;
-            public string roomData;
-            public RoomMode roomMode;
-            public int maxCount;
-            public int clientId;
-            public int[] clients;
         }
     }
 }

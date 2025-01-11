@@ -27,7 +27,7 @@ namespace JFramework.Net
 
         public void AddMessage(ArraySegment<byte> segment, double remoteTime)
         {
-            var header = NetworkCompress.GetLength((ulong)segment.Count);
+            var header = NetworkLength.GetLength((ulong)segment.Count);
             if (writer != null && writer.position + header + segment.Count > maxCount)
             {
                 writers.Enqueue(writer);
@@ -40,7 +40,7 @@ namespace JFramework.Net
                 writer.Write(remoteTime);
             }
 
-            NetworkCompress.Compress(writer, (ulong)segment.Count);
+            NetworkLength.Compress(writer, (ulong)segment.Count);
             writer.WriteBytes(segment.Array, segment.Offset, segment.Count);
         }
 

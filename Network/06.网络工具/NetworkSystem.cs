@@ -1,10 +1,11 @@
 // *********************************************************************************
-// # Project: Forest
-// # Unity: 2022.3.5f1c1
-// # Author: jinyijie
+// # Project: JFramework
+// # Unity: 6000.3.5f1
+// # Author: 云谷千羽
 // # Version: 1.0.0
-// # History: 2024-12-04  16:12
-// # Copyright: 2024, jinyijie
+// # History: 2025-01-10 21:01:21
+// # Recently: 2025-01-11 14:01:56
+// # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
 
@@ -61,7 +62,7 @@ namespace JFramework.Net
 
             if (playerLoop.subSystemList != null)
             {
-                for (int i = 0; i < playerLoop.subSystemList.Length; ++i)
+                for (var i = 0; i < playerLoop.subSystemList.Length; ++i)
                 {
                     if (AddLoopSystem(function, ref playerLoop.subSystemList[i], systemType))
                     {

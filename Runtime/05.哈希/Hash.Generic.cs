@@ -3,19 +3,19 @@
 // # Unity: 6000.3.5f1
 // # Author: 云谷千羽
 // # Version: 1.0.0
-// # History: 2024-12-23 18:12:21
-// # Recently: 2025-01-08 17:01:42
+// # History: 2025-01-11 13:01:36
+// # Recently: 2025-01-11 13:01:37
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
 
-using System;
-using UnityEngine;
-
-namespace JFramework.Common
+namespace JFramework
 {
-    internal interface IAgent : IDisposable
+    public static partial class Service
     {
-        void OnAwake(Component owner);
+        public static class Hash<T>
+        {
+            public static readonly ushort Id = (ushort)Hash.Id(typeof(T).FullName);
+        }
     }
 }

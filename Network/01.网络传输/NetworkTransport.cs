@@ -44,9 +44,9 @@ namespace JFramework.Net
 
         private void Awake()
         {
-            Udp.Log.Info = Debug.Log;
-            Udp.Log.Warn = Debug.LogWarning;
-            Udp.Log.Error = Debug.LogError;
+            Log.Info = Debug.Log;
+            Log.Warn = Debug.LogWarning;
+            Log.Error = Debug.LogError;
             var setting = new Setting(maxUnit, timeout, interval, deadLink, fastResend, sendWindow, receiveWindow);
             client = new Client(setting, ClientConnect, ClientDisconnect, ClientError, ClientReceive);
             server = new Server(setting, ServerConnect, ServerDisconnect, ServerError, ServerReceive);

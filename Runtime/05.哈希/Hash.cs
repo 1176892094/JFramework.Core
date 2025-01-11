@@ -15,11 +15,6 @@ namespace JFramework
 {
     public static partial class Service
     {
-        public static class Hash<T>
-        {
-            public static readonly ushort Id = (ushort)Hash.Id(typeof(T).FullName);
-        }
-
         public static class Hash
         {
             private static readonly byte[] buffer = new byte[4];

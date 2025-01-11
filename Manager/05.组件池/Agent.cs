@@ -19,7 +19,7 @@ namespace JFramework
 {
     internal static class AgentManager
     {
-        public static T Show<T>(GameObject entity) where T : ScriptableObject
+        public static T Show<T>(Component entity) where T : ScriptableObject
         {
             if (!GlobalManager.Instance) return default;
             if (!GlobalManager.agentData.TryGetValue(entity, out var agentData))
@@ -35,11 +35,11 @@ namespace JFramework
                 agentData.Add(typeof(T), agent);
                 ((IAgent)agent).OnAwake(entity);
             }
-
+            
             return (T)GlobalManager.agentData[entity][typeof(T)];
         }
 
-        public static ScriptableObject Show(GameObject entity, Type agentType)
+        public static ScriptableObject Show(Component entity, Type agentType)
         {
             if (!GlobalManager.Instance) return default;
             if (!GlobalManager.agentData.TryGetValue(entity, out var agentData))
@@ -59,7 +59,7 @@ namespace JFramework
             return GlobalManager.agentData[entity][agentType];
         }
 
-        public static void Hide(GameObject entity)
+        public static void Hide(Component entity)
         {
             if (!GlobalManager.Instance) return;
             if (GlobalManager.agentData.TryGetValue(entity, out var agentData))
@@ -90,7 +90,7 @@ namespace JFramework
 
         internal static void Dispose()
         {
-            var agentCaches = new List<GameObject>(GlobalManager.agentData.Keys);
+            var agentCaches = new List<Component>(GlobalManager.agentData.Keys);
             foreach (var cache in agentCaches)
             {
                 if (GlobalManager.agentData.TryGetValue(cache, out var agentData))

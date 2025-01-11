@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace JFramework.Net
@@ -47,7 +46,7 @@ namespace JFramework.Net
         {
             get
             {
-                if (!NetworkManager.Tick(ref sendTime))
+                if (!NetworkManager.Tick(NetworkManager.Instance.sendRate, ref sendTime))
                 {
                     return false;
                 }
@@ -234,15 +233,6 @@ namespace JFramework.Net
         {
             NetworkDelegate.RegisterServerRpc(typeof(NetworkTransform), 2, "System.Void JFramework.Net.NetworkTransform::SendToServerRpc(System.Nullable`1<UnityEngine.Vector3>,System.Nullable`1<UnityEngine.Quaternion>,System.Nullable`1<UnityEngine.Vector3>)", SendToServerRpc_Process);
             NetworkDelegate.RegisterClientRpc(typeof(NetworkTransform), 2, "System.Void JFramework.Net.NetworkTransform::SendToClientRpc(System.Nullable`1<UnityEngine.Vector3>,System.Nullable`1<UnityEngine.Quaternion>,System.Nullable`1<UnityEngine.Vector3>)", SendToClientRpc_Process);
-        }
-
-        [Flags]
-        private enum TransformOption
-        {
-            None,
-            Position = 1 << 0,
-            Rotation = 1 << 1,
-            Scale = 1 << 2,
         }
     }
 }

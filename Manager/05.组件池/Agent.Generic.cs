@@ -18,9 +18,9 @@ namespace JFramework
     {
         [SerializeField] private T instance;
 
-        public T owner => instance ??= GlobalManager.entity.GetComponent<T>();
+        public T owner => instance ??= (T)GlobalManager.entity;
 
-        public virtual void OnAwake(GameObject owner) => instance ??= owner.GetComponent<T>();
+        public virtual void OnAwake(Component owner) => instance ??= (T)owner;
 
         public virtual void Dispose() => instance = default;
     }

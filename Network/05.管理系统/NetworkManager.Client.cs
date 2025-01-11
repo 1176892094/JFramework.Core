@@ -528,7 +528,7 @@ namespace JFramework.Net
         {
             internal static void EarlyUpdate()
             {
-                if (Transport.Instance!= null)
+                if (Transport.Instance != null)
                 {
                     Transport.Instance.ClientEarlyUpdate();
                 }
@@ -538,7 +538,7 @@ namespace JFramework.Net
             {
                 if (isActive)
                 {
-                    if (Tick(ref sendTime))
+                    if (Tick(Instance.sendRate, ref sendTime))
                     {
                         Broadcast();
                     }
@@ -560,7 +560,7 @@ namespace JFramework.Net
                     }
                 }
 
-                if (Transport.Instance!= null)
+                if (Transport.Instance != null)
                 {
                     Transport.Instance.ClientAfterUpdate();
                 }

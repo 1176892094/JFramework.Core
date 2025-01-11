@@ -29,26 +29,25 @@ namespace JFramework.Net
             }
 
             StopDiscovery();
-            switch (NetworkManager.Mode)
+            if (NetworkManager.Server.isActive)
             {
-                case EntryMode.Server or EntryMode.Host:
-                    udpServer = new UdpClient(port)
-                    {
-                        EnableBroadcast = true,
-                        MulticastLoopback = false
-                    };
-                    GlobalSetting.Instance.MulticastLock(true);
-                    ServerReceive();
-                    break;
-                case EntryMode.Client:
-                    udpClient = new UdpClient(0)
-                    {
-                        EnableBroadcast = true,
-                        MulticastLoopback = false
-                    };
-                    ClientReceive();
-                    InvokeRepeating(nameof(ClientSend), 0, duration);
-                    break;
+                udpServer = new UdpClient(port)
+                {
+                    EnableBroadcast = true,
+                    MulticastLoopback = false
+                };
+                GlobalSetting.Instance.MulticastLock(true);
+                ServerReceive();
+            }
+            else if (NetworkManager.Client.isActive)
+            {
+                udpClient = new UdpClient(0)
+                {
+                    EnableBroadcast = true,
+                    MulticastLoopback = false
+                };
+                ClientReceive();
+                InvokeRepeating(nameof(ClientSend), 0, duration);
             }
         }
 

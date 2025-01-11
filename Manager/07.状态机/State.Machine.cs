@@ -34,12 +34,12 @@ namespace JFramework
 
         public void AddState<T>() where T : State<TOwner>
         {
-            states[typeof(T)] = (State<TOwner>)AgentManager.Show(owner.gameObject, typeof(T));
+            states[typeof(T)] = (State<TOwner>)AgentManager.Show(owner, typeof(T));
         }
 
         public void AddState(Type stateType)
         {
-            states[stateType] = (State<TOwner>)AgentManager.Show(owner.gameObject, stateType);
+            states[stateType] = (State<TOwner>)AgentManager.Show(owner, stateType);
         }
 
         public void ChangeState<T>() where T : State<TOwner>

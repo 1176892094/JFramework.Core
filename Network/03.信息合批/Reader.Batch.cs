@@ -77,7 +77,7 @@ namespace JFramework.Net
                 return false;
             }
 
-            var size = (int)NetworkCompress.Decompress(reader);
+            var size = (int)NetworkLength.Decompress(reader);
 
             if (reader.residue < size)
             {

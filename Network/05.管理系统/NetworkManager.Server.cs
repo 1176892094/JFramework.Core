@@ -487,7 +487,7 @@ namespace JFramework.Net
             {
                 if (isActive)
                 {
-                    if (Tick(ref sendTime))
+                    if (Tick(Instance.sendRate,ref sendTime))
                     {
                         Broadcast();
                     }

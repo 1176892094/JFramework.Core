@@ -76,4 +76,13 @@ namespace JFramework.Net
         Destroy = 1 << 1,
         Authority = 1 << 2,
     }
+    
+    [Flags]
+    internal enum TransformOption
+    {
+        None,
+        Position = 1 << 0,
+        Rotation = 1 << 1,
+        Scale = 1 << 2,
+    }
 }

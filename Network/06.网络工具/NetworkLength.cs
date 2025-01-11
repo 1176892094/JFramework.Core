@@ -3,15 +3,15 @@
 // # Unity: 6000.3.5f1
 // # Author: 云谷千羽
 // # Version: 1.0.0
-// # History: 2024-12-24 02:12:57
-// # Recently: 2025-01-08 17:01:24
+// # History: 2025-01-10 21:01:21
+// # Recently: 2025-01-11 14:01:55
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
 
 namespace JFramework.Net
 {
-    internal static class NetworkCompress
+    internal static class NetworkLength
     {
         public static int GetLength(ulong length)
         {

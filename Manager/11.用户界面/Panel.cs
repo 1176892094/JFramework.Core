@@ -150,19 +150,6 @@ namespace JFramework
         public static void Surface(UIPanel panel, int layer = 1)
         {
             if (!GlobalManager.Instance) return;
-            if (GlobalManager.canvas == null)
-            {
-                GlobalManager.canvas = new GameObject("UIManager").AddComponent<Canvas>();
-                GlobalManager.canvas.renderMode = RenderMode.ScreenSpaceCamera;
-                Object.DontDestroyOnLoad(GlobalManager.canvas.gameObject);
-
-                // var scaler = canvas.gameObject.AddComponent<CanvasScaler>();
-                // scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-                // scaler.referenceResolution = new Vector2(1920, 1080);
-                // scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
-                // scaler.matchWidthOrHeight = 0.5f;
-            }
-
             if (!GlobalManager.panelLayer.TryGetValue(layer, out var parent))
             {
                 var name = Service.Text.Format("Layer-{0}", layer);

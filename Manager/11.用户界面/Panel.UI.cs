@@ -19,12 +19,12 @@ namespace JFramework
 
         protected virtual void Awake()
         {
-            gameObject.Inject();
+            this.Inject();
         }
 
         protected virtual void OnDestroy()
         {
-            gameObject.Destroy();
+            this.Destroy();
         }
 
         public virtual void Show()

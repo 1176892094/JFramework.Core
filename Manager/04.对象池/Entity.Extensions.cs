@@ -19,22 +19,22 @@ namespace JFramework
 {
     public static partial class Extensions
     {
-        public static ScriptableObject Agent(this GameObject current, Type agentType)
+        public static ScriptableObject Agent(this Component current, Type agentType)
         {
             return AgentManager.Show(current, agentType);
         }
 
-        public static T Agent<T>(this GameObject current) where T : ScriptableObject
+        public static T Agent<T>(this Component current) where T : ScriptableObject
         {
             return AgentManager.Show<T>(current);
         }
 
-        public static void Destroy(this GameObject current)
+        public static void Destroy(this Component current)
         {
             AgentManager.Hide(current);
         }
-        
-              public static void Inject(this GameObject entity)
+
+        public static void Inject(this Component entity)
         {
             var fields = entity.GetType().GetFields(Service.Find.Instance);
             foreach (var field in fields)
@@ -58,7 +58,7 @@ namespace JFramework
 
                 if (!typeof(Transform).IsAssignableFrom(field.FieldType))
                 {
-                    var component = entity.transform.GetComponent(field.FieldType);
+                    var component = entity.GetComponent(field.FieldType);
                     if (component != null)
                     {
                         field.SetValue(entity, component);
@@ -71,7 +71,7 @@ namespace JFramework
             }
         }
 
-        private static void SetValue(this GameObject inject, FieldInfo field, string name)
+        private static void SetValue(this Component inject, FieldInfo field, string name)
         {
             var child = inject.transform.GetChild(name);
             if (child == null)
@@ -100,7 +100,7 @@ namespace JFramework
                 var property = injectType.GetProperty("onClick", Service.Find.Instance);
                 if (property != null)
                 {
-                    inject.transform.SetButton(name, (UnityEvent)property.GetValue(button));
+                    inject.SetButton(name, (UnityEvent)property.GetValue(button));
                 }
 
                 return;
@@ -112,7 +112,7 @@ namespace JFramework
                 var property = injectType.GetProperty("onValueChanged", Service.Find.Instance);
                 if (property != null)
                 {
-                    inject.transform.SetToggle(name, (UnityEvent<bool>)property.GetValue(toggle));
+                    inject.SetToggle(name, (UnityEvent<bool>)property.GetValue(toggle));
                 }
             }
         }
@@ -137,7 +137,7 @@ namespace JFramework
             return null;
         }
 
-        private static void SetButton(this Transform inject, string name, UnityEvent button)
+        private static void SetButton(this Component inject, string name, UnityEvent button)
         {
             if (!inject.TryGetComponent(out UIPanel panel))
             {
@@ -154,7 +154,7 @@ namespace JFramework
             });
         }
 
-        private static void SetToggle(this Transform inject, string name, UnityEvent<bool> toggle)
+        private static void SetToggle(this Component inject, string name, UnityEvent<bool> toggle)
         {
             if (!inject.TryGetComponent(out UIPanel panel))
             {

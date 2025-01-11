@@ -65,7 +65,7 @@ namespace JFramework
 
         internal static string structPath => Instance.scriptDataPath + "/02.结构体/{0}.cs";
 
-        internal static string tablePath => Instance.scriptDataPath + "/03.数据表/{0}.cs";
+        internal static string tablePath => Instance.scriptDataPath + "/03.数据表/{0}DataTable.cs";
 
         internal static string assemblyData => Resources.LoadAll<TextAsset>(nameof(GlobalSetting))[0].text;
 
