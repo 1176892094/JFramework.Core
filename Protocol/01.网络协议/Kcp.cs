@@ -84,7 +84,6 @@ namespace JFramework.Udp
         private byte[] buffer;                    // MTU可以在运行时改变，从而调整缓冲区的大小。
         private readonly uint conv;               // 会话标识符，用于唯一标识一个会话，以区分不同的会话数据。
         private readonly Action<byte[], int> output;
-        private readonly Pool segmentPool = new Pool(32);
         private readonly List<AckItem> ackList = new List<AckItem>(16);
         
         public readonly List<Segment> sendBuffer = new List<Segment>(16);
@@ -146,7 +145,7 @@ namespace JFramework.Udp
                 offset += (int)seg.data.Position;
                 len += (int)seg.data.Position;
                 var fragment = seg.frg;
-                segmentPool.Push(seg);
+                Segment.Enqueue(seg);
 
                 if (fragment == 0)
                 {
@@ -221,7 +220,7 @@ namespace JFramework.Udp
             {
                 return -1;
             }
-            
+
             if (len <= mss)
             {
                 count = 1;
@@ -245,17 +244,18 @@ namespace JFramework.Udp
             {
                 count = 1;
             }
-            
+
             for (int i = 0; i < count; i++)
             {
                 int size = len > (int)mss ? (int)mss : len;
-                var seg = segmentPool.Pop();
+                var seg = Segment.Dequeue();
+                seg.Reset();
 
                 if (len > 0)
                 {
                     seg.data.Write(buffer, offset, size);
                 }
-                
+
                 seg.frg = (uint)(count - i - 1);
                 sendQueue.Enqueue(seg);
                 offset += size;
@@ -321,7 +321,7 @@ namespace JFramework.Udp
                 if (sn == seg.sn)
                 {
                     sendBuffer.RemoveAt(i);
-                    segmentPool.Push(seg);
+                    Segment.Enqueue(seg);
                     break;
                 }
 
@@ -341,7 +341,7 @@ namespace JFramework.Udp
                 if (seg.sn < una)
                 {
                     ++removed;
-                    segmentPool.Push(seg);
+                    Segment.Enqueue(seg);
                 }
                 else
                 {
@@ -385,7 +385,7 @@ namespace JFramework.Udp
             var sn = segment.sn;
             if (Utils.Compare(sn, rcv_nxt + rcv_wnd) >= 0 || Utils.Compare(sn, rcv_nxt) < 0)
             {
-                segmentPool.Push(segment);
+                Segment.Enqueue(segment);
                 return;
             }
 
@@ -420,7 +420,7 @@ namespace JFramework.Udp
 
             else
             {
-                segmentPool.Push(segment);
+                Segment.Enqueue(segment);
             }
         }
 
@@ -522,7 +522,8 @@ namespace JFramework.Udp
                         ackList.Add(new AckItem(sn, ts));
                         if (Utils.Compare(sn, rcv_nxt) >= 0)
                         {
-                            var seg = segmentPool.Pop();
+                            var seg = Segment.Dequeue();
+                            seg.Reset();
                             seg.conv = conv_;
                             seg.cmd = cmd;
                             seg.frg = frg;
@@ -624,8 +625,9 @@ namespace JFramework.Udp
             {
                 return;
             }
-
-            var seg = segmentPool.Pop();
+            
+            var seg = Segment.Dequeue();
+            seg.Reset();
             seg.conv = conv;
             seg.cmd = CMD_ACK;
             seg.wnd = WndUnused();
@@ -790,8 +792,8 @@ namespace JFramework.Udp
                     }
                 }
             }
-
-            segmentPool.Push(seg);
+            
+            Segment.Enqueue(seg);
             FlushBuffer(size);
 
             if (change > 0)

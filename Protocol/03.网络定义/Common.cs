@@ -11,21 +11,11 @@
 
 using System;
 using System.Net.Sockets;
-using System.Security.Cryptography;
 
 namespace JFramework.Udp
 {
     internal static class Common
     {
-        private static readonly RNGCryptoServiceProvider cryptoRandom = new RNGCryptoServiceProvider();
-        private static readonly byte[] cryptoRandomBuffer = new byte[4];
-
-        internal static uint GenerateCookie()
-        {
-            cryptoRandom.GetBytes(cryptoRandomBuffer);
-            return BitConverter.ToUInt32(cryptoRandomBuffer, 0);
-        }
-
         internal static bool ParseReliable(byte value, out Reliable header)
         {
             if (Enum.IsDefined(typeof(Reliable), value))

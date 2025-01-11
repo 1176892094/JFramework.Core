@@ -18,19 +18,19 @@ namespace JFramework.Net
         public static void Info(string message)
         {
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine(Service.Text.Format("[{0}:MM-dd HH:mm:ss] {1}", DateTime.Now, message));
+            Console.WriteLine(Service.Text.Format("[{0}] {1}", DateTime.Now.ToString("MM-dd HH:mm:ss"), message));
         }
 
         public static void Warn(string message)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine(Service.Text.Format("[{0}:MM-dd HH:mm:ss] {1}", DateTime.Now, message));
+            Console.WriteLine(Service.Text.Format("[{0}] {1}", DateTime.Now.ToString("MM-dd HH:mm:ss"), message));
         }
 
         public static void Error(string message)
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(Service.Text.Format("[{0}:MM-dd HH:mm:ss] {1}", DateTime.Now, message));
+            Console.WriteLine(Service.Text.Format("[{0}] {1}", DateTime.Now.ToString("MM-dd HH:mm:ss"), message));
         }
     }
 }

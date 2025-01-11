@@ -124,7 +124,7 @@ namespace JFramework.Udp
 
         private Client AddClient(int clientId)
         {
-            return new Client(OnConnect, OnDisconnect, OnError, OnReceive, OnSend, setting, Common.GenerateCookie(), endPoint);
+            return new Client(OnConnect, OnDisconnect, OnError, OnReceive, OnSend, setting, Service.Hash.Id(), endPoint);
 
             void OnConnect(Client client)
             {

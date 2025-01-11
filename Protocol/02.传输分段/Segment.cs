@@ -57,5 +57,15 @@ namespace JFramework.Udp
             rto = 0;
             data.SetLength(0);
         }
+
+        public static Segment Dequeue()
+        {
+            return Service.Pool.Dequeue<Segment>();
+        }
+
+        public static void Enqueue(Segment segment)
+        {
+            Service.Pool.Enqueue(segment);
+        }
     }
 }
