@@ -20,9 +20,9 @@ namespace JFramework.Net
     public sealed class LobbyTransport : Transport
     {
         public Transport transport;
+        public RoomMode roomMode;
         public string roomName;
         public string roomData;
-        public RoomMode roomMode;
         public string serverId;
         public string serverKey = "Secret Key";
 

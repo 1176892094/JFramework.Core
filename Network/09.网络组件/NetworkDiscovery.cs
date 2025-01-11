@@ -6,19 +6,31 @@ using UnityEngine;
 
 namespace JFramework.Net
 {
-    public class NetworkDiscovery : MonoBehaviour
+    public class NetworkDiscovery : MonoBehaviour, IAddress
     {
-        public string address = "";
+        [SerializeField] private string address = IPAddress.Broadcast.ToString();
 
-        public ushort port = 47777;
+        [SerializeField] private ushort port = 47777;
 
+        public int version;
+        
         public int duration = 1;
-
-        public string version;
 
         private UdpClient udpClient;
 
         private UdpClient udpServer;
+
+        ushort IAddress.port
+        {
+            get => port;
+            set => port = value;
+        }
+
+        string IAddress.address
+        {
+            get => address;
+            set => address = value;
+        }
 
         public void StartDiscovery()
         {
@@ -83,7 +95,7 @@ namespace JFramework.Net
                 }
 
                 using var writer = MemoryWriter.Pop();
-                writer.WriteString(version);
+                writer.WriteInt(version);
                 writer.Invoke(new RequestMessage());
                 ArraySegment<byte> segment = writer;
                 udpClient.Send(segment.Array, segment.Count, endPoint);
@@ -102,7 +114,7 @@ namespace JFramework.Net
                 {
                     var result = await udpServer.ReceiveAsync();
                     using var reader = MemoryReader.Pop(new ArraySegment<byte>(result.Buffer));
-                    if (version != reader.ReadString())
+                    if (version != reader.ReadInt())
                     {
                         Debug.LogError("接收到的消息版本不同！");
                         return;
@@ -127,7 +139,7 @@ namespace JFramework.Net
             try
             {
                 using var writer = MemoryWriter.Pop();
-                writer.WriteString(version);
+                writer.WriteInt(version);
                 writer.Invoke(new ResponseMessage(new UriBuilder
                 {
                     Scheme = "https",
@@ -151,7 +163,7 @@ namespace JFramework.Net
                 {
                     var result = await udpClient.ReceiveAsync();
                     using var reader = MemoryReader.Pop(new ArraySegment<byte>(result.Buffer));
-                    if (version != reader.ReadString())
+                    if (version != reader.ReadInt())
                     {
                         Debug.LogError("接收到的消息版本不同息！");
                         return;

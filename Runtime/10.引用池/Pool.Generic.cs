@@ -4,7 +4,7 @@
 // # Author: 云谷千羽
 // # Version: 1.0.0
 // # History: 2025-01-10 18:01:34
-// # Recently: 2025-01-10 18:01:35
+// # Recently: 2025-01-11 18:01:32
 // # Copyright: 2024, 云谷千羽
 // # Description: This is an automatically generated comment.
 // *********************************************************************************
@@ -34,6 +34,12 @@ namespace JFramework
             public int unuseds => unused.Count;
             public int dequeue { get; private set; }
             public int enqueue { get; private set; }
+
+            void IDisposable.Dispose()
+            {
+                cached.Clear();
+                unused.Clear();
+            }
 
             public T Dequeue()
             {
@@ -66,12 +72,6 @@ namespace JFramework
                         unused.Enqueue(assetData);
                     }
                 }
-            }
-
-            void IDisposable.Dispose()
-            {
-                cached.Clear();
-                unused.Clear();
             }
         }
     }
