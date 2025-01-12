@@ -28,7 +28,6 @@ namespace JFramework
 
         private Vector2 consoleView = Vector2.zero;
         private Vector2 messageView = Vector2.zero;
-        private Vector2 assemblyView = Vector2.zero;
         private Vector2 referenceView = Vector2.zero;
         private Vector2 componentView = Vector2.zero;
         private Vector2 gameObjectView = Vector2.zero;

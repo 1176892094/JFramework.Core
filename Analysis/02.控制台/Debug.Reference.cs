@@ -20,7 +20,7 @@ namespace JFramework
     {
         private readonly Dictionary<string, List<Reference>> poolDataInfos = new Dictionary<string, List<Reference>>();
         private Pool pool = Pool.Heap;
-        
+
 
         private void ReferenceWindow()
         {
@@ -76,12 +76,13 @@ namespace JFramework
                 results.Add(poolInfo);
             }
 
-            GUILayout.BeginHorizontal();
-            assemblyView = GUILayout.BeginScrollView(assemblyView, "Box", BoxWidth);
+            referenceView = GUILayout.BeginScrollView(referenceView, "Box");
             foreach (var poolData in poolDataInfos)
             {
                 poolData.Value.Sort(Comparison);
-                GUILayout.BeginVertical("Box");
+                GUILayout.BeginHorizontal();
+
+                GUILayout.BeginVertical("Box", BoxWidth);
                 GUILayout.Label(poolData.Key, Height20);
                 foreach (var data in poolData.Value)
                 {
@@ -96,14 +97,7 @@ namespace JFramework
                 }
 
                 GUILayout.EndVertical();
-            }
-
-            GUILayout.EndScrollView();
-
-            referenceView = GUILayout.BeginScrollView(referenceView, "Box");
-            foreach (var poolData in poolDataInfos)
-            {
-                poolData.Value.Sort(Comparison);
+                
                 GUILayout.BeginVertical("Box");
                 GUILayout.Label(module, Height20);
                 foreach (var data in poolData.Value)
@@ -112,10 +106,11 @@ namespace JFramework
                 }
 
                 GUILayout.EndVertical();
+                
+                GUILayout.EndHorizontal();
             }
 
             GUILayout.EndScrollView();
-            GUILayout.EndHorizontal();
         }
 
         private static int Comparison(Reference origin, Reference target)
