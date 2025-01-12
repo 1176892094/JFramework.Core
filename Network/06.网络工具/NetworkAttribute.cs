@@ -17,7 +17,7 @@ namespace JFramework.Net
 {
     public delegate void InvokeDelegate(NetworkBehaviour component, MemoryReader reader, NetworkClient client);
 
-    public static class NetworkDelegate
+    public static class NetworkAttribute
     {
         private static readonly Dictionary<ushort, InvokeData> messages = new Dictionary<ushort, InvokeData>();
 

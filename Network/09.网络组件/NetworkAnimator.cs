@@ -423,10 +423,10 @@ namespace JFramework.Net
 
         static NetworkAnimator()
         {
-            NetworkDelegate.RegisterServerRpc(typeof(NetworkAnimator), 1, "System.Void JFramework.Net.NetworkAnimator::AnimationServerRpc(System.Int32,System.Single,System.Int32,System.Single,System.ArraySegment`1<System.Byte>)", AnimationServerRpc_Process);
-            NetworkDelegate.RegisterServerRpc(typeof(NetworkAnimator), 1, "System.Void JFramework.Net.NetworkAnimator::ParameterServerRpc(System.ArraySegment`1<System.Byte>)", ParameterServerRpc_Process);
-            NetworkDelegate.RegisterClientRpc(typeof(NetworkAnimator), 1, "System.Void JFramework.Net.NetworkAnimator::AnimationClientRpc(System.Int32,System.Single,System.Int32,System.Single,System.ArraySegment`1<System.Byte>)", AnimationClientRpc_Process);
-            NetworkDelegate.RegisterClientRpc(typeof(NetworkAnimator), 1, "System.Void JFramework.Net.NetworkAnimator::ParameterClientRpc(System.ArraySegment`1<System.Byte>)", ParameterClientRpc_Process);
+            NetworkAttribute.RegisterServerRpc(typeof(NetworkAnimator), 1, "System.Void JFramework.Net.NetworkAnimator::AnimationServerRpc(System.Int32,System.Single,System.Int32,System.Single,System.ArraySegment`1<System.Byte>)", AnimationServerRpc_Process);
+            NetworkAttribute.RegisterServerRpc(typeof(NetworkAnimator), 1, "System.Void JFramework.Net.NetworkAnimator::ParameterServerRpc(System.ArraySegment`1<System.Byte>)", ParameterServerRpc_Process);
+            NetworkAttribute.RegisterClientRpc(typeof(NetworkAnimator), 1, "System.Void JFramework.Net.NetworkAnimator::AnimationClientRpc(System.Int32,System.Single,System.Int32,System.Single,System.ArraySegment`1<System.Byte>)", AnimationClientRpc_Process);
+            NetworkAttribute.RegisterClientRpc(typeof(NetworkAnimator), 1, "System.Void JFramework.Net.NetworkAnimator::ParameterClientRpc(System.ArraySegment`1<System.Byte>)", ParameterClientRpc_Process);
         }
     }
 }

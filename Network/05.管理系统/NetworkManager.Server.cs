@@ -251,7 +251,7 @@ namespace JFramework.Net
                     return;
                 }
 
-                if (NetworkDelegate.RequireReady(message.methodHash) && @object.connection != client)
+                if (NetworkAttribute.RequireReady(message.methodHash) && @object.connection != client)
                 {
                     Debug.LogWarning(Service.Text.Format("无法为客户端 {0} 进行远程调用，未通过验证 {1}。", client.clientId, message.objectId));
                     return;

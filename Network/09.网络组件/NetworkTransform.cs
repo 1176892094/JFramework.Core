@@ -231,8 +231,8 @@ namespace JFramework.Net
 
         static NetworkTransform()
         {
-            NetworkDelegate.RegisterServerRpc(typeof(NetworkTransform), 2, "System.Void JFramework.Net.NetworkTransform::SendToServerRpc(System.Nullable`1<UnityEngine.Vector3>,System.Nullable`1<UnityEngine.Quaternion>,System.Nullable`1<UnityEngine.Vector3>)", SendToServerRpc_Process);
-            NetworkDelegate.RegisterClientRpc(typeof(NetworkTransform), 2, "System.Void JFramework.Net.NetworkTransform::SendToClientRpc(System.Nullable`1<UnityEngine.Vector3>,System.Nullable`1<UnityEngine.Quaternion>,System.Nullable`1<UnityEngine.Vector3>)", SendToClientRpc_Process);
+            NetworkAttribute.RegisterServerRpc(typeof(NetworkTransform), 2, "System.Void JFramework.Net.NetworkTransform::SendToServerRpc(System.Nullable`1<UnityEngine.Vector3>,System.Nullable`1<UnityEngine.Quaternion>,System.Nullable`1<UnityEngine.Vector3>)", SendToServerRpc_Process);
+            NetworkAttribute.RegisterClientRpc(typeof(NetworkTransform), 2, "System.Void JFramework.Net.NetworkTransform::SendToClientRpc(System.Nullable`1<UnityEngine.Vector3>,System.Nullable`1<UnityEngine.Quaternion>,System.Nullable`1<UnityEngine.Vector3>)", SendToClientRpc_Process);
         }
     }
 }
